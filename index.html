@@ -261,6 +261,31 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 @media (max-width:900px){.fcols{grid-template-columns:1fr 1fr}.fcols .about{grid-column:1/-1}}
 .fbot{border-top:1px solid rgba(255,255,255,.1)}
 .fbot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:18px}
+
+/* 空席カレンダー */
+.cal{background:var(--white);border:1px solid var(--hair);border-radius:12px;padding:16px;max-width:520px}
+.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-hd b{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+.cal-hd button{width:36px;height:36px;border-radius:50%;border:1px solid var(--hair);background:var(--white);cursor:pointer;font-size:18px;line-height:1;color:var(--ink)}
+.cal-hd button:disabled{opacity:.3;cursor:not-allowed}
+.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-w{font-size:11px;color:var(--mute);text-align:center;padding:4px 0}
+.cal-w.su{color:#C8402A}.cal-w.sa{color:#2C5FA0}
+.cal-d{aspect-ratio:1/1.05;border-radius:8px;display:grid;align-content:center;justify-items:center;gap:1px;font-size:13px;color:#B5BCC2;font-variant-numeric:tabular-nums;min-width:0}
+button.cal-d{border:1.5px solid var(--hair);background:var(--white);color:var(--ink);cursor:pointer;font:inherit;font-size:13px;padding:0}
+button.cal-d:hover:not(:disabled){border-color:var(--brand)}
+button.cal-d .mk{font-size:10.5px;font-weight:700;color:var(--brand);line-height:1.2;white-space:nowrap}
+button.cal-d.few .mk{color:#B26A00}
+button.cal-d:disabled{background:var(--bg-2);cursor:not-allowed;color:#9AA2AB}
+button.cal-d:disabled .mk{color:#9AA2AB}
+button.cal-d[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+button.cal-d[aria-pressed="true"] .mk{color:#fff}
+.cal-lg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--mute);margin-top:12px}
+.cal-lg b{color:var(--brand)}
+.cal-sel{margin-top:14px;font-size:14px;padding:12px 14px;border-radius:8px;background:var(--brand-l);color:var(--brand-d)}
+.cal-sel b{font-size:15px}
+.cal-none{padding:20px;text-align:center;color:var(--mute);border:1px dashed var(--hair);border-radius:12px}
+
 /* ===== BOOKING FLOW ===== */
 .bk{position:fixed;inset:0;z-index:60;background:var(--paper);display:flex;flex-direction:column;color:var(--ink)}
 .bk-top{background:var(--ink);color:#FCFCFA;padding-top:env(safe-area-inset-top,0px)}
@@ -592,6 +617,8 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 
 <script>
 (function(){
+/* スプレッドシート連携：Apps Script のウェブアプリURLを入れると、ツアー・空席・予約がシートと連動します。空欄ならデモ表示 */
+var API_URL='';
 var FUEL=6240; // 燃油サーチャージ・空港諸税（目安・お一人様）
 var TOURS={
  kpop:{name:'K-POP観覧ツアー 3日間',sub:'PRODUCE 101 JAPAN 新世界 観覧',code:'ST-KP',days:3,img:'img/concert.jpg',air:true,adult:89800,child:79800,single:18000,min:1,
@@ -674,13 +701,8 @@ function calc(){var t=T(),n=pax(),L=[];
 
 /* ---------- 画面 ---------- */
 function step1(){var t=T(),max=Math.min(9,seatsOf(S.date)||9),h='';
-  h+='<p class="demo-note">試作版のデモです。日程・料金は見本で、入力内容は送信されず、実際の決済も行われません。</p>';
-  h+='<h3 class="bk-h">出発日を選ぶ</h3><div class="dates" role="radiogroup" aria-label="出発日">';
-  t.dates.forEach(function(r){var d=dt(r[0]),s=r[1],full=s===0;
-    h+='<label class="date'+(full?' full':'')+'"><input type="radio" name="bk-date" value="'+r[0]+'"'+(full?' disabled':'')+(S.date===r[0]?' checked':'')+'>'
-     +'<span class="d">'+f(d)+'</span><span class="r">'+(t.days>1?'帰国 '+fs(addD(d,t.days-1))+'・'+t.days+'日間':'日帰り')+'</span>'
-     +'<span class="seat'+(full?' x':s<=5?' few':'')+'">'+(full?'満席':s<=5?'残り'+s+'席':'空席あり')+'</span></label>'});
-  h+='</div>';
+  if(!API_URL)h+='<p class="demo-note">試作版のデモです。日程・料金は見本で、入力内容は送信されず、実際の決済も行われません。</p>';
+  h+='<h3 class="bk-h">出発日を選ぶ</h3>'+calHtml();
   h+='<h3 class="bk-h">人数</h3><div class="pax">';
   h+=row('adults','大人','12歳以上',t.adult,S.adults<=1,pax()>=max);
   h+=row('children','子供','2〜11歳（大人の同行が必要です）',t.child,S.children<=0,pax()>=max);
@@ -689,6 +711,22 @@ function step1(){var t=T(),max=Math.min(9,seatsOf(S.date)||9),h='';
     +opt('room','twin','2名1室','追加料金なし',S.room==='twin',pax()<2)
     +opt('room','single','1名1室','お一人様 +'+yen(t.single),S.room==='single',false)+'</div>'}
   if(t.air){h+='<h3 class="bk-h">出発空港</h3><div class="opts">'+opt('origin','羽田','羽田空港','HND → GMP（金浦）',S.origin==='羽田')+opt('origin','成田','成田空港','NRT → ICN（仁川）',S.origin==='成田')+'</div>'}
+  return h}
+function calHtml(){var t=T(),ds={},months=[];
+  t.dates.forEach(function(r){ds[r[0]]=r[1];var mo=r[0].slice(0,7);if(months.indexOf(mo)<0)months.push(mo)});
+  months.sort();
+  if(!months.length)return '<div class="cal-none">現在、受付中の日程はありません。日程のご相談はお電話（03-3366-3221）でも承ります。</div>';
+  if(!S.cal||months.indexOf(S.cal)<0)S.cal=(S.date||months[0]).slice(0,7);
+  var y=+S.cal.slice(0,4),m=+S.cal.slice(5,7)-1,first=new Date(y,m,1).getDay(),nd=new Date(y,m+1,0).getDate(),ix=months.indexOf(S.cal),td=today();
+  var h='<div class="cal"><div class="cal-hd"><button type="button" data-cal="-1" aria-label="前の月"'+(ix<=0?' disabled':'')+'>‹</button><b aria-live="polite">'+y+'年'+(m+1)+'月</b><button type="button" data-cal="1" aria-label="次の月"'+(ix>=months.length-1?' disabled':'')+'>›</button></div><div class="cal-g">';
+  for(var w=0;w<7;w++)h+='<span class="cal-w'+(w===0?' su':w===6?' sa':'')+'">'+WD[w]+'</span>';
+  for(var b=0;b<first;b++)h+='<span></span>';
+  for(var d=1;d<=nd;d++){var key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(key in ds){var s=ds[key],past=dt(key)<td,dis=s===0||past;
+      h+='<button type="button" class="cal-d'+(s>0&&s<=5?' few':'')+'" data-day="'+key+'" aria-pressed="'+(S.date===key)+'"'+(dis?' disabled':'')+' aria-label="'+(m+1)+'月'+d+'日 '+(s===0?'満席':s<=5?'残り'+s+'席':'空席あり')+'"><span>'+d+'</span><span class="mk">'+(s===0?'×':s<=5?'残'+s:'○')+'</span></button>'}
+    else h+='<span class="cal-d">'+d+'</span>'}
+  h+='</div><div class="cal-lg"><span><b>○</b> 空席あり</span><span><b style="color:#B26A00">残n</b> 残りわずか</span><span><b style="color:#9AA2AB">×</b> 満席</span><span>色付きの日が出発日です</span></div></div>';
+  if(S.date){var sd=dt(S.date);h+='<p class="cal-sel">出発日：<b>'+f(sd)+'</b>'+(t.days>1?'　帰国 '+fs(addD(sd,t.days-1))+'（'+t.days+'日間）':'')+'　残り'+seatsOf(S.date)+'席</p>'}
   return h}
 function row(k,label,note,price,decDis,incDis){return '<div class="pr"><div><b>'+label+'</b><small>'+note+'</small></div><div class="ctr"><button type="button" data-ctr="'+k+'" data-d="-1" aria-label="'+label+'を1人減らす"'+(decDis?' disabled':'')+'>−</button><output aria-live="polite">'+S[k]+'</output><button type="button" data-ctr="'+k+'" data-d="1" aria-label="'+label+'を1人増やす"'+(incDis?' disabled':'')+'>+</button></div><span class="pp">'+yen(price)+'</span></div>'}
 function opt(name,val,b,s,on,dis){return '<label class="opt"><input type="radio" name="bk-'+name+'" value="'+val+'"'+(on?' checked':'')+(dis?' disabled':'')+'><b>'+b+'</b><span>'+s+'</span></label>'}
@@ -745,9 +783,9 @@ function step4(){var t=T(),c=calc(),h='<h3 class="bk-h">お支払い金額</h3><
   return h}
 
 function step5(){var t=T(),c=calc(),card=S.method==='card',mail=esc(S.form['f-mail']||'ご登録のメールアドレス');
-  var h='<div class="done"><div class="ok" aria-hidden="true">✓</div><h3>'+(card?'ご予約が確定しました':'ご予約を承りました')+'</h3>'
+  var h='<div class="done"><div class="ok" aria-hidden="true">✓</div><h3>'+(S.live?'お申込みを受け付けました':card?'ご予約が確定しました':'ご予約を承りました')+'</h3>'
    +'<div class="mono" style="margin-top:22px;color:var(--mute)">予約番号</div><div class="no">'+S.no+'</div>'
-   +'<p>'+(card?'ご予約内容と契約書面を '+mail+' にお送りしました（デモのため実際には送信されません）。':'振込先とお振込み期限を '+mail+' にお送りしました（デモのため実際には送信されません）。ご入金の確認後にご予約が確定します。')+'</p><ol>';
+   +'<p>'+(S.live?'受付内容は予約番号とともに担当者が確認し、'+mail+' あてに'+(card?'お支払い手続き':'振込先とお振込み期限')+'とご予約確定のご連絡をお送りします。':card?'ご予約内容と契約書面を '+mail+' にお送りしました（デモのため実際には送信されません）。':'振込先とお振込み期限を '+mail+' にお送りしました（デモのため実際には送信されません）。ご入金の確認後にご予約が確定します。')+'</p><ol>';
   if(card&&c.balance>0)h+='<li>残金 '+yen(c.balance)+' は '+f(c.due)+' までにお支払いください。</li>';
   if(!card)h+='<li>お申込みから3日以内に '+yen(c.payNow)+' をお振込みください。</li>';
   h+=(t.local?'<li>集合場所と時間は、ご出発の3日前までにメールでお知らせします。</li>':'<li>出発の約1週間前に、航空券（eチケット）と最終日程表をお届けします。</li>')
@@ -806,14 +844,22 @@ el.next.addEventListener('click',function(){
   go(S.step+1)});
 el.back.addEventListener('click',function(){if(S.step>1)go(S.step-1)});
 
+function payload(){var F=S.form,c=[];for(var i=1;i<pax();i++)c.push({kind:i>=S.adults?'child':'adult',s:F['f-c'+i+'s']||'',m:F['f-c'+i+'m']||'',b:F['f-c'+i+'b']||''});
+  return {action:'book',tourId:S.id,date:S.date,adults:S.adults,children:S.children,room:S.room,origin:S.origin,amount:S.amount,method:S.method,agree:S.agree,
+    lead:{sei:F['f-sei']||'',mei:F['f-mei']||'',rs:F['f-rs']||'',rm:F['f-rm']||'',birth:F['f-birth']||'',tel:F['f-tel']||'',mail:F['f-mail']||'',pp:F['f-pp']||''},companions:c}}
 function pay(){if(S.busy)return;S.busy=true;var card=S.method==='card';
   var p=document.createElement('div');p.className='proc';p.setAttribute('role','status');
   p.innerHTML='<div><div class="spin"></div>'+(card?'カード会社の本人認証（3Dセキュア）を確認しています…':'ご予約を登録しています…')+'</div>';
   el.bk.appendChild(p);el.next.disabled=true;
+  if(API_URL){fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload())})
+    .then(function(r){return r.json()}).then(function(res){p.remove();S.busy=false;if(!res.ok){S.err=res.error||'予約を登録できませんでした。';render();return}S.no=res.no;S.live=true;go(5);loadApi()})
+    .catch(function(){p.remove();S.busy=false;S.err='通信に失敗しました。時間をおいてもう一度お試しいただくか、お電話（03-3366-3221）でご予約ください。';render()});return}
   setTimeout(function(){var d=new Date();S.no='ST'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(Math.floor(1000+Math.random()*9000));
     p.remove();S.busy=false;go(5)},1600)}
 
-el.main.addEventListener('click',function(e){var b=e.target.closest('[data-ctr]');if(!b)return;var k=b.getAttribute('data-ctr'),d=+b.getAttribute('data-d');
+el.main.addEventListener('click',function(e){var cm=e.target.closest('[data-cal]');if(cm){var ms=[];T().dates.forEach(function(r){var mo=r[0].slice(0,7);if(ms.indexOf(mo)<0)ms.push(mo)});ms.sort();var ni=ms.indexOf(S.cal)+(+cm.getAttribute('data-cal'));if(ms[ni]){S.cal=ms[ni];render()}return}
+  var dy=e.target.closest('[data-day]');if(dy&&!dy.disabled){S.date=dy.getAttribute('data-day');var mx=seatsOf(S.date);while(pax()>mx&&S.children>0)S.children--;while(pax()>mx&&S.adults>1)S.adults--;S.err='';render();return}
+  var b=e.target.closest('[data-ctr]');if(!b)return;var k=b.getAttribute('data-ctr'),d=+b.getAttribute('data-d');
   S[k]=Math.max(k==='adults'?1:0,S[k]+d);if(pax()<2&&S.room==='twin')S.room='single';render()});
 el.main.addEventListener('change',function(e){var t=e.target;
   if(t.name==='bk-date'){S.date=t.value;var m=seatsOf(S.date);while(pax()>m&&S.children>0)S.children--;while(pax()>m&&S.adults>1)S.adults--;render();return}
@@ -850,7 +896,7 @@ function card(id,rank){var t=TOURS[id],on=fav.indexOf(id)>=0;
    +'<button class="fav" type="button" data-fav="'+id+'" aria-pressed="'+on+'" aria-label="お気に入り：'+esc(t.name)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button>'
    +'<div class="meta"><span class="ty">'+(t.local?'現地発':'航空券付き')+'</span><span>'+AREA[t.area]+'・'+t.dur+'</span></div>'
    +'<h3><a class="cover" href="#book-'+id+'">'+esc(t.name)+'</a></h3>'
-   +'<div class="stars"><span class="s" aria-hidden="true">'+stars(t.rating)+'</span><span class="sr">評価</span><b>'+t.rating.toFixed(1)+'</b><small>（'+t.reviews+'件）</small></div>'
+   +(t.reviews?'<div class="stars"><span class="s" aria-hidden="true">'+stars(t.rating)+'</span><span class="sr">評価</span><b>'+t.rating.toFixed(1)+'</b><small>（'+t.reviews+'件）</small></div>':'')
    +'<div class="badges">'+t.badges.map(function(b){return '<span>'+b+'</span>'}).join('')+'</div>'
    +'<div class="pr"><span class="cx">'+(t.local?'8日前まで取消無料':'即時予約確定')+'</span><b>'+yen(t.adult)+(t.local?'':'<small>〜</small>')+'</b></div></article>'}
 function renderRank(){var ids=RANK.filter(function(i){return !RK||TOURS[i].area===RK});
@@ -894,6 +940,12 @@ document.addEventListener('click',function(e){
   var tb=e.target.closest('[data-rk]');if(tb){RK=tb.getAttribute('data-rk');[].forEach.call(document.querySelectorAll('[data-rk]'),function(b){b.setAttribute('aria-selected',String(b===tb))});renderRank()}
 });
 saveFav();renderRank();renderGrid();
+function loadApi(){if(!API_URL)return;fetch(API_URL+'?action=tours').then(function(r){return r.json()}).then(function(d){if(!d||!d.ok||!Array.isArray(d.tours))return;
+  var next={};d.tours.forEach(function(x){var o=TOURS[x.id]||{};x.img=x.img||o.img||'img/bukchon.jpg';x.pos=o.pos;x.hot=o.hot;x.kw=(x.kw||'')+' '+(o.kw||'');if(!x.code)x.code=o.code||'ST';next[x.id]=x});
+  Object.keys(TOURS).forEach(function(k){delete TOURS[k]});Object.keys(next).forEach(function(k){TOURS[k]=next[k]});
+  IDS=Object.keys(TOURS);RANK=RANK.filter(function(i){return TOURS[i]}).concat(IDS.filter(function(i){return RANK.indexOf(i)<0}));fav=fav.filter(function(i){return TOURS[i]});saveFav();
+  renderRank();renderGrid();if(S&&!el.bk.hidden&&TOURS[S.id]&&S.step<5)render()}).catch(function(){})}
+loadApi();
 
 route();
 })();
