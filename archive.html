@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ツアー実績・アーカイブ｜サントラベル</title>
+<meta name="description" content="韓国専門旅行社サントラベルがこれまでに企画・販売してきたツアーの実績です。K-POP公演の観覧ツアー、地方をめぐる旅、咸安落火ノリなどの祭り、韓方ウェルネス、日韓交流の旅。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 34 34%22%3E%3Ccircle cx=%2217%22 cy=%2216%22 r=%2210%22 fill=%22%23F2A33A%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Old+Mincho:wght@700;900&family=Gowun+Batang:wght@400;700&family=Bodoni+Moda:ital,opsz,wght@1,6..96,500;1,6..96,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 予約サイト型（検索→エリア→カテゴリ→ランキング→商品一覧）。白地に青磁グリーンのブランド色、価格は朱色。単一配色で固定 */
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --bg-2:#F3F6F4; --ink:#1A1F24; --mute:#5E6870; --hair:#E1E6E3;
+  --brand:#1F6B5C; --brand-d:#154C41; --brand-l:#E3EFEA; --sun:#F2A33A; --price:#C8402A; --gold:#D9A441; --seal:#B8382C;
+  /* 予約画面（既存）と共通のトークン */
+  --paper:#F3F6F4; --paper-2:#E8EDEA; --white:#FFFFFF; --celadon:#1F6B5C; --celadon-l:#A9C8BC;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-jp:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-min:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-kr:"Gowun Batang","Apple SD Gothic Neo","Malgun Gothic",serif;
+  --f-en:"Bodoni Moda","Didot","Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.8;letter-spacing:.02em;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:50;background:var(--bg)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.kr{font-family:var(--f-kr)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* demo + util */
+.demo{background:#FFF4DC;color:#5C4210;font-size:12px;text-align:center}
+.demo .wrap{padding-block:6px}
+.util{background:var(--bg-2);font-size:11.5px;color:var(--mute)}
+.util .wrap{display:flex;justify-content:space-between;gap:16px;padding-block:6px;flex-wrap:wrap}
+.util b{color:var(--ink);font-weight:500}
+
+/* header */
+.hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--hair)}
+.hd .wrap{display:flex;align-items:center;gap:24px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;flex:none}
+.logo b{font-weight:900;font-size:19px;letter-spacing:.14em;line-height:1;display:block}
+.logo small{display:block;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.26em;color:var(--mute);margin-top:4px}
+.hsearch{flex:1;max-width:460px;display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--hair);border-radius:999px;padding:0 6px 0 16px}
+.hsearch input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:13.5px;padding:10px 0;color:var(--ink)}
+.hsearch input:focus{outline:none}
+.hsearch:focus-within{border-color:var(--brand);background:var(--bg)}
+.hsearch button{border:0;background:var(--brand);color:#fff;border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer}
+.hnav{margin-left:auto;display:flex;align-items:center;gap:4px}
+.hnav a,.hnav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--mute);padding:4px 10px;border-radius:8px;background:none;border:0;cursor:pointer;position:relative}
+.hnav a:hover,.hnav button:hover{background:var(--bg-2);color:var(--ink)}
+.hnav svg{width:22px;height:22px}
+.hnav .cnt{position:absolute;top:0;right:8px;background:var(--price);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:999px;display:grid;place-items:center;padding:0 4px;font-family:var(--f-mono)}
+.hnav .login{flex-direction:row;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 16px;border-radius:999px;margin-left:8px}
+.hnav .login:hover{background:var(--brand-d);color:#fff}
+@media (max-width:900px){.hsearch{display:none}.hnav .hide-s{display:none}}
+@media (max-width:420px){.hnav .login{padding:8px 12px}.util .r{display:none}}
+
+/* hero */
+.hero{position:relative;isolation:isolate;color:#fff}
+.hero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 55%;z-index:-2}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,20,26,.35),rgba(14,20,26,.15) 40%,rgba(14,20,26,.55))}
+.hero .wrap{padding-block:clamp(56px,9vw,104px) clamp(40px,6vw,64px)}
+.hero .kr{font-size:15px;color:#F6DDA6}
+.hero h1{font-weight:900;font-size:clamp(30px,5vw,56px);line-height:1.3;letter-spacing:.04em;margin-top:8px;text-shadow:0 2px 24px rgba(0,0,0,.3)}
+.hero .sub{margin-top:10px;font-size:15px;opacity:.95;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.sbox{margin-top:32px;background:#fff;color:var(--ink);border-radius:14px;padding:10px;display:grid;grid-template-columns:1.1fr 1fr 1.5fr auto;gap:0;box-shadow:0 20px 50px -20px rgba(0,0,0,.45);max-width:980px}
+.sbox .f{display:grid;gap:0;padding:6px 16px;border-right:1px solid var(--hair);min-width:0}
+.sbox .f:nth-child(3){border-right:0}
+.sbox label{font-size:11px;font-weight:700;color:var(--mute)}
+.sbox select,.sbox input{border:0;background:transparent;font:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:4px 0;width:100%;min-width:0}
+.sbox select:focus,.sbox input:focus{outline:none}
+.sbox .f:focus-within label{color:var(--brand)}
+.sbox .go{border:0;background:var(--brand);color:#fff;border-radius:10px;padding:0 28px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.sbox .go:hover{background:var(--brand-d)}
+.kw{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:center;font-size:12.5px}
+.kw span{opacity:.9}
+.kw button{border:1px solid rgba(255,255,255,.55);background:rgba(14,20,26,.25);backdrop-filter:blur(6px);color:#fff;border-radius:999px;padding:5px 13px;cursor:pointer;font-size:12.5px}
+.kw button:hover{background:#fff;color:var(--ink)}
+@media (max-width:860px){.sbox{grid-template-columns:1fr 1fr}.sbox .f{border-right:0;border-bottom:1px solid var(--hair)}.sbox .f:nth-child(1){border-right:1px solid var(--hair)}.sbox .f:nth-child(3){grid-column:1/-1}.sbox .go{grid-column:1/-1;justify-content:center;padding:13px;margin-top:8px}}
+
+/* trust */
+.trust{border-bottom:1px solid var(--hair)}
+.trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.trust .t{display:flex;gap:12px;align-items:center;padding-block:18px;padding-right:16px;min-width:0}
+.trust .t + .t{padding-left:20px;border-left:1px solid var(--hair)}
+.trust svg{flex:none;width:30px;height:30px;color:var(--brand)}
+.trust b{display:block;font-size:13.5px}
+.trust small{display:block;font-size:11.5px;color:var(--mute);line-height:1.5}
+@media (max-width:900px){.trust .wrap{grid-template-columns:1fr 1fr}.trust .t:nth-child(3){padding-left:0;border-left:0}.trust .t:nth-child(n+3){border-top:1px solid var(--hair)}}
+@media (max-width:480px){.trust .wrap{grid-template-columns:1fr}.trust .t + .t{padding-left:0;border-left:0;border-top:1px solid var(--hair)}}
+
+section{padding-block:clamp(48px,6vw,72px)}
+.alt{background:var(--bg-2)}
+.sh{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.sh h2{font-size:clamp(20px,2.4vw,26px);font-weight:900;letter-spacing:.04em;display:flex;align-items:center;gap:12px}
+.sh h2::before{content:"";width:6px;height:1.1em;background:var(--brand);border-radius:2px}
+.sh p{color:var(--mute);font-size:13px}
+.sh .more{font-size:13px;font-weight:700;color:var(--brand);display:flex;gap:6px;align-items:center;background:none;border:0;cursor:pointer;padding:0}
+.sh .more:hover{text-decoration:underline}
+
+/* areas */
+.areas{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.area{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;max-width:100%;color:#fff;cursor:pointer;border:0;padding:0;text-align:left;background:var(--brand-d);isolation:isolate}
+.area img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1);z-index:-2}
+.area::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6))}
+.area:hover img{transform:scale(1.06)}
+.area .big-kr{position:absolute;top:10px;left:12px;font-family:var(--f-kr);font-size:46px;font-weight:700;line-height:1;opacity:.22;z-index:-1}
+.area .lb{position:absolute;left:14px;right:14px;bottom:12px;display:grid}
+.area .lb b{font-size:18px;font-weight:900;letter-spacing:.06em}
+.area .lb small{font-size:11.5px;opacity:.9}
+.area.c1{background:linear-gradient(160deg,#2E7F96,#174A5C)}
+.area.c2{background:linear-gradient(160deg,#9A6A3A,#5A3A1E)}
+.area.c3{background:linear-gradient(160deg,#6C7B3A,#3B4620)}
+@media (max-width:960px){.areas{grid-template-columns:repeat(3,1fr)}.area{aspect-ratio:4/3}}
+@media (max-width:520px){.areas{grid-template-columns:1fr 1fr}}
+
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+.cat{display:grid;justify-items:center;gap:8px;padding:18px 6px 14px;border:1px solid var(--hair);border-radius:12px;background:var(--bg);cursor:pointer;font-size:12.5px;font-weight:700;text-align:center;line-height:1.4;transition:border-color .2s,transform .2s}
+.cat:hover{border-color:var(--brand);transform:translateY(-2px)}
+.cat .ic{width:48px;height:48px;border-radius:50%;background:var(--brand-l);color:var(--brand);display:grid;place-items:center}
+.cat svg{width:24px;height:24px}
+.cat[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-l)}
+@media (max-width:960px){.cats{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:420px){.cats{grid-template-columns:repeat(2,1fr)}}
+
+/* cards */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:6px 16px;font-size:13px;cursor:pointer;font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 3*18px)/4);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;scrollbar-width:thin}
+.rail > *{scroll-snap-align:start}
+@media (max-width:960px){.rail{grid-auto-columns:42%}}
+@media (max-width:560px){.rail{grid-auto-columns:78%}}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 18px}
+@media (max-width:960px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 12px}}
+@media (max-width:400px){.grid{grid-template-columns:1fr}}
+.card{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .pic{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--bg-2)}
+.card .pic img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.card:hover .pic img{transform:scale(1.05)}
+.card .cover::after{content:"";position:absolute;inset:0;z-index:1}
+.card .fav{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.card .fav svg{width:18px;height:18px}
+.card .fav[aria-pressed="true"]{color:var(--price)}
+.card .fav[aria-pressed="true"] path{fill:currentColor}
+.card .rank{position:absolute;top:0;left:0;z-index:1;background:var(--ink);color:#fff;font-family:var(--f-body);font-weight:900;font-size:19px;min-width:38px;text-align:center;line-height:1;padding:8px 12px 10px;border-radius:10px 0 10px 0}
+.card .rank.r1{background:#B8862E}.card .rank.r2{background:#7D8A93}.card .rank.r3{background:#9A5E3A}
+.card .hot{position:absolute;left:8px;bottom:8px;background:var(--price);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px}
+.card .meta{font-size:11.5px;color:var(--mute);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.card .meta .ty{border:1px solid var(--hair);border-radius:4px;padding:0 6px;color:var(--ink)}
+.card h3{font-size:14.5px;font-weight:700;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3.1em}
+.card:hover h3{color:var(--brand)}
+.stars{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.stars .s{color:var(--star,#F2A33A);letter-spacing:1px}
+.stars b{font-weight:700}
+.stars small{color:var(--mute)}
+.badges{display:flex;flex-wrap:wrap;gap:4px}
+.badges span{font-size:10.5px;background:var(--brand-l);color:var(--brand-d);border-radius:4px;padding:1px 7px;font-weight:500}
+.card .pr{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:auto;padding-top:4px}
+.card .pr .cx{font-size:11px;color:var(--brand);font-weight:500}
+.card .pr b{display:inline-flex;align-items:baseline;font-size:19px;font-weight:900;color:var(--price);font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .pr b small{font-size:11px;color:var(--mute);font-weight:400;margin-left:2px}
+
+/* features */
+.feat{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+.fb{position:relative;border-radius:14px;overflow:hidden;color:#fff;min-height:300px;display:flex;align-items:flex-end;isolation:isolate}
+.fb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.fb:hover img{transform:scale(1.04)}
+.fb::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.72))}
+.fb .in{padding:26px 28px}
+.fb .tag{display:inline-block;background:var(--sun);color:#2A1A05;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:4px}
+.fb h3{font-size:clamp(22px,2.6vw,30px);font-weight:900;margin-top:10px;letter-spacing:.04em;line-height:1.4}
+.fb p{font-size:13.5px;margin-top:6px;opacity:.92;max-width:30em}
+.fb .go{display:inline-flex;margin-top:14px;background:#fff;color:var(--ink);font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px}
+.feat .stack{display:grid;gap:18px}
+.feat .stack .fb{min-height:141px}
+@media (max-width:860px){.feat{grid-template-columns:1fr}.feat .stack .fb{min-height:220px}}
+
+/* results */
+.fbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:22px;padding:12px 14px;background:var(--bg-2);border-radius:10px}
+.fbar .cur{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.fbar .chip{background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:3px 6px 3px 12px;display:inline-flex;gap:6px;align-items:center}
+.fbar .chip button{border:0;background:var(--bg-2);border-radius:50%;width:20px;height:20px;cursor:pointer;line-height:1;font-size:13px}
+.fbar .n b{font-size:16px;font-variant-numeric:tabular-nums}
+.fbar select{font:inherit;font-size:13px;border:1px solid var(--hair);background:var(--bg);border-radius:8px;padding:7px 10px}
+.empty{grid-column:1/-1;text-align:center;padding:48px 16px;border:1px dashed var(--hair);border-radius:12px;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}
+.empty a{color:var(--brand);font-weight:700}
+
+/* reviews */
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.rev{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:22px;display:grid;gap:10px;align-content:start;min-width:0}
+.rev h3{font-size:15px;font-weight:700;line-height:1.6}
+.rev p{font-size:13.5px;color:var(--mute)}
+.rev .who{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--mute);border-top:1px solid var(--hair);padding-top:10px}
+.rev .who a{color:var(--brand);font-weight:700}
+.rnote{font-size:12px;color:var(--mute);margin-top:14px}
+@media (max-width:860px){.revs{grid-template-columns:1fr}}
+
+/* services */
+.svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-width:0}
+.svc .pic{aspect-ratio:16/9;overflow:hidden}
+.svc .pic img{width:100%;height:100%;object-fit:cover}
+.svc .in{padding:20px 22px 22px;display:grid;gap:8px}
+.svc h3{font-size:17px;font-weight:900}
+.svc p{font-size:13.5px;color:var(--mute)}
+.svc ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.svc li{font-size:11.5px;font-family:var(--f-mono);border:1px solid var(--hair);border-radius:4px;padding:1px 7px}
+.svc .go{color:var(--brand);font-weight:700;font-size:13px;margin-top:6px}
+@media (max-width:860px){.svcs{grid-template-columns:1fr}}
+
+/* support band */
+.support{background:var(--brand-d);color:#fff}
+.support .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding-block:36px}
+.support h2{font-size:clamp(19px,2.2vw,24px);font-weight:900}
+.support p{font-size:13px;opacity:.85;margin-top:4px}
+.support .tel{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.support .num{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1;user-select:all}
+.support .num small{display:block;font-family:var(--f-body);font-style:normal;font-weight:400;font-size:11.5px;opacity:.85;margin-top:6px}
+.support .btns{display:flex;gap:8px;flex-wrap:wrap}
+.support .btns a{border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700}
+.support .btns a:hover{background:#fff;color:var(--brand-d)}
+@media (max-width:860px){.support .wrap{grid-template-columns:1fr}}
+
+/* news + company */
+.nc{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px}
+.news{list-style:none;margin:0;padding:0;border-top:1px solid var(--hair)}
+.news li{display:grid;grid-template-columns:96px 70px minmax(0,1fr);gap:12px;padding-block:14px;border-bottom:1px solid var(--hair);font-size:13.5px;align-items:baseline}
+.news time{font-family:var(--f-mono);font-size:12px;color:var(--mute)}
+.news .t{font-size:10.5px;font-weight:700;color:var(--brand);border:1px solid var(--brand-l);background:var(--brand-l);border-radius:4px;text-align:center}
+@media (max-width:560px){.news li{grid-template-columns:auto auto}.news li > span:last-child{grid-column:1/-1}}
+.lic{border-top:1px solid var(--hair);padding-top:16px;color:var(--mute);font-size:12px;line-height:1.7;align-self:start;margin-top:52px}
+.lic h2{font-size:12.5px;font-weight:700;color:var(--ink);letter-spacing:.04em;margin-bottom:8px}
+.lic dl{margin:0;display:grid;grid-template-columns:7.5em 1fr;gap:2px 12px}
+.lic dd{margin:0;min-width:0}
+@media (max-width:860px){.nc{grid-template-columns:1fr}}
+
+/* footer */
+footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
+.fcols{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:32px;padding-block:56px 40px}
+.fcols h4{color:#fff;font-size:13px;margin-bottom:12px}
+.fcols ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.fcols a:hover{color:#fff}
+.fcols .about{display:grid;gap:12px;align-content:start}
+.fcols .about b{color:#fff;font-size:17px;letter-spacing:.14em;font-weight:900}
+@media (max-width:900px){.fcols{grid-template-columns:1fr 1fr}.fcols .about{grid-column:1/-1}}
+.fbot{border-top:1px solid rgba(255,255,255,.1)}
+.fbot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:18px}
+
+
+/* ===== 企業トップ ===== */
+.chd .wrap{gap:20px}
+.cnav{display:flex;gap:2px;margin-left:auto;align-items:center}
+.cnav a{font-size:13.5px;font-weight:500;padding:8px 12px;border-radius:8px;color:var(--ink)}
+.cnav a:hover{background:var(--bg-2);color:var(--brand)}
+.cnav .tour{background:var(--brand);color:#fff;font-weight:700;border-radius:999px;padding:9px 18px;margin-left:8px}
+.cnav .tour:hover{background:var(--brand-d);color:#fff}
+@media (max-width:960px){.cnav a:not(.tour){display:none}}
+.chero{position:relative;isolation:isolate;color:#fff;overflow:hidden}
+.chero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 40%;z-index:-2}
+.chero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(12,22,20,.78) 0%,rgba(12,22,20,.45) 45%,rgba(12,22,20,.05) 75%),linear-gradient(0deg,rgba(12,22,20,.35),rgba(12,22,20,0) 40%)}
+.chero .wrap{padding-block:clamp(72px,11vw,140px) clamp(56px,8vw,96px)}
+.chero .kr{font-size:15px;color:#F6DDA6}
+.chero h1{font-weight:900;font-size:clamp(32px,5.4vw,62px);line-height:1.32;letter-spacing:.04em;margin-top:12px;max-width:13em}
+.chero .lead{margin-top:20px;font-size:15px;max-width:32em;opacity:.95;line-height:2}
+.chero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.cbtn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-weight:700;font-size:14.5px;transition:background .2s,color .2s}
+.cbtn.light{background:#fff;color:var(--ink)}.cbtn.light:hover{background:var(--sun)}
+.cbtn.line{border:1px solid rgba(255,255,255,.6);color:#fff}.cbtn.line:hover{background:#fff;color:var(--ink)}
+.cbtn.pri{background:var(--brand);color:#fff}.cbtn.pri:hover{background:var(--brand-d)}
+.facts{background:var(--ink);color:#C9D0D6}
+.facts .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.facts .f{padding-block:26px;padding-right:20px;min-width:0}
+.facts .f + .f{padding-left:24px;border-left:1px solid rgba(255,255,255,.1)}
+.facts b{display:block;font-family:var(--f-en);font-style:italic;font-weight:700;font-size:clamp(28px,3.4vw,40px);line-height:1.1;color:#fff;font-variant-numeric:lining-nums}
+.facts b small{font-family:var(--f-body);font-style:normal;font-size:14px;font-weight:700;margin-left:4px}
+.facts span{font-size:12.5px}
+@media (max-width:860px){.facts .wrap{grid-template-columns:1fr 1fr}.facts .f:nth-child(3){padding-left:0;border-left:0}.facts .f:nth-child(n+3){border-top:1px solid rgba(255,255,255,.1)}}
+.intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
+.intro .en{font-family:var(--f-en);font-style:italic;color:var(--brand);font-size:17px}
+.intro h2{font-size:clamp(24px,3vw,34px);font-weight:900;line-height:1.6;letter-spacing:.04em;margin-top:8px}
+.intro p{color:var(--mute);margin-top:18px;max-width:34em;line-height:2}
+.intro .pics{position:relative;padding-bottom:16%}
+.intro .pics .a{aspect-ratio:4/3;border-radius:14px;overflow:hidden}
+.intro .pics .b{position:absolute;right:-2%;bottom:0;width:48%;aspect-ratio:1;border-radius:12px;overflow:hidden;border:8px solid var(--bg);box-shadow:0 24px 50px -24px rgba(0,0,0,.35)}
+.intro .pics img{width:100%;height:100%;object-fit:cover}
+@media (max-width:860px){.intro{grid-template-columns:1fr;gap:36px}.intro .pics .b{right:0}}
+.biz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.bz{position:relative;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);border:1px solid var(--hair);border-radius:14px;overflow:hidden;background:var(--bg);min-height:230px;transition:border-color .2s,transform .2s}
+.bz:hover{border-color:var(--brand);transform:translateY(-2px)}
+.bz .pic{overflow:hidden}
+.bz .pic img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.bz:hover .pic img{transform:scale(1.05)}
+.bz .in{padding:22px 24px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bz .no{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;color:var(--brand)}
+.bz h3{font-size:19px;font-weight:900;letter-spacing:.03em}
+.bz p{font-size:13.5px;color:var(--mute)}
+.bz .go{margin-top:auto;font-size:13px;font-weight:700;color:var(--brand)}
+@media (max-width:960px){.biz{grid-template-columns:1fr}}
+@media (max-width:520px){.bz{grid-template-columns:1fr}.bz .pic{aspect-ratio:16/9}}
+.partner{margin-top:28px;border:1px solid var(--hair);border-radius:14px;padding:22px 24px;background:var(--bg)}
+.partner h3{font-size:15px;font-weight:900}
+.partner p{font-size:13px;color:var(--mute);margin-top:4px}
+.partner ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.partner li{font-size:12.5px;border:1px solid var(--hair);border-radius:999px;padding:4px 12px;background:var(--bg-2)}
+.str{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink)}
+.str > div{padding:28px 28px 4px 0;min-width:0}
+.str > div + div{padding-left:28px;border-left:1px solid var(--hair)}
+.str .n{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:15px;color:var(--brand)}
+.str h3{font-size:18px;font-weight:900;margin:8px 0 8px;letter-spacing:.03em}
+.str p{font-size:13.5px;color:var(--mute)}
+@media (max-width:860px){.str{grid-template-columns:1fr}.str > div + div{padding-left:0;border-left:0;border-top:1px solid var(--hair)}}
+.tourban{position:relative;isolation:isolate;color:#fff;border-radius:16px;overflow:hidden}
+.tourban > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.tourban::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(10,10,30,.8),rgba(10,10,30,.2))}
+.tourban .in{padding:clamp(32px,5vw,56px);max-width:560px}
+.tourban .kr{color:#F6DDA6;font-size:14px}
+.tourban h2{font-size:clamp(24px,3.2vw,36px);font-weight:900;line-height:1.45;margin-top:8px}
+.tourban p{margin-top:12px;opacity:.92;font-size:14px}
+.tourban .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.co2{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:48px;align-items:start}
+.cotbl{margin:0;display:grid;grid-template-columns:10em 1fr;border-top:1px solid var(--ink);font-size:14px}
+.cotbl dt,.cotbl dd{margin:0;padding-block:15px;border-bottom:1px solid var(--hair);min-width:0}
+.cotbl dt{color:var(--mute);font-size:13px}
+.cotbl dd small{display:block;color:var(--mute);font-size:12.5px}
+@media (max-width:860px){.co2{grid-template-columns:1fr}.cotbl{grid-template-columns:7.5em 1fr}}
+.hist{list-style:none;margin:0;padding:0;border-left:2px solid var(--brand-l);display:grid;gap:22px;padding-left:22px}
+.hist li{position:relative}
+.hist li::before{content:"";position:absolute;left:-29px;top:.55em;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--brand)}
+.hist time{font-family:var(--f-mono);font-size:12px;color:var(--brand);letter-spacing:.06em}
+.hist p{font-size:14px;margin-top:2px}
+.hist-h{font-size:15px;font-weight:900;margin-bottom:18px}
+.reg{margin-top:36px;border-top:1px solid var(--hair);padding-top:14px;font-size:12px;color:var(--mute);line-height:1.8}
+.reg b{color:var(--ink);font-size:12.5px;display:block;margin-bottom:4px}
+.offices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.office{border:1px solid var(--hair);border-radius:14px;padding:24px;background:var(--bg);display:grid;gap:6px;font-size:14px;align-content:start;min-width:0}
+.office .lb{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;color:var(--brand)}
+.office h3{font-size:18px;font-weight:900}
+.office .tel{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:24px;user-select:all}
+.office small{color:var(--mute);font-size:12.5px}
+.office a.map{color:var(--brand);font-weight:700;font-size:13px;margin-top:6px}
+@media (max-width:760px){.offices{grid-template-columns:1fr}}
+.cform-wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px}
+.cform-wrap .side p{color:var(--mute);font-size:14px;margin-top:10px}
+.cform-wrap .tel2{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:34px;margin-top:22px;display:block;user-select:all}
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--bg);border:1px solid var(--hair);border-radius:14px;padding:26px}
+.cform .full{grid-column:1/-1}
+.cform label{display:grid;gap:6px;font-size:12.5px;color:var(--mute)}
+.cform input,.cform select,.cform textarea{font:inherit;font-size:14.5px;color:var(--ink);background:var(--bg);border:1px solid var(--hair);border-radius:8px;padding:10px 12px;width:100%}
+.cform input:focus,.cform select:focus,.cform textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(31,107,92,.15)}
+.cform textarea{min-height:120px;resize:vertical}
+.cform button{border:0;cursor:pointer;font-family:inherit}
+#cmsg{font-size:13px;color:var(--brand-d)}
+@media (max-width:860px){.cform-wrap{grid-template-columns:1fr}.cform{grid-template-columns:1fr}}
+
+/* ===== グローバルメニュー（現行サイトの構成） ===== */
+.gnav ul{list-style:none;margin:0;padding:0}
+.gnav{margin-left:auto}
+.gnav > ul{display:flex;gap:2px;align-items:center}
+.gnav > ul > li{position:relative}
+.gnav > ul > li > a{display:flex;align-items:center;font-size:13.5px;font-weight:500;padding:10px 11px;border-radius:8px;white-space:nowrap}
+.gnav > ul > li > a:hover,.gnav > ul > li:focus-within > a{color:var(--brand);background:var(--bg-2)}
+.gnav .has > a::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:7px;opacity:.55}
+.gnav .sub{position:absolute;top:calc(100% + 4px);left:0;min-width:250px;width:max-content;max-width:340px;background:var(--bg);border:1px solid var(--hair);border-radius:10px;box-shadow:0 18px 40px -18px rgba(0,0,0,.28);padding:6px;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .18s,transform .18s,visibility .18s;z-index:40}
+.gnav .sub::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}
+.gnav .has:hover .sub,.gnav .has:focus-within .sub{opacity:1;visibility:visible;transform:none}
+.gnav li:last-child .sub{left:auto;right:0}
+.gnav .sub a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;font-size:13.5px}
+.gnav .sub a:hover{background:var(--bg-2);color:var(--brand)}
+.gnav .sub small{font-size:10.5px;background:var(--bg-2);color:var(--mute);border-radius:4px;padding:1px 7px;flex:none}
+.burger{display:none;margin-left:auto;align-items:center;gap:8px;border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink)}
+.burger i{display:grid;gap:3px}.burger i::before,.burger i::after,.burger i span{content:"";display:block;width:16px;height:2px;background:currentColor;border-radius:1px}
+.util .sns{display:flex;gap:12px;align-items:center}
+.util .sns a{font-weight:500;color:var(--mute)}
+.util .sns a:hover{color:var(--brand)}
+@media (max-width:1040px){
+  .burger{display:inline-flex}
+  .gnav{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--hair);box-shadow:0 20px 40px -20px rgba(0,0,0,.3);display:none;max-height:calc(100vh - 110px);overflow:auto;padding-block:8px 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .gnav.open{display:block}
+  .gnav > ul{flex-direction:column;align-items:stretch;gap:0}
+  .gnav > ul > li{border-bottom:1px solid var(--hair)}
+  .gnav > ul > li > a{font-weight:700;font-size:15px;padding:14px 4px}
+  .gnav .has > a::after{display:none}
+  .gnav .sub{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;padding:0 0 10px 12px;min-width:0}
+  .gnav .sub::before{display:none}
+}
+
+.facc{display:grid;gap:10px}
+.facc details{border:1px solid var(--hair);border-radius:12px;background:var(--bg)}
+.facc summary{cursor:pointer;list-style:none;padding:16px 20px;font-weight:700;font-size:14.5px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.facc summary::-webkit-details-marker{display:none}
+.facc summary::after{content:"+";font-size:20px;color:var(--brand);font-weight:400;flex:none}
+.facc details[open] summary::after{content:"−"}
+.facc summary span::before{content:"Q.";color:var(--brand);font-family:var(--f-en);font-style:italic;font-weight:700;margin-right:8px;font-size:17px}
+.facc .in{padding:0 20px 18px;font-size:14px;color:var(--mute)}
+.facc .in a{color:var(--brand);font-weight:700}
+
+/* ===== ビザ申請代行の特集 ===== */
+.gnav > ul > li.hl > a{color:var(--brand-d);background:var(--brand-l);font-weight:700}
+.gnav > ul > li.hl > a:hover{background:var(--brand);color:#fff}
+.vfeat{background:linear-gradient(180deg,var(--brand-d),#123E35);color:#fff;position:relative;overflow:hidden;isolation:isolate}
+.vfeat::after{content:"VISA";position:absolute;right:-1%;bottom:-6%;font-family:var(--f-en);font-style:italic;font-weight:700;font-size:clamp(120px,20vw,280px);line-height:1;color:rgba(255,255,255,.05);z-index:-1;pointer-events:none}
+.vfeat .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
+.vfeat .kr{color:#F6DDA6;font-size:14px}
+.vfeat h2{font-size:clamp(26px,3.6vw,42px);font-weight:900;line-height:1.45;letter-spacing:.03em;margin-top:8px}
+.vfeat .lead{margin-top:16px;opacity:.9;max-width:34em;line-height:2}
+.vfeat .codes{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.vfeat .codes a{display:inline-flex;align-items:baseline;gap:8px;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:8px 12px;font-size:12.5px;background:rgba(255,255,255,.05)}
+.vfeat .codes a:hover{background:#fff;color:var(--brand-d)}
+.vfeat .codes b{font-family:var(--f-mono);font-weight:500;font-size:14px;letter-spacing:.02em}
+.vfeat .pts{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:12px}
+.vfeat .pts li{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;font-size:14px}
+.vfeat .pts li::before{content:"✓";width:28px;height:28px;border-radius:50%;background:var(--sun);color:#2A1A05;display:grid;place-items:center;font-weight:900;font-size:14px}
+.vfeat .pts small{display:block;opacity:.75;font-size:12.5px}
+.vfeat .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
+.vfeat .tel{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:26px;user-select:all}
+.vfeat .tel small{display:block;font-family:var(--f-body);font-style:normal;font-weight:400;font-size:11.5px;opacity:.8}
+.vfeat .pic{position:relative;aspect-ratio:4/5;border-radius:16px;overflow:hidden;max-width:100%}
+.vfeat .pic img{width:100%;height:100%;object-fit:cover;object-position:62% 40%}
+.vfeat .stamp{position:absolute;left:18px;bottom:18px;background:#fff;color:var(--ink);border-radius:12px;padding:14px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);display:grid;gap:2px}
+.vfeat .stamp b{font-size:15px}
+.vfeat .stamp span{font-size:12px;color:var(--mute)}
+@media (max-width:900px){.vfeat .wrap{grid-template-columns:1fr}.vfeat .pic{aspect-ratio:16/10;order:-1}}
+.util .lang{display:flex;gap:2px;align-items:center;margin-right:6px}
+.util .lang a{padding:1px 8px;border-radius:999px;color:var(--mute)}
+.util .lang a[aria-current="page"]{background:var(--ink);color:#fff;font-weight:700}
+.util .r2{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ===== ツアー実績・アーカイブ ===== */
+.crumb{font-size:12px;color:var(--mute);padding-block:12px}.crumb a{color:var(--brand)}
+.ahero{background:var(--bg-2)}
+.ahero .wrap{padding-block:clamp(36px,5vw,64px)}
+.ahero .kr{color:var(--brand);font-size:14px}
+.ahero h1{font-size:clamp(30px,4.4vw,48px);font-weight:900;letter-spacing:.04em;margin-top:6px}
+.ahero p.lead{color:var(--mute);margin-top:14px;max-width:40em}
+.astats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
+.astats div{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;min-width:0}
+.astats b{display:block;font-family:var(--f-en);font-style:italic;font-weight:700;font-size:34px;line-height:1.1;color:var(--brand-d);font-variant-numeric:lining-nums}
+.astats b small{font-family:var(--f-body);font-style:normal;font-size:13px;margin-left:3px;color:var(--ink)}
+.astats span{font-size:12.5px;color:var(--mute)}
+@media (max-width:760px){.astats{grid-template-columns:1fr 1fr}}
+.afilter{position:sticky;top:calc(env(safe-area-inset-top,0px) + 63px);z-index:20;background:var(--bg);border-bottom:1px solid var(--hair)}
+.afilter .wrap{display:flex;gap:16px;align-items:center;justify-content:space-between;padding-block:10px;flex-wrap:wrap}
+.chipset{display:flex;gap:6px;flex-wrap:wrap}
+.chipset button{border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--ink)}
+.chipset button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.yrs{display:flex;gap:4px;font-family:var(--f-mono);font-size:12.5px;flex-wrap:wrap}
+.yrs a{padding:4px 8px;border-radius:6px;color:var(--mute)}.yrs a:hover{background:var(--bg-2);color:var(--brand)}
+.yr{padding-block:40px 8px;scroll-margin-top:130px}
+.yh{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:22px}
+.yh h2{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:44px;line-height:1;color:var(--brand-d)}
+.yh span{font-size:13px;color:var(--mute)}
+.ag{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:960px){.ag{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.ag{grid-template-columns:1fr}}
+.ac{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-width:0}
+.ap{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--bg-2);isolation:isolate}
+.ap .bg{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(18px) saturate(1.1);opacity:.55;z-index:-1}
+.ap .fg{width:100%;height:100%;object-fit:contain}
+.ap.none{display:grid;place-items:center;background:linear-gradient(150deg,var(--brand),var(--brand-d));color:#fff;font-weight:900;font-size:18px;text-align:center;padding:20px}
+.ai{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.am{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12px;color:var(--mute)}
+.am time{font-weight:700;color:var(--brand-d);font-variant-numeric:tabular-nums}
+.am span{border:1px solid var(--hair);border-radius:4px;padding:0 6px}
+.am .full{background:var(--price);color:#fff;border-radius:4px;padding:1px 8px;font-size:11px}
+.ac h3{font-size:15.5px;font-weight:900;line-height:1.55}
+.ac .pl{font-size:12.5px;color:var(--mute)}
+.ac ul{margin:0;padding-left:1.1em;font-size:13px;display:grid;gap:3px}
+.ac .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:6px}
+.ac .tags span{font-size:10.5px;background:var(--brand-l);color:var(--brand-d);border-radius:4px;padding:1px 7px;font-weight:500}
+.ac .pt{font-size:11.5px;color:var(--mute);border-top:1px solid var(--hair);padding-top:8px;line-height:1.7}
+.ac[hidden]{display:none}
+.anote{font-size:12.5px;color:var(--mute);margin-top:28px}
+.partners2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.partners2 > div{border:1px solid var(--hair);border-radius:12px;padding:22px;background:var(--bg)}
+.partners2 h3{font-size:15px;font-weight:900;margin-bottom:12px}
+.partners2 ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.partners2 li{font-size:12.5px;border:1px solid var(--hair);border-radius:999px;padding:4px 12px;background:var(--bg-2)}
+@media (max-width:760px){.partners2{grid-template-columns:1fr}}
+.acta{background:var(--brand-d);color:#fff;border-radius:16px;padding:clamp(28px,4vw,44px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
+.acta h2{font-size:clamp(20px,2.6vw,28px);font-weight:900}
+.acta p{opacity:.85;margin-top:6px;font-size:14px}
+.acta .btns{display:flex;gap:10px;flex-wrap:wrap}
+@media (max-width:760px){.acta{grid-template-columns:1fr}}
+</style>
+<style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}</style>
+</head>
+<body>
+<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">東京本店営業所　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span><span class="r2"><span class="lang"><a href="archive.html" lang="ja" aria-current="page">日本語</a><a href="ko.html" lang="ko" hreflang="ko">한국어</a></span><span class="sns"><a href="#">LINE</a><a href="#">KakaoTalk</a><a href="#">X</a><a href="#">Facebook</a></span></span></div></div>
+<header class="hd chd">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="株式会社サントラベル トップ">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="16" r="10" fill="#F2A33A"/><path d="M2 22h30M6 26.5h22M11 31h12" stroke="#1F6B5C" stroke-width="2" stroke-linecap="round"/></svg>
+      <span><b>サントラベル</b><small>SUN TRAVEL INC.</small></span>
+    </a>
+    <nav class="gnav" id="gnav" aria-label="メイン">
+      <ul>
+        <li><a href="tours.html#services">格安航空券</a></li>
+        <li class="has"><a href="tours.html">ツアー</a><ul class="sub"><li><a href="tours.html#kikaku">企画ツアー</a></li><li><a href="tours.html#kokunai">国内ツアー</a></li><li><a href="tours.html#genchi">現地発ツアー</a></li><li><a href="archive.html">ツアー実績・アーカイブ</a></li></ul></li>
+        <li class="has hl"><a href="visa.html">ビザ(VISA)申請代行</a><ul class="sub"><li><a href="visa.html#v-types">韓国査証（C-4-5・C-3-9・C-3-4）</a></li><li><a href="visa.html#v-types">米国ビザ（B-1・B-2）</a></li></ul></li>
+        <li><a href="index.html#about">会社案内</a></li>
+        <li class="has"><a href="index.html#contact">お問い合わせ</a><ul class="sub"><li><a href="index.html#faq">よくある質問（FAQ）</a></li></ul></li>
+        <li class="has"><a href="tours.html#results">マイアカウント</a><ul class="sub"><li><a href="index.html#contact">ご予約明細ページ<small>準備中</small></a></li><li><a href="tours.html#results">予約手続きページ</a></li></ul></li>
+      </ul>
+    </nav>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="gnav"><i><span></span></i>メニュー</button>
+  </div>
+</header>
+<main>
+  <div class="wrap crumb"><a href="index.html">トップ</a>　›　ツアー実績・アーカイブ</div>
+  <div class="ahero"><div class="wrap">
+    <p class="kr">지난 투어</p>
+    <h1>ツアー実績・アーカイブ</h1>
+    <p class="lead">サントラベルがこれまでに企画・販売してきたツアーです。K-POP公演の観覧から、地方の祭り、韓方のウェルネス、日韓の交流の旅まで、韓国の観光公社や地域の団体とともにつくってきました。</p>
+    <div class="astats">
+      <div><b>23<small>件</small></b><span>掲載しているツアー</span></div>
+      <div><b>2020–2026</b><span>掲載期間</span></div>
+      <div><b>10<small>地域</small></b><span>ソウル・京畿・仁川・江原・忠南・慶南・全南・釜山・大邱・慶北</span></div>
+      <div><b>11<small>団体</small></b><span>後援・協力をいただいた観光公社・自治体など</span></div>
+    </div>
+  </div></div>
+
+  <div class="afilter"><div class="wrap">
+    <div class="chipset" role="group" aria-label="種類で絞り込む">
+      <button type="button" data-f="" aria-pressed="true">すべて</button><button type="button" data-f="kpop" aria-pressed="false">K-POP・公演</button><button type="button" data-f="region" aria-pressed="false">地方をめぐる旅</button><button type="button" data-f="festival" aria-pressed="false">祭り・イベント</button><button type="button" data-f="wellness" aria-pressed="false">ウェルネス・美食</button><button type="button" data-f="exchange" aria-pressed="false">交流・研修</button>
+    </div>
+    <nav class="yrs" aria-label="年"><a href="#y2026">2026</a><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2020">2020</a></nav>
+  </div></div>
+
+  <div class="wrap">
+    <section class="yr" id="y2026" aria-labelledby="h2026"><div class="yh"><h2 id="h2026">2026</h2><span>2件</span></div><div class="ag"><article class="ac" data-cats="festival region"><div class="ap"><img class="bg" src="img/archive/koreangarden2026.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/koreangarden2026.jpg" alt="「KOREAN GARDEN 2026　慶尚南道・全羅南道・釜山ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2026年10月15日〜18日</time><span>3泊4日</span></div>
+  <h3>KOREAN GARDEN 2026　慶尚南道・全羅南道・釜山ツアー</h3>
+  <p class="pl">📍 慶尚南道・全羅南道・釜山</p>
+  <ul><li>咸安落火ノリと晋州南江流灯祭りを鑑賞</li><li>麗水の海上ケーブルカーとアルテミュージアム</li><li>参加者のためのプライベートコンサート</li></ul>
+  <div class="tags"><span>祭り・イベント</span><span>地方をめぐる旅</span></div>
+  <p class="pt">後援：韓国観光公社</p>
+</div></article><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/p101j_shinsekai.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/p101j_shinsekai.jpg" alt="「PRODUCE 101 JAPAN 新世界「特別評価バトル」観覧ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2026年5月14日〜16日</time><span>2泊3日</span></div>
+  <h3>PRODUCE 101 JAPAN 新世界「特別評価バトル」観覧ツアー</h3>
+  <p class="pl">📍 京畿道（CJ スタジオ）</p>
+  <ul><li>特別評価バトルと番組イベントを観覧</li><li>成田・関西・中部・福岡・新千歳から出発、現地集合プランも</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  <p class="pt">主催・企画：株式会社chocolate-box japan、株式会社サントラベル／後援：韓国観光公社</p>
+</div></article></div></section><section class="yr" id="y2025" aria-labelledby="h2025"><div class="yh"><h2 id="h2025">2025</h2><span>8件</span></div><div class="ag"><article class="ac" data-cats="region"><div class="ap"><img class="bg" src="img/archive/koreangarden2025.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/koreangarden2025.jpg" alt="「KOREAN GARDEN 2025　京畿道・江原道ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年11月8日〜11日</time><span>3泊4日</span></div>
+  <h3>KOREAN GARDEN 2025　京畿道・江原道ツアー</h3>
+  <p class="pl">📍 京畿道・江原道</p>
+  <ul><li>抱川アートバレーと安藤忠雄設計のミュージアムSAN</li><li>平昌の寺院でビビンバ作りを体験</li><li>「冬のソナタ」のロケ地・南怡島を散策</li></ul>
+  <div class="tags"><span>地方をめぐる旅</span></div>
+  <p class="pt">主催・企画：株式会社サントラベル、株式会社KPARK TOUR</p>
+</div></article><article class="ac" data-cats="wellness"><div class="ap"><img class="bg" src="img/archive/2025bikatsu.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2025bikatsu.jpg" alt="「新大久保語学院コラボ　ソウル美食＆美活ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年10月18日〜21日</time><span>3泊4日</span></div>
+  <h3>新大久保語学院コラボ　ソウル美食＆美活ツアー</h3>
+  <p class="pl">📍 ソウル</p>
+  <ul><li>ミシュラン掲載の精進料理店バルゴンヤンで食事</li><li>韓国の美容クリニックを見学</li><li>語学院の講師が同行</li></ul>
+  <div class="tags"><span>ウェルネス・美食</span></div>
+  <p class="pt">主催・企画：新大久保語学院、株式会社サントラベル／後援：韓国観光公社</p>
+</div></article><article class="ac" data-cats="region festival exchange"><div class="ap"><img class="bg" src="img/archive/hansanthreecitystory3.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/hansanthreecitystory3.jpg" alt="「観光大統領ハンさんと行く三道物語　第三弾」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年10月16日〜19日</time><span>3泊4日</span><b class="full">満員御礼</b></div>
+  <h3>観光大統領ハンさんと行く三道物語　第三弾</h3>
+  <p class="pl">📍 慶尚南道・全羅南道・釜山</p>
+  <ul><li>咸安落火ノリ JAPAN DAYを鑑賞</li><li>田内千鶴子ゆかりの木浦共生園を訪問</li><li>順天ドラマ撮影場と木浦の海上ケーブルカー</li></ul>
+  <div class="tags"><span>地方をめぐる旅</span><span>祭り・イベント</span><span>交流・研修</span></div>
+  <p class="pt">主催・企画：株式会社サントラベル、株式会社KPARK TOUR／後援：韓国観光公社、駐日本大韓民国全羅南道事務所</p>
+</div></article><article class="ac" data-cats="festival"><div class="ap"><img class="bg" src="img/archive/2025hamank-fire.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2025hamank-fire.jpg" alt="「咸安（ハマン）落火ノリ JAPAN DAY鑑賞ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年10月16日〜</time><span>日帰り・1泊2日・2泊3日</span></div>
+  <h3>咸安（ハマン）落火ノリ JAPAN DAY鑑賞ツアー</h3>
+  <p class="pl">📍 慶尚南道 咸安・釜山</p>
+  <ul><li>日韓国交正常化60周年を記念した日本人向けの特別開催日</li><li>BTS RMのMV撮影地・無尽亭の池</li><li>WOWKOREAとのコラボで日帰りプランも販売</li></ul>
+  <div class="tags"><span>祭り・イベント</span></div>
+  <p class="pt">主催・企画：株式会社サントラベル、株式会社KPARK TOUR、WOWKOREA／後援：韓国観光公社</p>
+</div></article><article class="ac" data-cats="exchange region"><div class="ap"><img class="bg" src="img/archive/2025shinjuku.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2025shinjuku.jpg" alt="「日韓親善交流旅　江原道・京畿道・ソウルを巡るツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年8月2日〜4日</time><span>2泊3日</span></div>
+  <h3>日韓親善交流旅　江原道・京畿道・ソウルを巡るツアー</h3>
+  <p class="pl">📍 江原道・京畿道・ソウル</p>
+  <ul><li>世界遺産・南漢山城と韓屋での韓定食</li><li>南怡島と抱川アートバレー</li><li>広蔵市場とミシュラン掲載の参鶏湯</li></ul>
+  <div class="tags"><span>交流・研修</span><span>地方をめぐる旅</span></div>
+  <p class="pt">後援：韓国観光公社、京畿観光公社</p>
+</div></article><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/karathe6thjapantour2025.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/karathe6thjapantour2025.jpg" alt="「KARA THE 6th JAPAN TOUR 2025「KARASIA : MAGICAL WORLD」」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年7月・8月</time><span>公演</span></div>
+  <h3>KARA THE 6th JAPAN TOUR 2025「KARASIA : MAGICAL WORLD」</h3>
+  <p class="pl">📍 横浜・神戸（国内）</p>
+  <ul><li>横浜ぴあアリーナMM・神戸GLION ARENA KOBE公演</li><li>協賛社用のアップグレード席を販売</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  
+</div></article><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/2025myk-festa.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2025myk-festa.jpg" alt="「2025 MyK-FESTA　K-POPコンサートツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年6月18日〜22日</time><span>公演</span></div>
+  <h3>2025 MyK-FESTA　K-POPコンサートツアー</h3>
+  <p class="pl">📍 ソウル（KSPO DOME）</p>
+  <ul><li>ステージ前の外国人スタンディング優先席</li><li>韓国観光公社提供のチケット</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  <p class="pt">主催・企画：株式会社サントラベル、株式会社KPARK TOUR／後援・チケット提供：韓国観光公社</p>
+</div></article><article class="ac" data-cats="region"><div class="ap"><img class="bg" src="img/archive/hansanthreecitystory2.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/hansanthreecitystory2.jpg" alt="「観光大統領ハンさんと行く三道物語　第二弾」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2025年4月17日〜20日</time><span>3泊4日</span></div>
+  <h3>観光大統領ハンさんと行く三道物語　第二弾</h3>
+  <p class="pl">📍 江原道・京畿道・ソウル</p>
+  <ul><li>ハンさんの案内で青瓦台を観覧</li><li>韓国最北端の高城統一展望台</li><li>伝統酒博物館 山査園で試飲</li></ul>
+  <div class="tags"><span>地方をめぐる旅</span></div>
+  <p class="pt">後援：韓国観光公社、京畿観光公社、江原観光財団、江陵観光開発公社</p>
+</div></article></div></section><section class="yr" id="y2024" aria-labelledby="h2024"><div class="yh"><h2 id="h2024">2024</h2><span>7件</span></div><div class="ag"><article class="ac" data-cats="festival region"><div class="ap"><img class="bg" src="img/archive/koreangarden2024.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/koreangarden2024.jpg" alt="「KOREAN GARDEN 2024　釜山ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年11月7日〜10日</time><span>3泊4日</span></div>
+  <h3>KOREAN GARDEN 2024　釜山ツアー</h3>
+  <p class="pl">📍 釜山</p>
+  <ul><li>釜山世界花火大会を観覧</li><li>甘川文化村と海東龍宮寺</li><li>チャガルチ市場・国際市場で食べ歩き</li></ul>
+  <div class="tags"><span>祭り・イベント</span><span>地方をめぐる旅</span></div>
+  <p class="pt">後援：韓国観光公社、釜山観光公社</p>
+</div></article><article class="ac" data-cats="wellness region"><div class="ap"><img class="bg" src="img/archive/healing_gangwon.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/healing_gangwon.jpg" alt="「Sakicaさんとフェリーで行く　江原道ヒーリングトリップ」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年10月13日〜19日</time><span>6泊7日（船中2泊）</span></div>
+  <h3>Sakicaさんとフェリーで行く　江原道ヒーリングトリップ</h3>
+  <p class="pl">📍 江原道 東海・江陵・束草（鳥取・境港発）</p>
+  <ul><li>境港からフェリーで韓国へ</li><li>ウェルネス、ロケ地めぐり、グルメ</li></ul>
+  <div class="tags"><span>ウェルネス・美食</span><span>地方をめぐる旅</span></div>
+  <p class="pt">企画：株式会社サントラベル、KLTLAB（KOREA LOCAL TRIP）／後援：江陵市、江陵観光開発公社</p>
+</div></article><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/2024k-link.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2024k-link.jpg" alt="「2024 K-Link Festival　K-POPコンサートツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年10月5日</time><span>公演</span></div>
+  <h3>2024 K-Link Festival　K-POPコンサートツアー</h3>
+  <p class="pl">📍 仁川（インスパイアリゾート）</p>
+  <ul><li>ステージ前の外国人スタンディング優先席</li><li>K-カルチャーコンベンションに参加</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  <p class="pt">主催・企画：株式会社サントラベル、株式会社KPARK TOUR／後援：韓国観光公社</p>
+</div></article><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/2024ink.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2024ink.jpg" alt="「第15回 仁川K-POPコンサート（INK CONCERT）ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年9月7日</time><span>公演</span></div>
+  <h3>第15回 仁川K-POPコンサート（INK CONCERT）ツアー</h3>
+  <p class="pl">📍 仁川（文鶴競技場）</p>
+  <ul><li>外国人優先席で観覧</li><li>現地集合プラン</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  <p class="pt">主催・企画：株式会社サントラベル、株式会社KPARK TOUR／後援：韓国観光公社、仁川観光公社</p>
+</div></article><article class="ac" data-cats="region wellness"><div class="ap"><img class="bg" src="img/archive/hansanthreecitystory.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/hansanthreecitystory.jpg" alt="「観光大統領ハンさんと行く三道物語」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年9月5日〜8日</time><span>3泊4日</span></div>
+  <h3>観光大統領ハンさんと行く三道物語</h3>
+  <p class="pl">📍 京畿道・仁川・忠清南道・江原道</p>
+  <ul><li>高麗手指鍼の体験と健康講座</li><li>保寧の忠清水営城と尙和園</li><li>キムチ作りとミュージアムSAN</li></ul>
+  <div class="tags"><span>地方をめぐる旅</span><span>ウェルネス・美食</span></div>
+  <p class="pt">後援：保寧市、韓国観光公社、京畿観光公社、仁川観光公社</p>
+</div></article><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/show-musiccore.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/show-musiccore.jpg" alt="「Show! Music Core in Japan　VIP席チケット販売」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年6月29日・30日</time><span>公演</span></div>
+  <h3>Show! Music Core in Japan　VIP席チケット販売</h3>
+  <p class="pl">📍 埼玉（ベルーナドーム／国内）</p>
+  <ul><li>韓国の音楽番組の日本公演</li><li>VIP席を先着順で販売</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  
+</div></article><article class="ac" data-cats="wellness"><div class="ap"><img class="bg" src="img/archive/2024kanpo.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2024kanpo.jpg" alt="「黒田福美と行く韓方三昧ウェルネスツアー　第2弾」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2024年5月24日〜27日</time><span>3泊4日</span></div>
+  <h3>黒田福美と行く韓方三昧ウェルネスツアー　第2弾</h3>
+  <p class="pl">📍 大邱・栄州・安東・盈徳</p>
+  <ul><li>韓方の特別講義と花茶づくり</li><li>韓屋のヒーリングセンターで韓方診断・瞑想</li></ul>
+  <div class="tags"><span>ウェルネス・美食</span></div>
+  <p class="pt">主催：一般社団法人 日本韓方協会</p>
+</div></article></div></section><section class="yr" id="y2023" aria-labelledby="h2023"><div class="yh"><h2 id="h2023">2023</h2><span>4件</span></div><div class="ag"><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/p101girls2023.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/p101girls2023.jpg" alt="「PRODUCE 101 JAPAN THE GIRLS　特別評価バトルツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2023年11月24日〜26日</time><span>2泊3日</span></div>
+  <h3>PRODUCE 101 JAPAN THE GIRLS　特別評価バトルツアー</h3>
+  <p class="pl">📍 京畿道（一山 CJ ENM スタジオ）</p>
+  <ul><li>特別公開収録と評価バトルを観覧</li><li>航空券付きプランと現地集合プラン</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  
+</div></article><article class="ac" data-cats="exchange"><div class="ap none"><span>ソウル・全羅南道 木浦</span></div><div class="ai">
+  <div class="am"><time>2023年10月31日〜11月3日</time><span>3泊4日</span></div>
+  <h3>田内千鶴子生誕111周年記念　ソウルと木浦共生園訪問の旅</h3>
+  <p class="pl">📍 ソウル・全羅南道 木浦</p>
+  <ul><li>木浦市民への感謝碑の除幕式に参加</li><li>日韓福祉シンポジウムと交流会</li><li>木浦の海上ケーブルカーと近代歴史館</li></ul>
+  <div class="tags"><span>交流・研修</span></div>
+  <p class="pt">主催：尹鶴子（田内千鶴子）を愛して下さった木浦市民に感謝する会</p>
+</div></article><article class="ac" data-cats="wellness"><div class="ap"><img class="bg" src="img/archive/kanpo2023.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/kanpo2023.jpg" alt="「黒田福美と行く韓方三昧ツアー　ソウル・仁川江華島」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2023年10月13日〜16日</time><span>3泊4日</span></div>
+  <h3>黒田福美と行く韓方三昧ツアー　ソウル・仁川江華島</h3>
+  <p class="pl">📍 ソウル・仁川 江華島</p>
+  <ul><li>参加者全員の四象体質診断</li><li>精進料理店バルゴンヤンで夕食</li></ul>
+  <div class="tags"><span>ウェルネス・美食</span></div>
+  <p class="pt">協力：国際文化観光交流協会</p>
+</div></article><article class="ac" data-cats="region festival"><div class="ap"><img class="bg" src="img/archive/tae2023.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/tae2023.jpg" alt="「観光大統領ハンさんと大邱名誉広報委員Yuckyさんと行く大邱＆浦項ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2023年5月26日〜29日</time><span>2泊3日・3泊4日</span></div>
+  <h3>観光大統領ハンさんと大邱名誉広報委員Yuckyさんと行く大邱＆浦項ツアー</h3>
+  <p class="pl">📍 大邱・浦項</p>
+  <ul><li>釈迦誕生日に桐華寺の点灯式へ</li><li>「椿の花咲く頃」「海街チャチャチャ」のロケ地めぐり</li></ul>
+  <div class="tags"><span>地方をめぐる旅</span><span>祭り・イベント</span></div>
+  <p class="pt">協力：国際文化観光交流協会</p>
+</div></article></div></section><section class="yr" id="y2022" aria-labelledby="h2022"><div class="yh"><h2 id="h2022">2022</h2><span>1件</span></div><div class="ag"><article class="ac" data-cats="exchange"><div class="ap none"><span>全羅南道 木浦</span></div><div class="ai">
+  <div class="am"><time>2022年</time><span>—</span></div>
+  <h3>田内千鶴子生誕110周年 記念式典への訪韓団</h3>
+  <p class="pl">📍 全羅南道 木浦</p>
+  <ul><li>記念式典に参加</li><li>木浦共生園と史跡をめぐり、日韓の歴史をたどる</li></ul>
+  <div class="tags"><span>交流・研修</span></div>
+  
+</div></article></div></section><section class="yr" id="y2020" aria-labelledby="h2020"><div class="yh"><h2 id="h2020">2020</h2><span>1件</span></div><div class="ag"><article class="ac" data-cats="kpop"><div class="ap"><img class="bg" src="img/archive/2020-tma.jpg" alt="" loading="lazy" aria-hidden="true"><img class="fg" src="img/archive/2020-tma.jpg" alt="「【日本公式】2020 THE FACT MUSIC AWARDS 鑑賞ツアー」の告知画像" loading="lazy"></div><div class="ai">
+  <div class="am"><time>2020年2月29日</time><span>公演</span></div>
+  <h3>【日本公式】2020 THE FACT MUSIC AWARDS 鑑賞ツアー</h3>
+  <p class="pl">📍 ソウル（高尺スカイドーム）</p>
+  <ul><li>日本公式のグラウンド区域で観覧</li></ul>
+  <div class="tags"><span>K-POP・公演</span></div>
+  
+</div></article></div></section>
+    <p class="anote">掲載内容は募集時の情報をもとにしています。画像は当時の告知に使用したものです。</p>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="sh"><h2>ともにツアーをつくってきた皆さま</h2><p>後援・協力・共催をいただいた団体（掲載ツアーより）</p></div>
+      <div class="partners2">
+        <div><h3>後援・協力</h3><ul><li>韓国観光公社</li><li>京畿観光公社</li><li>仁川観光公社</li><li>釜山観光公社</li><li>江原観光財団</li><li>江陵観光開発公社</li><li>江陵市</li><li>保寧市</li><li>駐日本大韓民国全羅南道事務所</li><li>国際文化観光交流協会</li><li>一般社団法人 日本韓方協会</li></ul></div>
+        <div><h3>共同企画・コラボレーション</h3><ul><li>株式会社KPARK TOUR</li><li>WOWKOREA</li><li>株式会社chocolate-box japan</li><li>新大久保語学院</li><li>KLTLAB（KOREA LOCAL TRIP）</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="acta">
+        <div><h2>団体・企画旅行のご相談</h2><p>自治体・企業・学校・ファンクラブなどの企画旅行を承ります。これまでの実績をもとに、目的に合わせたツアーをご提案します。</p></div>
+        <div class="btns"><a class="cbtn light" href="index.html#contact">相談する →</a><a class="cbtn line" href="tours.html">募集中のツアー</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap fcols">
+    <div class="about"><b>サントラベル</b><p>株式会社サントラベル<br>1996年創業の韓国専門旅行社</p><p>観光庁長官登録旅行業 第1791号</p></div>
+    <div><h4>事業内容</h4><ul><li><a href="visa.html">ビザ申請代行</a></li><li><a href="tours.html">ツアー予約</a></li><li><a href="tours.html#services">格安航空券</a></li><li><a href="index.html#contact">団体・法人旅行</a></li></ul></div>
+    <div><h4>会社情報</h4><ul><li><a href="index.html#about">会社案内</a></li><li><a href="index.html#about">沿革</a></li><li><a href="index.html#access">アクセス</a></li><li><a href="index.html#news">お知らせ</a></li></ul></div>
+    <div><h4>規約</h4><ul><li><a href="index.html#">旅行条件書</a></li><li><a href="index.html#">旅行業約款</a></li><li><a href="index.html#">特定商取引法に基づく表記</a></li><li><a href="index.html#">個人情報について</a></li></ul></div>
+    <div><h4>お問い合わせ</h4><ul><li>03-3366-3221</li><li>info@suntravel.co.jp</li><li><a href="index.html#contact">お問い合わせフォーム</a></li><li><a href="index.html#faq">よくある質問</a></li></ul></div>
+  </div>
+  <div class="fbot"><div class="wrap"><span>© 1996–2026 SUN TRAVEL Inc.</span><span>東京本店営業所 03-3366-3221</span></div></div>
+</footer>
+<script>
+(function(){var bs=document.querySelectorAll('.chipset [data-f]');
+bs.forEach(function(b){b.addEventListener('click',function(){var f=b.getAttribute('data-f');bs.forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+document.querySelectorAll('.ac').forEach(function(c){c.hidden=!!f&&c.getAttribute('data-cats').split(' ').indexOf(f)<0});
+document.querySelectorAll('.yr').forEach(function(s){var any=s.querySelectorAll('.ac:not([hidden])').length;s.hidden=!any;var n=s.querySelector('.yh span');if(n)n.textContent=any+'件'});})});})();
+</script>
+<script>
+(function(){var b=document.querySelector('.burger'),n=document.getElementById('gnav');if(!b||!n)return;
+b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',String(o))});
+n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');b.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&n.classList.contains('open')){n.classList.remove('open');b.setAttribute('aria-expanded','false');b.focus()}});})();
+</script>
+</body>
+</html>

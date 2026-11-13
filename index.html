@@ -442,6 +442,15 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 .util .lang a{padding:1px 8px;border-radius:999px;color:var(--mute)}
 .util .lang a[aria-current="page"]{background:var(--ink);color:#fff;font-weight:700}
 .util .r2{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.arc3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.arc3 a{display:flex;flex-direction:column;border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--bg);transition:border-color .2s,transform .2s}
+.arc3 a:hover{border-color:var(--brand);transform:translateY(-2px)}
+.arc3 img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:50% 20%;background:var(--bg-2)}
+.arc3 span{display:grid;gap:4px;padding:14px 16px 16px}
+.arc3 time{font-family:var(--f-mono);font-size:12px;color:var(--brand)}
+.arc3 b{font-size:15px;line-height:1.5}
+.arc3 small{font-size:12px;color:var(--mute)}
+@media (max-width:860px){.arc3{grid-template-columns:1fr}}
 </style>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}</style>
 </head>
@@ -457,7 +466,7 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
     <nav class="gnav" id="gnav" aria-label="メイン">
       <ul>
         <li><a href="tours.html#services">格安航空券</a></li>
-        <li class="has"><a href="tours.html">ツアー</a><ul class="sub"><li><a href="tours.html#kikaku">企画ツアー</a></li><li><a href="tours.html#kokunai">国内ツアー</a></li><li><a href="tours.html#genchi">現地発ツアー</a></li></ul></li>
+        <li class="has"><a href="tours.html">ツアー</a><ul class="sub"><li><a href="tours.html#kikaku">企画ツアー</a></li><li><a href="tours.html#kokunai">国内ツアー</a></li><li><a href="tours.html#genchi">現地発ツアー</a></li><li><a href="archive.html">ツアー実績・アーカイブ</a></li></ul></li>
         <li class="has hl"><a href="visa.html">ビザ(VISA)申請代行</a><ul class="sub"><li><a href="visa.html#v-types">韓国査証（C-4-5・C-3-9・C-3-4）</a></li><li><a href="visa.html#v-types">米国ビザ（B-1・B-2）</a></li></ul></li>
         <li><a href="index.html#about">会社案内</a></li>
         <li class="has"><a href="index.html#contact">お問い合わせ</a><ul class="sub"><li><a href="index.html#faq">よくある質問（FAQ）</a></li></ul></li>
@@ -545,6 +554,17 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
         <div><span class="n">01</span><h3>韓国だけを見てきた30年</h3><p>創業以来、韓国専門で営業を続けてきました。航空会社や現地の手配会社とのつながりが、ほかにはない旅の企画につながっています。</p></div>
         <div><span class="n">02</span><h3>旅行と手続きを一つの窓口で</h3><p>ツアー、航空券、ビザ、入国申告書の登録まで。渡航に必要なことを、同じ担当者にまとめてご相談いただけます。</p></div>
         <div><span class="n">03</span><h3>日本語と韓国語で対応</h3><p>コリアンタウン新大久保の東京本店では、日本語と韓国語でご相談を承ります。電話・LINE・カカオトークでもどうぞ。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0" id="archive">
+    <div class="wrap">
+      <div class="sh"><h2>これまでのツアー</h2><a class="more" href="archive.html" style="color:var(--brand);font-weight:700;font-size:13px">ツアー実績をすべて見る →</a></div>
+      <div class="arc3">
+        <a href="archive.html#y2025"><img src="img/archive/hansanthreecitystory3.jpg" alt="" loading="lazy"><span><time>2025.10</time><b>観光大統領ハンさんと行く三道物語 第三弾</b><small>咸安落火ノリ・木浦共生園 ／ 満員御礼</small></span></a>
+        <a href="archive.html#y2024"><img src="img/archive/koreangarden2024.jpg" alt="" loading="lazy"><span><time>2024.11</time><b>KOREAN GARDEN 2024 釜山ツアー</b><small>釜山世界花火大会 ／ 後援：韓国観光公社・釜山観光公社</small></span></a>
+        <a href="archive.html#y2023"><img src="img/archive/kanpo2023.jpg" alt="" loading="lazy"><span><time>2023.10</time><b>黒田福美と行く韓方三昧ツアー</b><small>ソウル・仁川江華島 ／ 四象体質診断</small></span></a>
       </div>
     </div>
   </section>
@@ -659,7 +679,7 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
   <div class="wrap fcols">
     <div class="about"><b>サントラベル</b><p>株式会社サントラベル<br>1996年創業の韓国専門旅行社</p><p>観光庁長官登録旅行業 第1791号</p></div>
     <div><h4>事業内容</h4><ul><li><a href="visa.html">ビザ申請代行</a></li><li><a href="tours.html">ツアー予約</a></li><li><a href="tours.html#services">格安航空券</a></li><li><a href="#contact">団体・法人旅行</a></li></ul></div>
-    <div><h4>会社情報</h4><ul><li><a href="#about">会社案内</a></li><li><a href="#about">沿革</a></li><li><a href="#access">アクセス</a></li><li><a href="#news">お知らせ</a></li></ul></div>
+    <div><h4>会社情報</h4><ul><li><a href="#about">会社案内</a></li><li><a href="#about">沿革</a></li><li><a href="archive.html">ツアー実績</a></li><li><a href="#access">アクセス</a></li><li><a href="#news">お知らせ</a></li></ul></div>
     <div><h4>規約</h4><ul><li><a href="#">旅行条件書</a></li><li><a href="#">旅行業約款</a></li><li><a href="#">特定商取引法に基づく表記</a></li><li><a href="#">個人情報について</a></li></ul></div>
     <div><h4>お問い合わせ</h4><ul><li>03-3366-3221</li><li>info@suntravel.co.jp</li><li><a href="#contact">お問い合わせフォーム</a></li><li><a href="#faq">よくある質問</a></li></ul></div>
   </div>
