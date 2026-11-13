@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ビザ申請代行｜サントラベル</title>
+<meta name="description" content="韓国ビザ（C-3-9・C-3-4・C-4-5）、米国ビザ（B-1・B-2）、韓国の電子入国申告書（e-Arrival Card）の申請代行。新大久保の韓国専門旅行社サントラベル。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 34 34%22%3E%3Ccircle cx=%2217%22 cy=%2216%22 r=%2210%22 fill=%22%23F2A33A%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Old+Mincho:wght@700;900&family=Gowun+Batang:wght@400;700&family=Bodoni+Moda:ital,opsz,wght@1,6..96,500;1,6..96,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 予約サイト型（検索→エリア→カテゴリ→ランキング→商品一覧）。白地に青磁グリーンのブランド色、価格は朱色。単一配色で固定 */
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --bg-2:#F3F6F4; --ink:#1A1F24; --mute:#5E6870; --hair:#E1E6E3;
+  --brand:#1F6B5C; --brand-d:#154C41; --brand-l:#E3EFEA; --sun:#F2A33A; --price:#C8402A; --gold:#D9A441; --seal:#B8382C;
+  /* 予約画面（既存）と共通のトークン */
+  --paper:#F3F6F4; --paper-2:#E8EDEA; --white:#FFFFFF; --celadon:#1F6B5C; --celadon-l:#A9C8BC;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-jp:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-min:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-kr:"Gowun Batang","Apple SD Gothic Neo","Malgun Gothic",serif;
+  --f-en:"Bodoni Moda","Didot","Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.8;letter-spacing:.02em;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:50;background:var(--bg)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.kr{font-family:var(--f-kr)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* demo + util */
+.demo{background:#FFF4DC;color:#5C4210;font-size:12px;text-align:center}
+.demo .wrap{padding-block:6px}
+.util{background:var(--bg-2);font-size:11.5px;color:var(--mute)}
+.util .wrap{display:flex;justify-content:space-between;gap:16px;padding-block:6px;flex-wrap:wrap}
+.util b{color:var(--ink);font-weight:500}
+
+/* header */
+.hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--hair)}
+.hd .wrap{display:flex;align-items:center;gap:24px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;flex:none}
+.logo b{font-weight:900;font-size:19px;letter-spacing:.14em;line-height:1;display:block}
+.logo small{display:block;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.26em;color:var(--mute);margin-top:4px}
+.hsearch{flex:1;max-width:460px;display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--hair);border-radius:999px;padding:0 6px 0 16px}
+.hsearch input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:13.5px;padding:10px 0;color:var(--ink)}
+.hsearch input:focus{outline:none}
+.hsearch:focus-within{border-color:var(--brand);background:var(--bg)}
+.hsearch button{border:0;background:var(--brand);color:#fff;border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer}
+.hnav{margin-left:auto;display:flex;align-items:center;gap:4px}
+.hnav a,.hnav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--mute);padding:4px 10px;border-radius:8px;background:none;border:0;cursor:pointer;position:relative}
+.hnav a:hover,.hnav button:hover{background:var(--bg-2);color:var(--ink)}
+.hnav svg{width:22px;height:22px}
+.hnav .cnt{position:absolute;top:0;right:8px;background:var(--price);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:999px;display:grid;place-items:center;padding:0 4px;font-family:var(--f-mono)}
+.hnav .login{flex-direction:row;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 16px;border-radius:999px;margin-left:8px}
+.hnav .login:hover{background:var(--brand-d);color:#fff}
+@media (max-width:900px){.hsearch{display:none}.hnav .hide-s{display:none}}
+@media (max-width:420px){.hnav .login{padding:8px 12px}.util .r{display:none}}
+
+/* hero */
+.hero{position:relative;isolation:isolate;color:#fff}
+.hero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 55%;z-index:-2}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,20,26,.35),rgba(14,20,26,.15) 40%,rgba(14,20,26,.55))}
+.hero .wrap{padding-block:clamp(56px,9vw,104px) clamp(40px,6vw,64px)}
+.hero .kr{font-size:15px;color:#F6DDA6}
+.hero h1{font-weight:900;font-size:clamp(30px,5vw,56px);line-height:1.3;letter-spacing:.04em;margin-top:8px;text-shadow:0 2px 24px rgba(0,0,0,.3)}
+.hero .sub{margin-top:10px;font-size:15px;opacity:.95;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.sbox{margin-top:32px;background:#fff;color:var(--ink);border-radius:14px;padding:10px;display:grid;grid-template-columns:1.1fr 1fr 1.5fr auto;gap:0;box-shadow:0 20px 50px -20px rgba(0,0,0,.45);max-width:980px}
+.sbox .f{display:grid;gap:0;padding:6px 16px;border-right:1px solid var(--hair);min-width:0}
+.sbox .f:nth-child(3){border-right:0}
+.sbox label{font-size:11px;font-weight:700;color:var(--mute)}
+.sbox select,.sbox input{border:0;background:transparent;font:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:4px 0;width:100%;min-width:0}
+.sbox select:focus,.sbox input:focus{outline:none}
+.sbox .f:focus-within label{color:var(--brand)}
+.sbox .go{border:0;background:var(--brand);color:#fff;border-radius:10px;padding:0 28px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.sbox .go:hover{background:var(--brand-d)}
+.kw{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:center;font-size:12.5px}
+.kw span{opacity:.9}
+.kw button{border:1px solid rgba(255,255,255,.55);background:rgba(14,20,26,.25);backdrop-filter:blur(6px);color:#fff;border-radius:999px;padding:5px 13px;cursor:pointer;font-size:12.5px}
+.kw button:hover{background:#fff;color:var(--ink)}
+@media (max-width:860px){.sbox{grid-template-columns:1fr 1fr}.sbox .f{border-right:0;border-bottom:1px solid var(--hair)}.sbox .f:nth-child(1){border-right:1px solid var(--hair)}.sbox .f:nth-child(3){grid-column:1/-1}.sbox .go{grid-column:1/-1;justify-content:center;padding:13px;margin-top:8px}}
+
+/* trust */
+.trust{border-bottom:1px solid var(--hair)}
+.trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.trust .t{display:flex;gap:12px;align-items:center;padding-block:18px;padding-right:16px;min-width:0}
+.trust .t + .t{padding-left:20px;border-left:1px solid var(--hair)}
+.trust svg{flex:none;width:30px;height:30px;color:var(--brand)}
+.trust b{display:block;font-size:13.5px}
+.trust small{display:block;font-size:11.5px;color:var(--mute);line-height:1.5}
+@media (max-width:900px){.trust .wrap{grid-template-columns:1fr 1fr}.trust .t:nth-child(3){padding-left:0;border-left:0}.trust .t:nth-child(n+3){border-top:1px solid var(--hair)}}
+@media (max-width:480px){.trust .wrap{grid-template-columns:1fr}.trust .t + .t{padding-left:0;border-left:0;border-top:1px solid var(--hair)}}
+
+section{padding-block:clamp(48px,6vw,72px)}
+.alt{background:var(--bg-2)}
+.sh{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.sh h2{font-size:clamp(20px,2.4vw,26px);font-weight:900;letter-spacing:.04em;display:flex;align-items:center;gap:12px}
+.sh h2::before{content:"";width:6px;height:1.1em;background:var(--brand);border-radius:2px}
+.sh p{color:var(--mute);font-size:13px}
+.sh .more{font-size:13px;font-weight:700;color:var(--brand);display:flex;gap:6px;align-items:center;background:none;border:0;cursor:pointer;padding:0}
+.sh .more:hover{text-decoration:underline}
+
+/* areas */
+.areas{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.area{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;max-width:100%;color:#fff;cursor:pointer;border:0;padding:0;text-align:left;background:var(--brand-d);isolation:isolate}
+.area img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1);z-index:-2}
+.area::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6))}
+.area:hover img{transform:scale(1.06)}
+.area .big-kr{position:absolute;top:10px;left:12px;font-family:var(--f-kr);font-size:46px;font-weight:700;line-height:1;opacity:.22;z-index:-1}
+.area .lb{position:absolute;left:14px;right:14px;bottom:12px;display:grid}
+.area .lb b{font-size:18px;font-weight:900;letter-spacing:.06em}
+.area .lb small{font-size:11.5px;opacity:.9}
+.area.c1{background:linear-gradient(160deg,#2E7F96,#174A5C)}
+.area.c2{background:linear-gradient(160deg,#9A6A3A,#5A3A1E)}
+.area.c3{background:linear-gradient(160deg,#6C7B3A,#3B4620)}
+@media (max-width:960px){.areas{grid-template-columns:repeat(3,1fr)}.area{aspect-ratio:4/3}}
+@media (max-width:520px){.areas{grid-template-columns:1fr 1fr}}
+
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+.cat{display:grid;justify-items:center;gap:8px;padding:18px 6px 14px;border:1px solid var(--hair);border-radius:12px;background:var(--bg);cursor:pointer;font-size:12.5px;font-weight:700;text-align:center;line-height:1.4;transition:border-color .2s,transform .2s}
+.cat:hover{border-color:var(--brand);transform:translateY(-2px)}
+.cat .ic{width:48px;height:48px;border-radius:50%;background:var(--brand-l);color:var(--brand);display:grid;place-items:center}
+.cat svg{width:24px;height:24px}
+.cat[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-l)}
+@media (max-width:960px){.cats{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:420px){.cats{grid-template-columns:repeat(2,1fr)}}
+
+/* cards */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:6px 16px;font-size:13px;cursor:pointer;font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 3*18px)/4);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;scrollbar-width:thin}
+.rail > *{scroll-snap-align:start}
+@media (max-width:960px){.rail{grid-auto-columns:42%}}
+@media (max-width:560px){.rail{grid-auto-columns:78%}}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 18px}
+@media (max-width:960px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 12px}}
+@media (max-width:400px){.grid{grid-template-columns:1fr}}
+.card{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .pic{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--bg-2)}
+.card .pic img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.card:hover .pic img{transform:scale(1.05)}
+.card .cover::after{content:"";position:absolute;inset:0;z-index:1}
+.card .fav{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.card .fav svg{width:18px;height:18px}
+.card .fav[aria-pressed="true"]{color:var(--price)}
+.card .fav[aria-pressed="true"] path{fill:currentColor}
+.card .rank{position:absolute;top:0;left:0;z-index:1;background:var(--ink);color:#fff;font-family:var(--f-body);font-weight:900;font-size:19px;min-width:38px;text-align:center;line-height:1;padding:8px 12px 10px;border-radius:10px 0 10px 0}
+.card .rank.r1{background:#B8862E}.card .rank.r2{background:#7D8A93}.card .rank.r3{background:#9A5E3A}
+.card .hot{position:absolute;left:8px;bottom:8px;background:var(--price);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px}
+.card .meta{font-size:11.5px;color:var(--mute);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.card .meta .ty{border:1px solid var(--hair);border-radius:4px;padding:0 6px;color:var(--ink)}
+.card h3{font-size:14.5px;font-weight:700;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3.1em}
+.card:hover h3{color:var(--brand)}
+.stars{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.stars .s{color:var(--star,#F2A33A);letter-spacing:1px}
+.stars b{font-weight:700}
+.stars small{color:var(--mute)}
+.badges{display:flex;flex-wrap:wrap;gap:4px}
+.badges span{font-size:10.5px;background:var(--brand-l);color:var(--brand-d);border-radius:4px;padding:1px 7px;font-weight:500}
+.card .pr{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:auto;padding-top:4px}
+.card .pr .cx{font-size:11px;color:var(--brand);font-weight:500}
+.card .pr b{display:inline-flex;align-items:baseline;font-size:19px;font-weight:900;color:var(--price);font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .pr b small{font-size:11px;color:var(--mute);font-weight:400;margin-left:2px}
+
+/* features */
+.feat{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+.fb{position:relative;border-radius:14px;overflow:hidden;color:#fff;min-height:300px;display:flex;align-items:flex-end;isolation:isolate}
+.fb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.fb:hover img{transform:scale(1.04)}
+.fb::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.72))}
+.fb .in{padding:26px 28px}
+.fb .tag{display:inline-block;background:var(--sun);color:#2A1A05;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:4px}
+.fb h3{font-size:clamp(22px,2.6vw,30px);font-weight:900;margin-top:10px;letter-spacing:.04em;line-height:1.4}
+.fb p{font-size:13.5px;margin-top:6px;opacity:.92;max-width:30em}
+.fb .go{display:inline-flex;margin-top:14px;background:#fff;color:var(--ink);font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px}
+.feat .stack{display:grid;gap:18px}
+.feat .stack .fb{min-height:141px}
+@media (max-width:860px){.feat{grid-template-columns:1fr}.feat .stack .fb{min-height:220px}}
+
+/* results */
+.fbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:22px;padding:12px 14px;background:var(--bg-2);border-radius:10px}
+.fbar .cur{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.fbar .chip{background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:3px 6px 3px 12px;display:inline-flex;gap:6px;align-items:center}
+.fbar .chip button{border:0;background:var(--bg-2);border-radius:50%;width:20px;height:20px;cursor:pointer;line-height:1;font-size:13px}
+.fbar .n b{font-size:16px;font-variant-numeric:tabular-nums}
+.fbar select{font:inherit;font-size:13px;border:1px solid var(--hair);background:var(--bg);border-radius:8px;padding:7px 10px}
+.empty{grid-column:1/-1;text-align:center;padding:48px 16px;border:1px dashed var(--hair);border-radius:12px;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}
+.empty a{color:var(--brand);font-weight:700}
+
+/* reviews */
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.rev{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:22px;display:grid;gap:10px;align-content:start;min-width:0}
+.rev h3{font-size:15px;font-weight:700;line-height:1.6}
+.rev p{font-size:13.5px;color:var(--mute)}
+.rev .who{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--mute);border-top:1px solid var(--hair);padding-top:10px}
+.rev .who a{color:var(--brand);font-weight:700}
+.rnote{font-size:12px;color:var(--mute);margin-top:14px}
+@media (max-width:860px){.revs{grid-template-columns:1fr}}
+
+/* services */
+.svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-width:0}
+.svc .pic{aspect-ratio:16/9;overflow:hidden}
+.svc .pic img{width:100%;height:100%;object-fit:cover}
+.svc .in{padding:20px 22px 22px;display:grid;gap:8px}
+.svc h3{font-size:17px;font-weight:900}
+.svc p{font-size:13.5px;color:var(--mute)}
+.svc ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.svc li{font-size:11.5px;font-family:var(--f-mono);border:1px solid var(--hair);border-radius:4px;padding:1px 7px}
+.svc .go{color:var(--brand);font-weight:700;font-size:13px;margin-top:6px}
+@media (max-width:860px){.svcs{grid-template-columns:1fr}}
+
+/* support band */
+.support{background:var(--brand-d);color:#fff}
+.support .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding-block:36px}
+.support h2{font-size:clamp(19px,2.2vw,24px);font-weight:900}
+.support p{font-size:13px;opacity:.85;margin-top:4px}
+.support .tel{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.support .num{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1;user-select:all}
+.support .num small{display:block;font-family:var(--f-body);font-style:normal;font-weight:400;font-size:11.5px;opacity:.85;margin-top:6px}
+.support .btns{display:flex;gap:8px;flex-wrap:wrap}
+.support .btns a{border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700}
+.support .btns a:hover{background:#fff;color:var(--brand-d)}
+@media (max-width:860px){.support .wrap{grid-template-columns:1fr}}
+
+/* news + company */
+.nc{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px}
+.news{list-style:none;margin:0;padding:0;border-top:1px solid var(--hair)}
+.news li{display:grid;grid-template-columns:96px 70px minmax(0,1fr);gap:12px;padding-block:14px;border-bottom:1px solid var(--hair);font-size:13.5px;align-items:baseline}
+.news time{font-family:var(--f-mono);font-size:12px;color:var(--mute)}
+.news .t{font-size:10.5px;font-weight:700;color:var(--brand);border:1px solid var(--brand-l);background:var(--brand-l);border-radius:4px;text-align:center}
+@media (max-width:560px){.news li{grid-template-columns:auto auto}.news li > span:last-child{grid-column:1/-1}}
+.lic{border-top:1px solid var(--hair);padding-top:16px;color:var(--mute);font-size:12px;line-height:1.7;align-self:start;margin-top:52px}
+.lic h2{font-size:12.5px;font-weight:700;color:var(--ink);letter-spacing:.04em;margin-bottom:8px}
+.lic dl{margin:0;display:grid;grid-template-columns:7.5em 1fr;gap:2px 12px}
+.lic dd{margin:0;min-width:0}
+@media (max-width:860px){.nc{grid-template-columns:1fr}}
+
+/* footer */
+footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
+.fcols{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:32px;padding-block:56px 40px}
+.fcols h4{color:#fff;font-size:13px;margin-bottom:12px}
+.fcols ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.fcols a:hover{color:#fff}
+.fcols .about{display:grid;gap:12px;align-content:start}
+.fcols .about b{color:#fff;font-size:17px;letter-spacing:.14em;font-weight:900}
+@media (max-width:900px){.fcols{grid-template-columns:1fr 1fr}.fcols .about{grid-column:1/-1}}
+.fbot{border-top:1px solid rgba(255,255,255,.1)}
+.fbot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:18px}
+
+
+/* ===== ビザ申請代行ページ ===== */
+.crumb{font-size:12px;color:var(--mute);padding-block:12px}
+.crumb a{color:var(--brand)}
+.vhero{background:var(--bg-2)}
+.vhero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center;padding-block:clamp(32px,5vw,56px)}
+.vhero .kr{color:var(--brand);font-size:14px}
+.vhero h1{font-size:clamp(30px,4.4vw,48px);font-weight:900;letter-spacing:.04em;line-height:1.3;margin-top:6px}
+.vhero .en{font-family:var(--f-en);font-style:italic;font-size:17px;color:var(--mute);display:block;margin-top:2px}
+.vhero p.lead{margin-top:18px;color:var(--mute);max-width:34em}
+.vhero .pic{aspect-ratio:4/3;border-radius:14px;overflow:hidden;max-width:100%}
+.vhero .pic img{width:100%;height:100%;object-fit:cover;object-position:62% 40%}
+.vhero .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.vbtn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px}
+.vbtn.pri{background:var(--brand);color:#fff}.vbtn.pri:hover{background:var(--brand-d)}
+.vbtn.sec{border:1px solid var(--hair);background:var(--bg)}.vbtn.sec:hover{border-color:var(--brand)}
+@media (max-width:860px){.vhero .wrap{grid-template-columns:1fr}.vhero .pic{order:-1;aspect-ratio:16/9}}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 63px);z-index:20;background:var(--bg);border-bottom:1px solid var(--hair)}
+.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+.toc a{white-space:nowrap;font-size:13px;padding:6px 14px;border-radius:999px;color:var(--mute)}
+.toc a:hover{background:var(--bg-2);color:var(--ink)}
+[id^="v-"]{scroll-margin-top:130px}
+.note-box{border-left:3px solid var(--sun);background:#FFF8EA;padding:14px 18px;border-radius:0 8px 8px 0;font-size:13.5px;color:#5C4210;margin-top:20px}
+.note-box ul{margin:6px 0 0;padding-left:1.2em}
+.who{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.who > div{border:1px solid var(--hair);border-radius:12px;padding:22px;background:var(--bg);min-width:0}
+.who h3{font-size:16px;font-weight:900;display:flex;gap:10px;align-items:center}
+.who h3 span{font-size:11px;font-weight:700;background:var(--brand-l);color:var(--brand-d);border-radius:4px;padding:2px 8px}
+.who dl{margin:12px 0 0;display:grid;grid-template-columns:7.5em 1fr;gap:8px 12px;font-size:13.5px}
+.who dt{color:var(--mute)}.who dd{margin:0}
+@media (max-width:760px){.who{grid-template-columns:1fr}}
+.need{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.need > div{background:var(--bg-2);border-radius:10px;padding:18px;min-width:0}
+.need b{display:block;font-size:14.5px;margin-bottom:4px}
+.need p{font-size:13px;color:var(--mute)}
+.need .y{color:var(--price);font-weight:700}.need .n{color:var(--brand);font-weight:700}
+@media (max-width:860px){.need{grid-template-columns:1fr}}
+.vtypes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.vt{position:relative;border:1px solid var(--hair);border-radius:12px;padding:20px;background:var(--bg);display:grid;gap:6px;align-content:start;min-width:0}
+.vt .ctry{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;color:var(--mute)}
+.vt .cd{font-family:var(--f-mono);font-weight:500;font-size:26px;line-height:1.2;letter-spacing:.02em;color:var(--brand-d)}
+.vt.us .cd{color:#8E2C2C}
+.vt h3{font-size:15.5px;font-weight:900}
+.vt p{font-size:13px;color:var(--mute)}
+.vt .for{font-size:12px;border-top:1px solid var(--hair);padding-top:8px;margin-top:4px}
+@media (max-width:960px){.vtypes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.vtypes{grid-template-columns:1fr}}
+.tbl{overflow-x:auto;border:1px solid var(--hair);border-radius:12px;background:var(--bg)}
+.tbl table{width:100%;min-width:560px;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--hair);vertical-align:top}
+.tbl thead th{background:var(--bg-2);font-size:12px;color:var(--mute);font-weight:700}
+.tbl tbody tr:last-child td{border-bottom:0}
+.tbl td.num{text-align:right;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--price);font-size:16px}
+.tbl td small{display:block;color:var(--mute);font-size:12px;font-weight:400}
+.sample{display:inline-block;font-size:10.5px;font-weight:700;background:#FFF4DC;color:#7A4E07;border-radius:4px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.fine{font-size:12.5px;color:var(--mute);margin-top:14px;display:grid;gap:4px;padding-left:1.1em}
+.acc{display:grid;gap:10px}
+.acc details{border:1px solid var(--hair);border-radius:12px;background:var(--bg);overflow:hidden}
+.acc summary{cursor:pointer;list-style:none;padding:16px 20px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";font-size:20px;color:var(--brand);font-weight:400;flex:none}
+.acc details[open] summary::after{content:"−"}
+.acc summary small{font-weight:400;color:var(--mute);font-size:12.5px;margin-left:8px}
+.acc .in{padding:0 20px 18px;font-size:14px;color:var(--ink)}
+.acc .in ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.acc .in li small{color:var(--mute)}
+.acc .in p{color:var(--mute);font-size:13.5px}
+.acc .in p + p,.acc .in ul + p{margin-top:8px}
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}
+.links a{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--hair);border-radius:10px;padding:14px 18px;background:var(--bg);font-size:14px;font-weight:700}
+.links a:hover{border-color:var(--brand);color:var(--brand)}
+.links a small{display:block;font-weight:400;color:var(--mute);font-size:12px}
+@media (max-width:640px){.links{grid-template-columns:1fr}}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:st}
+.flow li{counter-increment:st;background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:20px;position:relative;min-width:0}
+.flow li::before{content:"STEP " counter(st, decimal-leading-zero);font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:var(--brand);font-weight:500}
+.flow h3{font-size:16px;font-weight:900;margin:6px 0}
+.flow p{font-size:13px;color:var(--mute)}
+.flow .d{display:inline-block;margin-top:10px;font-size:11.5px;background:var(--brand-l);color:var(--brand-d);border-radius:4px;padding:2px 8px;font-weight:700}
+@media (max-width:960px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.flow{grid-template-columns:1fr}}
+.faq summary{font-size:14.5px}
+.faq summary span::before{content:"Q.";color:var(--brand);font-family:var(--f-en);font-style:italic;font-weight:700;margin-right:8px;font-size:17px}
+.offices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.office{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-width:0}
+.office .pic{aspect-ratio:16/7;overflow:hidden}
+.office .pic img{width:100%;height:100%;object-fit:cover}
+.office .in{padding:20px 22px;display:grid;gap:6px;font-size:13.5px}
+.office h3{font-size:17px;font-weight:900}
+.office .tel{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:24px;user-select:all}
+.office a.map{color:var(--brand);font-weight:700;font-size:13px}
+@media (max-width:760px){.offices{grid-template-columns:1fr}}
+
+:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}
+</style>
+</head>
+<body>
+
+<div class="demo"><div class="wrap">試作版です。代行手数料・受付条件は見本のため、公開前に実際の内容へ差し替えてください。</div></div>
+<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">ビザのご相談　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span></div></div>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="サントラベル トップ">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="16" r="10" fill="#F2A33A"/><path d="M2 22h30M6 26.5h22M11 31h12" stroke="#1F6B5C" stroke-width="2" stroke-linecap="round"/></svg>
+      <span><b>サントラベル</b><small>SUN TRAVEL</small></span>
+    </a>
+    <nav class="hnav" aria-label="メニュー">
+      <a href="index.html#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>ツアーを探す</a>
+      <a href="index.html#services" class="hide-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 14 22 6l-3 7-7 2-3 5-1-4z"/></svg>航空券</a>
+      <a href="#v-contact" class="login">ビザの相談</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap crumb"><a href="index.html">トップ</a>　›　ビザ申請代行</div>
+  <div class="vhero"><div class="wrap">
+    <div>
+      <p class="kr">비자 신청 대행</p>
+      <h1>ビザ申請代行</h1>
+      <span class="en">Visa application support</span>
+      <p class="lead">韓国ビザ・米国ビザの申請と、韓国入国時の電子入国申告書（e-Arrival Card）の登録を代行します。必要書類の確認から領事館への申請、パスポートのお返しまで、新大久保の東京本店でまとめてお手伝いします。</p>
+      <div class="cta"><a class="vbtn pri" href="#v-contact">電話・LINEで相談する →</a><a class="vbtn sec" href="#v-docs">必要書類を見る</a></div>
+    </div>
+    <div class="pic"><img src="img/visa-staff.jpg" alt="申請書類を確認するスタッフ"></div>
+  </div></div>
+
+  <nav class="toc" aria-label="ページ内の目次"><div class="wrap">
+    <a href="#v-need">ビザが必要な方</a><a href="#v-area">受付対象</a><a href="#v-types">取扱いビザ</a><a href="#v-fee">料金</a><a href="#v-docs">必要書類</a><a href="#v-flow">申請の流れ</a><a href="#v-faq">よくある質問</a><a href="#v-contact">お問い合わせ</a>
+  </div></nav>
+
+  <section id="v-need">
+    <div class="wrap">
+      <div class="sh"><h2>ビザが必要な方</h2><p>国籍と、渡航の目的によって変わります。</p></div>
+      <div class="need">
+        <div><b>日本国籍で、観光・短期の商用</b><p><span class="n">韓国ビザは不要です。</span>90日以内の滞在なら、ビザなしで入国できます。K-ETA（電子渡航認証）も2026年12月31日まで一時免除です。</p></div>
+        <div><b>日本国籍で、報酬を伴う公演・就業</b><p><span class="y">ビザが必要です。</span>短期間でも、韓国で報酬を受け取る公演や仕事には短期就業ビザ（C-4）が必要です。</p></div>
+        <div><b>外国籍で、日本にお住まいの方</b><p><span class="y">国籍によってビザが必要です。</span>観光目的でも、国籍によっては短期訪問ビザ（C-3）が必要です。在留カードの国籍でご確認ください。</p></div>
+      </div>
+      <div class="note-box">韓国に入国するすべての方に、入国申告書の提出が必要です。オンラインで事前に登録できる<b>電子入国申告書（e-Arrival Card）</b>の登録も代行します。</div>
+    </div>
+  </section>
+
+  <section class="alt" id="v-area">
+    <div class="wrap">
+      <div class="sh"><h2>受付対象</h2><p>韓国ビザは、お住まいの地域を管轄する公館に申請します。</p></div>
+      <div class="who">
+        <div><h3>東京管轄<span>駐日韓国大使館 領事部</span></h3><dl><dt>お住まい</dt><dd>東京都・千葉県・埼玉県・茨城県・栃木県・群馬県</dd><dt>窓口</dt><dd>東京本店営業所（新大久保）</dd></dl></div>
+        <div><h3>横浜管轄<span>駐横浜韓国総領事館</span></h3><dl><dt>お住まい</dt><dd>神奈川県・静岡県・山梨県</dd><dt>窓口</dt><dd>東京本店営業所・本社（新横浜）</dd></dl></div>
+      </div>
+      <div class="note-box">
+        <ul>
+          <li>渡航日の<b>3週間前まで</b>にお申し込みください。書類に不足があると、申請が遅れることがあります。</li>
+          <li>上記以外の地域にお住まいの方、韓国の企業・団体からの招へいによる申請は、お電話でご相談ください。</li>
+          <li>米国ビザは、お住まいの地域にかかわらず受け付けます（面接はご本人が東京の米国大使館または大阪の総領事館で受けます）。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="v-types">
+    <div class="wrap">
+      <div class="sh"><h2>取扱いビザ</h2><p>このほかのビザもご相談ください。</p></div>
+      <div class="vtypes">
+        <article class="vt"><span class="ctry">KOREA</span><span class="cd">C-3-9</span><h3>短期訪問（一般観光）</h3><p>観光、知人訪問、イベントの見学など。</p><p class="for">滞在：90日以内</p></article>
+        <article class="vt"><span class="ctry">KOREA</span><span class="cd">C-3-4</span><h3>短期訪問（一般商用）</h3><p>商談、会議への出席、市場調査、業務連絡などの短期出張。</p><p class="for">滞在：90日以内</p></article>
+        <article class="vt"><span class="ctry">KOREA</span><span class="cd">C-4-5</span><h3>短期就業（公演など）</h3><p>韓国での公演、撮影、イベント出演など、報酬を伴う短期の活動。</p><p class="for">日本国籍の方も必要です</p></article>
+        <article class="vt us"><span class="ctry">U.S.A.</span><span class="cd">B-1</span><h3>商用</h3><p>商談、会議、研修への参加など。ESTAが使えない方や、ESTAで認められない滞在に。</p><p class="for">面接：ご本人が大使館・総領事館へ</p></article>
+        <article class="vt us"><span class="ctry">U.S.A.</span><span class="cd">B-2</span><h3>観光</h3><p>観光、親族・知人の訪問、治療など。ESTAの申請が認められなかった方もご相談ください。</p><p class="for">面接：ご本人が大使館・総領事館へ</p></article>
+        <article class="vt"><span class="ctry">KOREA</span><span class="cd">e-Arrival</span><h3>電子入国申告書</h3><p>韓国入国時の入国申告書を、オンラインで事前に登録します。ツアーのお客様の分もまとめて承ります。</p><p class="for">ビザの有無にかかわらず、入国者全員</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="v-fee">
+    <div class="wrap">
+      <div class="sh"><h2>料金<span class="sample">見本</span></h2><p>代行手数料はお一人様・税込です。</p></div>
+      <div class="tbl"><table>
+        <thead><tr><th>申請の種類</th><th>代行手数料</th><th>このほかにかかる費用</th></tr></thead>
+        <tbody>
+          <tr><td><b>韓国ビザ</b>　C-3-9・C-3-4<small>東京管轄</small></td><td class="num">¥13,200</td><td>査証の申請手数料（国籍により異なります。日本国籍の方は免除）</td></tr>
+          <tr><td><b>韓国ビザ</b>　C-3-9・C-3-4<small>横浜管轄</small></td><td class="num">¥17,600</td><td>同上</td></tr>
+          <tr><td><b>韓国ビザ</b>　C-4-5<small>公演・短期就業</small></td><td class="num">¥22,000</td><td>同上。公演の内容により書類作成のサポート料がかかる場合があります</td></tr>
+          <tr><td><b>米国ビザ</b>　B-1・B-2<small>オンライン申請書（DS-160）の作成・面接予約のサポート</small></td><td class="num">¥27,500</td><td>米国大使館の申請料金（ドル建て）。金額は大使館の公式サイトでご確認ください</td></tr>
+          <tr><td><b>電子入国申告書</b>　e-Arrival Card</td><td class="num">¥2,200</td><td>なし（当社のツアーのお客様は無料）</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="fine">
+        <li>書類の不足による再申請、営業時間外の対応、出発直前のお急ぎの申請は、追加料金がかかる場合があります。</li>
+        <li>領事館が申請を受け付けた後に不許可となった場合、代行手数料と申請手数料はお返しできません。</li>
+        <li>領事館で申請が受け付けられなかった場合は、代行手数料を全額お返しします。</li>
+        <li>お支払いは、ご来店時の現金・クレジットカード、または銀行振込です。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="v-docs">
+    <div class="wrap">
+      <div class="sh"><h2>必要書類</h2><p>代表的な書類です。領事館の判断で追加の書類を求められることがあります。</p></div>
+      <div class="acc">
+        <details open><summary>すべての申請に共通<small>韓国ビザ</small></summary><div class="in"><ul>
+          <li>パスポート（原本）<small>　残りの有効期間が十分あり、査証欄に空白のページがあるもの</small></li>
+          <li>査証発給申請書<small>　当社でご用意します。記入もお手伝いします</small></li>
+          <li>証明写真 1枚<small>　縦4.5cm×横3.5cm、6か月以内に撮影、白い背景</small></li>
+          <li>在留カード（外国籍の方）<small>　原本と両面のコピー。申請日から3か月以上の有効期間が必要です</small></li>
+        </ul></div></details>
+        <details><summary>短期訪問（一般観光） C-3-9</summary><div class="in"><ul>
+          <li>在職証明書（会社員の方）／在学証明書（学生の方）</li>
+          <li>収入や預金を確認できる書類<small>　預金通帳のコピー、残高証明書など。口座名義と銀行名がわかるページを含めます</small></li>
+          <li>旅行の日程がわかるもの<small>　航空券の予約確認書、ホテルの予約確認書など</small></li>
+        </ul><p>在留資格（永住者、定住者、留学、家族滞在など）によって、必要な書類が変わります。お電話で在留資格をお伺いし、必要書類をご案内します。</p></div></details>
+        <details><summary>短期訪問（一般商用） C-3-4</summary><div class="in"><ul>
+          <li>在職証明書<small>　会社の押印があるもの。社員証や雇用契約書では代わりになりません</small></li>
+          <li>出張命令書（会社が発行するもの）</li>
+          <li>韓国側の招へい状と、招へい企業の事業者登録証のコピー</li>
+          <li>会社の登記簿謄本など、勤務先を確認できる書類</li>
+        </ul></div></details>
+        <details><summary>短期就業（公演など） C-4-5</summary><div class="in"><ul>
+          <li>韓国側との出演・雇用の契約書</li>
+          <li>公演の推薦書など、公演の内容を確認できる書類<small>　公演の種類により異なります</small></li>
+          <li>招へい企業の事業者登録証のコピー</li>
+          <li>出演者の経歴がわかる資料</li>
+        </ul><p>出演者が複数の場合は、まとめて申請できます。公演日の1か月以上前にご相談ください。</p></div></details>
+        <details><summary>米国ビザ B-1・B-2</summary><div class="in"><ul>
+          <li>パスポート（原本）と証明写真のデータ<small>　縦横5cm、6か月以内に撮影、白い背景</small></li>
+          <li>オンライン申請書（DS-160）に入力する情報<small>　学歴・職歴、渡航歴、家族の情報など。事前にヒアリングシートをお送りします</small></li>
+          <li>渡航目的を説明できる書類<small>　招へい状、在職証明書、旅行の日程など</small></li>
+          <li>外国籍の方は在留カード</li>
+        </ul><p>面接はご本人が大使館・総領事館で受けます。当社は申請書の作成、申請料金の支払い手続き、面接の予約をサポートします。</p></div></details>
+        <details><summary>電子入国申告書 e-Arrival Card</summary><div class="in"><ul>
+          <li>パスポートの顔写真ページのコピー</li>
+          <li>韓国での滞在先（ホテル名・住所）と、航空便の情報</li>
+        </ul></div></details>
+      </div>
+      <div class="links">
+        <a href="https://overseas.mofa.go.kr/jp-ja/index.do" target="_blank" rel="noopener"><span>駐日本国大韓民国大使館<small>ビザの最新情報（公式）</small></span>↗</a>
+        <a href="https://overseas.mofa.go.kr/jp-yokohama-ja/index.do" target="_blank" rel="noopener"><span>駐横浜大韓民国総領事館<small>横浜管轄の方（公式）</small></span>↗</a>
+        <a href="https://jp.usembassy.gov/ja/visas-ja/" target="_blank" rel="noopener"><span>在日米国大使館・領事館 ビザ<small>米国ビザの申請料金・手続き（公式）</small></span>↗</a>
+        <a href="https://www.k-eta.go.kr/" target="_blank" rel="noopener"><span>K-ETA 公式サイト<small>電子渡航認証（公式）</small></span>↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="v-flow">
+    <div class="wrap">
+      <div class="sh"><h2>申請の流れ</h2><p>パスポートは審査のあいだ領事館に預けられます。</p></div>
+      <ol class="flow">
+        <li><h3>ご相談</h3><p>お電話・LINE・カカオトークで、国籍・在留資格・渡航日・目的をお知らせください。必要書類をご案内します。</p></li>
+        <li><h3>書類の確認・お支払い</h3><p>東京本店（新大久保）に書類をお持ちください。不足がないか確認し、申請書の記入をお手伝いします。</p></li>
+        <li><h3>領事館へ申請</h3><p>当社が領事館に申請します。審査中はパスポートをお使いいただけません。</p><span class="d">審査の目安：約1〜2週間</span></li>
+        <li><h3>パスポートのお返し</h3><p>審査が終わり次第ご連絡します。ご来店でのお受け取りのほか、郵送でのお返しもできます。</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="v-faq">
+    <div class="wrap">
+      <div class="sh"><h2>よくある質問</h2></div>
+      <div class="acc faq">
+        <details><summary><span>審査にはどのくらいかかりますか？</span></summary><div class="in"><p>韓国ビザは、領事館が申請を受け付けてから約1〜2週間が目安です。時期や書類の内容によって長くなることがあるため、余裕をもってお申し込みください。米国ビザは面接の予約状況によって変わります。</p></div></details>
+        <details><summary><span>日本国籍ですが、韓国旅行にビザは必要ですか？</span></summary><div class="in"><p>90日以内の観光や短期の商用であれば、ビザは必要ありません。韓国で報酬を伴う公演や仕事をする場合は、短期間でもビザが必要です。</p></div></details>
+        <details><summary><span>来店せずに申し込めますか？</span></summary><div class="in"><p>パスポートの原本と書類を確認するため、原則としてご来店をお願いしています。遠方の方や、団体でのお申し込みはご相談ください。</p></div></details>
+        <details><summary><span>在職証明書の代わりに、社員証や雇用契約書を使えますか？</span></summary><div class="in"><p>使えません。会社の押印がある在職証明書をご用意ください。書式がない場合は、記入例をお渡しします。</p></div></details>
+        <details><summary><span>在留カードの更新中でも申請できますか？</span></summary><div class="in"><p>更新が終わってからの申請になります。在留カードは、申請日から3か月以上の有効期間が必要です。</p></div></details>
+        <details><summary><span>審査中にパスポートを使う予定があります。</span></summary><div class="in"><p>審査中のパスポートは領事館で保管されるため、使えません。ほかの国への渡航予定がある場合は、お申し込みの際にお知らせください。日程を調整します。</p></div></details>
+        <details><summary><span>マルチビザ（数次ビザ）は取れますか？</span></summary><div class="in"><p>数次ビザで申請することはできますが、発給するかどうかと有効期間は領事館が判断します。条件によっては、1回限りのビザになることがあります。</p></div></details>
+        <details><summary><span>ビザが発給されなかった場合、費用は戻りますか？</span></summary><div class="in"><p>領事館が申請を受け付けた後に不許可となった場合は、代行手数料・申請手数料ともにお返しできません。申請自体が受け付けられなかった場合は、代行手数料を全額お返しします。</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="v-contact">
+    <div class="wrap">
+      <div class="sh"><h2>お問い合わせ・窓口</h2><p>はじめに、国籍・在留資格・渡航日・お住まいの都道府県をお知らせください。</p></div>
+      <div class="offices">
+        <article class="office"><div class="pic"><img src="img/counter.jpg" alt="カウンターで相談を受けるスタッフ" loading="lazy" style="object-position:30% 45%"></div><div class="in">
+          <h3>東京本店営業所（新大久保）</h3>
+          <span class="tel">03-3366-3221</span>
+          <span>〒169-0073 東京都新宿区百人町1-23-6 ケーエムビル3階</span>
+          <span>月〜金 9:30〜18:00（日曜・祝日・年末年始休業）</span>
+          <span>FAX 03-3366-3224 ／ info@suntravel.co.jp</span>
+          <a class="map" href="https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E4%BA%AC%E9%83%BD%E6%96%B0%E5%AE%BF%E5%8C%BA%E7%99%BE%E4%BA%BA%E7%94%BA1-23-6" target="_blank" rel="noopener">地図を開く ↗</a>
+        </div></article>
+        <article class="office"><div class="pic"><img src="img/team.jpg" alt="旅行会社のスタッフのイメージ" loading="lazy" style="object-position:50% 35%"></div><div class="in">
+          <h3>本社（新横浜）</h3>
+          <span>〒222-0033 神奈川県横浜市港北区新横浜2-17-19 AR新横浜ビル4F</span>
+          <span>横浜管轄（神奈川県・静岡県・山梨県）にお住まいの方のご相談も承ります。ご来社の前にお電話ください。</span>
+          <a class="map" href="https://www.google.com/maps/search/?api=1&query=%E6%A8%AA%E6%B5%9C%E5%B8%82%E6%B8%AF%E5%8C%97%E5%8C%BA%E6%96%B0%E6%A8%AA%E6%B5%9C2-17-19" target="_blank" rel="noopener">地図を開く ↗</a>
+        </div></article>
+      </div>
+    </div>
+  </section>
+
+  <div class="support"><div class="wrap">
+    <div><h2>ビザのこと、まずはお電話で</h2><p>書類のそろえ方から、旅行の手配まで。韓国専門の担当者がご案内します。</p></div>
+    <div class="tel"><span class="num">03-3366-3221<small>月〜金 9:30〜18:00 ／ info@suntravel.co.jp</small></span><span class="btns"><a href="#">LINEで相談</a><a href="#">KakaoTalk</a></span></div>
+  </div></div>
+</main>
+
+<footer>
+  <div class="wrap fcols">
+    <div class="about"><b>サントラベル</b><p>1996年創業の韓国専門旅行社。ツアー・現地体験・航空券・ビザ申請代行をひとつの窓口でご案内します。</p><p>観光庁長官登録旅行業 第1791号</p></div>
+    <div><h4>ツアー</h4><ul><li><a href="index.html#results">ツアー・体験を探す</a></li><li><a href="index.html#services">格安航空券</a></li><li><a href="index.html#services">団体旅行</a></li></ul></div>
+    <div><h4>ビザ申請代行</h4><ul><li><a href="#v-types">取扱いビザ</a></li><li><a href="#v-fee">料金</a></li><li><a href="#v-docs">必要書類</a></li><li><a href="#v-faq">よくある質問</a></li></ul></div>
+    <div><h4>ご利用ガイド</h4><ul><li><a href="#">予約の流れ</a></li><li><a href="#">お支払い方法</a></li><li><a href="#">キャンセルについて</a></li></ul></div>
+    <div><h4>会社情報</h4><ul><li><a href="index.html#company">会社案内</a></li><li><a href="#">旅行条件書</a></li><li><a href="#">旅行業約款</a></li><li><a href="#">個人情報について</a></li></ul></div>
+  </div>
+  <div class="fbot"><div class="wrap"><span>© 1996–2026 SUN TRAVEL Inc.</span><span>東京本店営業所 03-3366-3221</span></div></div>
+</footer>
+</body>
+</html>
