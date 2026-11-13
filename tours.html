@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="韓国専門旅行社サントラベル（観光庁長官登録旅行業 第1791号）。K-POP観覧ツアー、ソウル・釜山の現地発ツアー、格安航空券、韓国ビザ申請代行。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 34 34%22%3E%3Ccircle cx=%2217%22 cy=%2216%22 r=%2210%22 fill=%22%23F2A33A%22/%3E%3C/svg%3E">
+<title>ツアー予約｜サントラベル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Old+Mincho:wght@700;900&family=Gowun+Batang:wght@400;700&family=Bodoni+Moda:ital,opsz,wght@1,6..96,500;1,6..96,700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 予約サイト型（検索→エリア→カテゴリ→ランキング→商品一覧）。白地に青磁グリーンのブランド色、価格は朱色。単一配色で固定 */
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --bg-2:#F3F6F4; --ink:#1A1F24; --mute:#5E6870; --hair:#E1E6E3;
+  --brand:#1F6B5C; --brand-d:#154C41; --brand-l:#E3EFEA; --sun:#F2A33A; --price:#C8402A; --gold:#D9A441; --seal:#B8382C;
+  /* 予約画面（既存）と共通のトークン */
+  --paper:#F3F6F4; --paper-2:#E8EDEA; --white:#FFFFFF; --celadon:#1F6B5C; --celadon-l:#A9C8BC;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-jp:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-min:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-kr:"Gowun Batang","Apple SD Gothic Neo","Malgun Gothic",serif;
+  --f-en:"Bodoni Moda","Didot","Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.8;letter-spacing:.02em;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:50;background:var(--bg)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.kr{font-family:var(--f-kr)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* demo + util */
+.demo{background:#FFF4DC;color:#5C4210;font-size:12px;text-align:center}
+.demo .wrap{padding-block:6px}
+.util{background:var(--bg-2);font-size:11.5px;color:var(--mute)}
+.util .wrap{display:flex;justify-content:space-between;gap:16px;padding-block:6px;flex-wrap:wrap}
+.util b{color:var(--ink);font-weight:500}
+
+/* header */
+.hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--hair)}
+.hd .wrap{display:flex;align-items:center;gap:24px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;flex:none}
+.logo b{font-weight:900;font-size:19px;letter-spacing:.14em;line-height:1;display:block}
+.logo small{display:block;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.26em;color:var(--mute);margin-top:4px}
+.hsearch{flex:1;max-width:460px;display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--hair);border-radius:999px;padding:0 6px 0 16px}
+.hsearch input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:13.5px;padding:10px 0;color:var(--ink)}
+.hsearch input:focus{outline:none}
+.hsearch:focus-within{border-color:var(--brand);background:var(--bg)}
+.hsearch button{border:0;background:var(--brand);color:#fff;border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer}
+.hnav{margin-left:auto;display:flex;align-items:center;gap:4px}
+.hnav a,.hnav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--mute);padding:4px 10px;border-radius:8px;background:none;border:0;cursor:pointer;position:relative}
+.hnav a:hover,.hnav button:hover{background:var(--bg-2);color:var(--ink)}
+.hnav svg{width:22px;height:22px}
+.hnav .cnt{position:absolute;top:0;right:8px;background:var(--price);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:999px;display:grid;place-items:center;padding:0 4px;font-family:var(--f-mono)}
+.hnav .login{flex-direction:row;font-size:13px;font-weight:700;color:#fff;background:var(--brand);padding:9px 16px;border-radius:999px;margin-left:8px}
+.hnav .login:hover{background:var(--brand-d);color:#fff}
+@media (max-width:900px){.hsearch{display:none}.hnav .hide-s{display:none}}
+@media (max-width:420px){.hnav .login{padding:8px 12px}.util .r{display:none}}
+
+/* hero */
+.hero{position:relative;isolation:isolate;color:#fff}
+.hero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 55%;z-index:-2}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(14,20,26,.35),rgba(14,20,26,.15) 40%,rgba(14,20,26,.55))}
+.hero .wrap{padding-block:clamp(56px,9vw,104px) clamp(40px,6vw,64px)}
+.hero .kr{font-size:15px;color:#F6DDA6}
+.hero h1{font-weight:900;font-size:clamp(30px,5vw,56px);line-height:1.3;letter-spacing:.04em;margin-top:8px;text-shadow:0 2px 24px rgba(0,0,0,.3)}
+.hero .sub{margin-top:10px;font-size:15px;opacity:.95;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.sbox{margin-top:32px;background:#fff;color:var(--ink);border-radius:14px;padding:10px;display:grid;grid-template-columns:1.1fr 1fr 1.5fr auto;gap:0;box-shadow:0 20px 50px -20px rgba(0,0,0,.45);max-width:980px}
+.sbox .f{display:grid;gap:0;padding:6px 16px;border-right:1px solid var(--hair);min-width:0}
+.sbox .f:nth-child(3){border-right:0}
+.sbox label{font-size:11px;font-weight:700;color:var(--mute)}
+.sbox select,.sbox input{border:0;background:transparent;font:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:4px 0;width:100%;min-width:0}
+.sbox select:focus,.sbox input:focus{outline:none}
+.sbox .f:focus-within label{color:var(--brand)}
+.sbox .go{border:0;background:var(--brand);color:#fff;border-radius:10px;padding:0 28px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.sbox .go:hover{background:var(--brand-d)}
+.kw{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:center;font-size:12.5px}
+.kw span{opacity:.9}
+.kw button{border:1px solid rgba(255,255,255,.55);background:rgba(14,20,26,.25);backdrop-filter:blur(6px);color:#fff;border-radius:999px;padding:5px 13px;cursor:pointer;font-size:12.5px}
+.kw button:hover{background:#fff;color:var(--ink)}
+@media (max-width:860px){.sbox{grid-template-columns:1fr 1fr}.sbox .f{border-right:0;border-bottom:1px solid var(--hair)}.sbox .f:nth-child(1){border-right:1px solid var(--hair)}.sbox .f:nth-child(3){grid-column:1/-1}.sbox .go{grid-column:1/-1;justify-content:center;padding:13px;margin-top:8px}}
+
+/* trust */
+.trust{border-bottom:1px solid var(--hair)}
+.trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.trust .t{display:flex;gap:12px;align-items:center;padding-block:18px;padding-right:16px;min-width:0}
+.trust .t + .t{padding-left:20px;border-left:1px solid var(--hair)}
+.trust svg{flex:none;width:30px;height:30px;color:var(--brand)}
+.trust b{display:block;font-size:13.5px}
+.trust small{display:block;font-size:11.5px;color:var(--mute);line-height:1.5}
+@media (max-width:900px){.trust .wrap{grid-template-columns:1fr 1fr}.trust .t:nth-child(3){padding-left:0;border-left:0}.trust .t:nth-child(n+3){border-top:1px solid var(--hair)}}
+@media (max-width:480px){.trust .wrap{grid-template-columns:1fr}.trust .t + .t{padding-left:0;border-left:0;border-top:1px solid var(--hair)}}
+
+section{padding-block:clamp(48px,6vw,72px)}
+.alt{background:var(--bg-2)}
+.sh{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.sh h2{font-size:clamp(20px,2.4vw,26px);font-weight:900;letter-spacing:.04em;display:flex;align-items:center;gap:12px}
+.sh h2::before{content:"";width:6px;height:1.1em;background:var(--brand);border-radius:2px}
+.sh p{color:var(--mute);font-size:13px}
+.sh .more{font-size:13px;font-weight:700;color:var(--brand);display:flex;gap:6px;align-items:center;background:none;border:0;cursor:pointer;padding:0}
+.sh .more:hover{text-decoration:underline}
+
+/* areas */
+.areas{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.area{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;max-width:100%;color:#fff;cursor:pointer;border:0;padding:0;text-align:left;background:var(--brand-d);isolation:isolate}
+.area img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1);z-index:-2}
+.area::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6))}
+.area:hover img{transform:scale(1.06)}
+.area .big-kr{position:absolute;top:10px;left:12px;font-family:var(--f-kr);font-size:46px;font-weight:700;line-height:1;opacity:.22;z-index:-1}
+.area .lb{position:absolute;left:14px;right:14px;bottom:12px;display:grid}
+.area .lb b{font-size:18px;font-weight:900;letter-spacing:.06em}
+.area .lb small{font-size:11.5px;opacity:.9}
+.area.c1{background:linear-gradient(160deg,#2E7F96,#174A5C)}
+.area.c2{background:linear-gradient(160deg,#9A6A3A,#5A3A1E)}
+.area.c3{background:linear-gradient(160deg,#6C7B3A,#3B4620)}
+@media (max-width:960px){.areas{grid-template-columns:repeat(3,1fr)}.area{aspect-ratio:4/3}}
+@media (max-width:520px){.areas{grid-template-columns:1fr 1fr}}
+
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+.cat{display:grid;justify-items:center;gap:8px;padding:18px 6px 14px;border:1px solid var(--hair);border-radius:12px;background:var(--bg);cursor:pointer;font-size:12.5px;font-weight:700;text-align:center;line-height:1.4;transition:border-color .2s,transform .2s}
+.cat:hover{border-color:var(--brand);transform:translateY(-2px)}
+.cat .ic{width:48px;height:48px;border-radius:50%;background:var(--brand-l);color:var(--brand);display:grid;place-items:center}
+.cat svg{width:24px;height:24px}
+.cat[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-l)}
+@media (max-width:960px){.cats{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:420px){.cats{grid-template-columns:repeat(2,1fr)}}
+
+/* cards */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:6px 16px;font-size:13px;cursor:pointer;font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 3*18px)/4);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;scrollbar-width:thin}
+.rail > *{scroll-snap-align:start}
+@media (max-width:960px){.rail{grid-auto-columns:42%}}
+@media (max-width:560px){.rail{grid-auto-columns:78%}}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 18px}
+@media (max-width:960px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 12px}}
+@media (max-width:400px){.grid{grid-template-columns:1fr}}
+.card{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .pic{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--bg-2)}
+.card .pic img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.card:hover .pic img{transform:scale(1.05)}
+.card .cover::after{content:"";position:absolute;inset:0;z-index:1}
+.card .fav{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.card .fav svg{width:18px;height:18px}
+.card .fav[aria-pressed="true"]{color:var(--price)}
+.card .fav[aria-pressed="true"] path{fill:currentColor}
+.card .rank{position:absolute;top:0;left:0;z-index:1;background:var(--ink);color:#fff;font-family:var(--f-body);font-weight:900;font-size:19px;min-width:38px;text-align:center;line-height:1;padding:8px 12px 10px;border-radius:10px 0 10px 0}
+.card .rank.r1{background:#B8862E}.card .rank.r2{background:#7D8A93}.card .rank.r3{background:#9A5E3A}
+.card .hot{position:absolute;left:8px;bottom:8px;background:var(--price);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px}
+.card .meta{font-size:11.5px;color:var(--mute);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.card .meta .ty{border:1px solid var(--hair);border-radius:4px;padding:0 6px;color:var(--ink)}
+.card h3{font-size:14.5px;font-weight:700;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3.1em}
+.card:hover h3{color:var(--brand)}
+.stars{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.stars .s{color:var(--star,#F2A33A);letter-spacing:1px}
+.stars b{font-weight:700}
+.stars small{color:var(--mute)}
+.badges{display:flex;flex-wrap:wrap;gap:4px}
+.badges span{font-size:10.5px;background:var(--brand-l);color:var(--brand-d);border-radius:4px;padding:1px 7px;font-weight:500}
+.card .pr{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:auto;padding-top:4px}
+.card .pr .cx{font-size:11px;color:var(--brand);font-weight:500}
+.card .pr b{display:inline-flex;align-items:baseline;font-size:19px;font-weight:900;color:var(--price);font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .pr b small{font-size:11px;color:var(--mute);font-weight:400;margin-left:2px}
+
+/* features */
+.feat{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+.fb{position:relative;border-radius:14px;overflow:hidden;color:#fff;min-height:300px;display:flex;align-items:flex-end;isolation:isolate}
+.fb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.fb:hover img{transform:scale(1.04)}
+.fb::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.72))}
+.fb .in{padding:26px 28px}
+.fb .tag{display:inline-block;background:var(--sun);color:#2A1A05;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:4px}
+.fb h3{font-size:clamp(22px,2.6vw,30px);font-weight:900;margin-top:10px;letter-spacing:.04em;line-height:1.4}
+.fb p{font-size:13.5px;margin-top:6px;opacity:.92;max-width:30em}
+.fb .go{display:inline-flex;margin-top:14px;background:#fff;color:var(--ink);font-weight:700;font-size:13px;padding:9px 18px;border-radius:999px}
+.feat .stack{display:grid;gap:18px}
+.feat .stack .fb{min-height:141px}
+@media (max-width:860px){.feat{grid-template-columns:1fr}.feat .stack .fb{min-height:220px}}
+
+/* results */
+.fbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:22px;padding:12px 14px;background:var(--bg-2);border-radius:10px}
+.fbar .cur{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.fbar .chip{background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:3px 6px 3px 12px;display:inline-flex;gap:6px;align-items:center}
+.fbar .chip button{border:0;background:var(--bg-2);border-radius:50%;width:20px;height:20px;cursor:pointer;line-height:1;font-size:13px}
+.fbar .n b{font-size:16px;font-variant-numeric:tabular-nums}
+.fbar select{font:inherit;font-size:13px;border:1px solid var(--hair);background:var(--bg);border-radius:8px;padding:7px 10px}
+.empty{grid-column:1/-1;text-align:center;padding:48px 16px;border:1px dashed var(--hair);border-radius:12px;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}
+.empty a{color:var(--brand);font-weight:700}
+
+/* reviews */
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.rev{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:22px;display:grid;gap:10px;align-content:start;min-width:0}
+.rev h3{font-size:15px;font-weight:700;line-height:1.6}
+.rev p{font-size:13.5px;color:var(--mute)}
+.rev .who{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--mute);border-top:1px solid var(--hair);padding-top:10px}
+.rev .who a{color:var(--brand);font-weight:700}
+.rnote{font-size:12px;color:var(--mute);margin-top:14px}
+@media (max-width:860px){.revs{grid-template-columns:1fr}}
+
+/* services */
+.svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-width:0}
+.svc .pic{aspect-ratio:16/9;overflow:hidden}
+.svc .pic img{width:100%;height:100%;object-fit:cover}
+.svc .in{padding:20px 22px 22px;display:grid;gap:8px}
+.svc h3{font-size:17px;font-weight:900}
+.svc p{font-size:13.5px;color:var(--mute)}
+.svc ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.svc li{font-size:11.5px;font-family:var(--f-mono);border:1px solid var(--hair);border-radius:4px;padding:1px 7px}
+.svc .go{color:var(--brand);font-weight:700;font-size:13px;margin-top:6px}
+@media (max-width:860px){.svcs{grid-template-columns:1fr}}
+
+/* support band */
+.support{background:var(--brand-d);color:#fff}
+.support .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding-block:36px}
+.support h2{font-size:clamp(19px,2.2vw,24px);font-weight:900}
+.support p{font-size:13px;opacity:.85;margin-top:4px}
+.support .tel{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.support .num{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:clamp(28px,3.4vw,38px);line-height:1;user-select:all}
+.support .num small{display:block;font-family:var(--f-body);font-style:normal;font-weight:400;font-size:11.5px;opacity:.85;margin-top:6px}
+.support .btns{display:flex;gap:8px;flex-wrap:wrap}
+.support .btns a{border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700}
+.support .btns a:hover{background:#fff;color:var(--brand-d)}
+@media (max-width:860px){.support .wrap{grid-template-columns:1fr}}
+
+/* news + company */
+.nc{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px}
+.news{list-style:none;margin:0;padding:0;border-top:1px solid var(--hair)}
+.news li{display:grid;grid-template-columns:96px 70px minmax(0,1fr);gap:12px;padding-block:14px;border-bottom:1px solid var(--hair);font-size:13.5px;align-items:baseline}
+.news time{font-family:var(--f-mono);font-size:12px;color:var(--mute)}
+.news .t{font-size:10.5px;font-weight:700;color:var(--brand);border:1px solid var(--brand-l);background:var(--brand-l);border-radius:4px;text-align:center}
+@media (max-width:560px){.news li{grid-template-columns:auto auto}.news li > span:last-child{grid-column:1/-1}}
+.lic{border-top:1px solid var(--hair);padding-top:16px;color:var(--mute);font-size:12px;line-height:1.7;align-self:start;margin-top:52px}
+.lic h2{font-size:12.5px;font-weight:700;color:var(--ink);letter-spacing:.04em;margin-bottom:8px}
+.lic dl{margin:0;display:grid;grid-template-columns:7.5em 1fr;gap:2px 12px}
+.lic dd{margin:0;min-width:0}
+@media (max-width:860px){.nc{grid-template-columns:1fr}}
+
+/* footer */
+footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
+.fcols{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:32px;padding-block:56px 40px}
+.fcols h4{color:#fff;font-size:13px;margin-bottom:12px}
+.fcols ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.fcols a:hover{color:#fff}
+.fcols .about{display:grid;gap:12px;align-content:start}
+.fcols .about b{color:#fff;font-size:17px;letter-spacing:.14em;font-weight:900}
+@media (max-width:900px){.fcols{grid-template-columns:1fr 1fr}.fcols .about{grid-column:1/-1}}
+.fbot{border-top:1px solid rgba(255,255,255,.1)}
+.fbot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:18px}
+
+/* 空席カレンダー */
+.cal{background:var(--white);border:1px solid var(--hair);border-radius:12px;padding:16px;max-width:520px}
+.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-hd b{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums}
+.cal-hd button{width:36px;height:36px;border-radius:50%;border:1px solid var(--hair);background:var(--white);cursor:pointer;font-size:18px;line-height:1;color:var(--ink)}
+.cal-hd button:disabled{opacity:.3;cursor:not-allowed}
+.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-w{font-size:11px;color:var(--mute);text-align:center;padding:4px 0}
+.cal-w.su{color:#C8402A}.cal-w.sa{color:#2C5FA0}
+.cal-d{aspect-ratio:1/1.05;border-radius:8px;display:grid;align-content:center;justify-items:center;gap:1px;font-size:13px;color:#B5BCC2;font-variant-numeric:tabular-nums;min-width:0}
+button.cal-d{border:1.5px solid var(--hair);background:var(--white);color:var(--ink);cursor:pointer;font:inherit;font-size:13px;padding:0}
+button.cal-d:hover:not(:disabled){border-color:var(--brand)}
+button.cal-d .mk{font-size:10.5px;font-weight:700;color:var(--brand);line-height:1.2;white-space:nowrap}
+button.cal-d.few .mk{color:#B26A00}
+button.cal-d:disabled{background:var(--bg-2);cursor:not-allowed;color:#9AA2AB}
+button.cal-d:disabled .mk{color:#9AA2AB}
+button.cal-d[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+button.cal-d[aria-pressed="true"] .mk{color:#fff}
+.cal-lg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:11.5px;color:var(--mute);margin-top:12px}
+.cal-lg b{color:var(--brand)}
+.cal-sel{margin-top:14px;font-size:14px;padding:12px 14px;border-radius:8px;background:var(--brand-l);color:var(--brand-d)}
+.cal-sel b{font-size:15px}
+.cal-none{padding:20px;text-align:center;color:var(--mute);border:1px dashed var(--hair);border-radius:12px}
+
+/* ===== BOOKING FLOW ===== */
+.bk{position:fixed;inset:0;z-index:60;background:var(--paper);display:flex;flex-direction:column;color:var(--ink)}
+.bk-top{background:var(--ink);color:#FCFCFA;padding-top:env(safe-area-inset-top,0px)}
+.bk-top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.bk-top .t{min-width:0}
+.bk-top .t .mono{opacity:.7;font-size:10px}
+.bk-top .t b{display:block;font-family:var(--f-jp);font-size:17px;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-x{background:transparent;color:#FCFCFA;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 16px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.bk-x:hover{background:#FCFCFA;color:var(--ink)}
+.stepper{list-style:none;margin:0;padding:0;display:flex;gap:4px;counter-reset:st}
+.stepper li{flex:1;counter-increment:st;font-size:12px;color:var(--mute);padding-top:12px;border-top:3px solid var(--hair);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stepper li::before{content:counter(st) ". "}
+.stepper li.on{border-color:var(--celadon);color:var(--ink);font-weight:700}
+.stepper li.done{border-color:var(--celadon-l);color:var(--ink)}
+.bk-step-wrap{padding-block:20px 0;background:var(--white);border-bottom:1px solid var(--hair)}
+.bk-step-wrap .wrap{padding-bottom:14px}
+.bk-body{flex:1;overflow:auto;overscroll-behavior:contain}
+.bk-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;padding-block:36px 48px;align-items:start}
+.bk-main{min-width:0}
+.bk-h{font-family:var(--f-jp);font-weight:900;font-size:22px;letter-spacing:.05em;margin:0 0 16px}
+.bk-h:not(:first-child){margin-top:40px}
+.bk-lead{color:var(--mute);font-size:13.5px;margin:-8px 0 16px}
+.demo-note{background:#FFF6E2;border:1px solid #EBCB86;color:#5C4210;font-size:12.5px;padding:10px 14px;border-radius:6px;margin-bottom:28px}
+.dates{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.date{position:relative;display:grid;gap:2px;border:1.5px solid var(--hair);background:var(--white);border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color .2s}
+.date input{position:absolute;opacity:0;pointer-events:none}
+.date:hover{border-color:var(--mute)}
+.date:has(input:checked){border-color:var(--celadon);box-shadow:0 0 0 3px rgba(79,127,112,.18)}
+.date:has(input:focus-visible){outline:2px solid var(--gold);outline-offset:2px}
+.date.full{opacity:.5;cursor:not-allowed}
+.date .d{font-family:var(--f-jp);font-weight:900;font-size:17px;font-variant-numeric:tabular-nums}
+.date .r{font-size:12px;color:var(--mute)}
+.seat{justify-self:start;margin-top:6px;font-size:11px;font-weight:700;padding:2px 10px;border-radius:999px;background:#E3EFEA;color:#2F5D50}
+.seat.few{background:#FBE8C4;color:#7A4E07}
+.seat.x{background:#ECECEC;color:#777}
+.pax{display:grid;border-top:1px solid var(--hair)}
+.pr{display:grid;grid-template-columns:minmax(0,1fr) auto 110px;gap:16px;align-items:center;padding-block:14px;border-bottom:1px solid var(--hair)}
+.pr small{display:block;color:var(--mute);font-size:12px}
+.pr .pp{text-align:right;font-variant-numeric:tabular-nums;font-size:14px}
+.ctr{display:flex;align-items:center;gap:6px}
+.ctr button{width:36px;height:36px;border-radius:50%;border:1px solid var(--hair);background:var(--white);font-size:18px;line-height:1;cursor:pointer;color:var(--ink)}
+.ctr button:hover:not(:disabled){border-color:var(--ink)}
+.ctr button:disabled{opacity:.35;cursor:not-allowed}
+.ctr output{width:30px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;font-size:16px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{position:relative;display:grid;gap:2px;border:1.5px solid var(--hair);background:var(--white);border-radius:8px;padding:14px 16px;cursor:pointer}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt:has(input:checked){border-color:var(--celadon);box-shadow:0 0 0 3px rgba(79,127,112,.18)}
+.opt:has(input:focus-visible){outline:2px solid var(--gold);outline-offset:2px}
+.opt:has(input:disabled){opacity:.5;cursor:not-allowed}
+.opt b{font-size:14.5px}
+.opt span{font-size:12.5px;color:var(--mute)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.fgrid .full{grid-column:1/-1}
+.fld{display:grid;gap:6px;font-size:12.5px;color:var(--mute)}
+.fld i{font-style:normal;color:var(--seal);margin-left:4px}
+.fld input,.fld select{font:inherit;font-size:15px;color:var(--ink);background:var(--white);border:1px solid var(--hair);border-radius:6px;padding:11px 12px;width:100%}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--celadon);box-shadow:0 0 0 3px rgba(79,127,112,.18)}
+.fld input[aria-invalid="true"]{border-color:var(--seal)}
+.fld input[readonly]{background:var(--paper);color:var(--mute)}
+.tv{border:1px solid var(--hair);background:var(--white);border-radius:8px;padding:20px;margin-top:16px}
+.tv .mono{color:var(--celadon);display:block;margin-bottom:12px}
+.fill-demo{background:transparent;border:1px dashed var(--mute);border-radius:999px;padding:6px 14px;font:inherit;font-size:12.5px;color:var(--mute);cursor:pointer;margin-bottom:16px}
+.fill-demo:hover{color:var(--ink);border-color:var(--ink)}
+.cond{margin:0;display:grid;grid-template-columns:10em 1fr;border-top:1px solid var(--hair);font-size:13.5px}
+.cond dt,.cond dd{margin:0;padding-block:12px;border-bottom:1px solid var(--hair);min-width:0}
+.cond dt{color:var(--mute)}
+.cond ul{margin:0;padding-left:1.1em}
+.tbl-wrap{overflow-x:auto}
+.cxl{width:100%;min-width:420px;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+.cxl th,.cxl td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--hair)}
+.cxl th{font-size:12px;color:var(--mute);font-weight:500;background:var(--paper-2)}
+.cxl td:last-child{text-align:right;font-weight:700}
+.agree{display:grid;gap:12px;margin-top:8px}
+.chk{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;font-size:14px;cursor:pointer;background:var(--white);border:1px solid var(--hair);border-radius:8px;padding:14px 16px}
+.chk input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--celadon)}
+.chk a{color:var(--celadon)}
+.card-demo{border:1px solid var(--hair);background:var(--white);border-radius:8px;padding:20px;margin-top:16px}
+.card-demo .brands{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.card-demo .brands span{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;border:1px solid var(--hair);border-radius:4px;padding:3px 7px;color:var(--mute)}
+.card-demo .test{font-size:12px;color:#7A4E07;margin-top:14px}
+.bank{border:1px solid var(--hair);background:var(--white);border-radius:8px;padding:20px;margin-top:16px;font-size:13.5px;color:var(--mute)}
+.err{color:var(--seal);font-size:13px;margin-top:16px;min-height:1.2em}
+.sum{position:sticky;top:20px;background:var(--white);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.sum .ph-img{aspect-ratio:16/9}
+.sum-in{padding:20px 22px 22px}
+.sum .mono{color:var(--celadon);font-size:10px}
+.sum h4{font-family:var(--f-jp);font-size:17px;font-weight:900;margin:4px 0 14px;letter-spacing:.04em;line-height:1.5}
+.sum dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px}
+.sum dt{color:var(--mute)}
+.sum dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;min-width:0}
+.sum .lines{border-top:1px solid var(--hair);margin-top:14px;padding-top:14px}
+.sum .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--ink);margin-top:14px;padding-top:12px}
+.sum .tot b{font-family:var(--f-jp);font-weight:900;font-size:26px;font-variant-numeric:tabular-nums}
+.sum .now{margin-top:10px;background:var(--paper-2);border-radius:6px;padding:10px 12px;font-size:12.5px;display:grid;gap:2px}
+.sum .now b{font-size:15px;font-variant-numeric:tabular-nums}
+.bk-foot{background:var(--white);border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bk-foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.bk-foot .ft{display:grid;line-height:1.4}
+.bk-foot .ft small{font-size:11.5px;color:var(--mute)}
+.bk-foot .ft b{font-family:var(--f-jp);font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.bk-foot .acts{display:flex;gap:10px}
+.btn-back{background:transparent;border:1px solid var(--hair);color:var(--ink)}
+.btn-next{background:var(--ink);color:#FCFCFA}
+.btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-pay{background:var(--gold);color:#22180A}
+.proc{position:absolute;inset:0;background:rgba(244,245,242,.92);display:grid;place-items:center;z-index:2;text-align:center;font-size:14px}
+.spin{width:40px;height:40px;border-radius:50%;border:3px solid var(--hair);border-top-color:var(--celadon);margin:0 auto 16px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.done{text-align:left}
+.done .ok{width:56px;height:56px;border-radius:50%;background:var(--celadon);color:#fff;display:grid;place-items:center;font-size:26px;margin-bottom:20px}
+.done h3{font-family:var(--f-jp);font-weight:900;font-size:clamp(24px,3vw,32px);letter-spacing:.05em}
+.done .no{font-family:var(--f-mono);font-size:20px;letter-spacing:.08em;margin-top:18px;user-select:all}
+.done p{color:var(--mute);margin-top:14px;max-width:34em;font-size:14px}
+.done ol{margin:20px 0 0;padding-left:1.3em;font-size:14px;display:grid;gap:8px}
+@media (max-width:960px){.bk-grid{grid-template-columns:1fr}.sum{position:static}.sum .ph-img{display:none}}
+@media (max-width:640px){
+  .dates,.opts,.fgrid{grid-template-columns:1fr}
+  .stepper li{font-size:0}.stepper li::before{font-size:12px}.stepper li.on{font-size:12px}
+  .pr{grid-template-columns:minmax(0,1fr) auto}.pr .pp{display:none}
+  .cond{grid-template-columns:1fr}.cond dt{border-bottom:0;padding-bottom:0}
+  .bk-foot .btn{padding:12px 16px}
+  .bk-foot .btn-back{display:none}
+}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font-weight:700;font-size:14px;border:0;cursor:pointer;font-family:inherit;transition:background .2s}
+.ph-img{overflow:hidden}.ph-img img{width:100%;height:100%;object-fit:cover}
+#results{scroll-margin-top:72px}
+[hidden]{display:none!important}
+</style>
+<style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}</style>
+</head>
+<body>
+
+<div class="demo"><div class="wrap">試作版です。掲載の日程・料金・評価・体験談は見本で、予約・決済は実際には行われません。</div></div>
+<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">お電話でのご予約・ご相談　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span></div></div>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="サントラベル トップ">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="16" r="10" fill="#F2A33A"/><path d="M2 22h30M6 26.5h22M11 31h12" stroke="#1F6B5C" stroke-width="2" stroke-linecap="round"/></svg>
+      <span><b>サントラベル</b><small>TOURS ・ ツアー予約</small></span>
+    </a>
+    <form class="hsearch" id="hsearch" role="search">
+      <label for="hq" class="sr">ツアーを検索</label>
+      <input id="hq" type="search" placeholder="ツアー・体験を検索（例：焼肉、王宮、K-POP）">
+      <button type="submit" aria-label="検索"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+    </form>
+    <nav class="hnav" aria-label="会員メニュー">
+      <a href="#results" class="hide-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>予約確認</a>
+      <button type="button" id="fav-btn" aria-label="お気に入り"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>お気に入り<span class="cnt" id="fav-cnt" hidden>0</span></button>
+      <a href="index.html" class="hide-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg>会社案内</a>
+      <a href="#results" class="login">ログイン</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <img src="img/bukchon.jpg" alt="夕暮れの北村韓屋村の坂道を歩く二人。遠くにNソウルタワー" fetchpriority="high">
+    <div class="wrap">
+      <p class="kr">가까운 나라, 깊은 여행.</p>
+      <h1>韓国の旅、<br>ぜんぶここで予約。</h1>
+      <p class="sub">ツアー・現地体験・航空券・ビザまで。1996年創業の韓国専門旅行社です。</p>
+      <form class="sbox" id="sbox" role="search">
+        <div class="f"><label for="s-area">行き先</label><select id="s-area"><option value="">すべてのエリア</option><option value="seoul">ソウル</option><option value="busan">釜山</option><option value="jeju">済州島</option><option value="gyeongju">慶州</option><option value="jeonju">全州</option><option value="other">韓国以外の海外</option></select></div>
+        <div class="f"><label for="s-date">日付</label><input id="s-date" type="date" min="2026-11-13"></div>
+        <div class="f"><label for="s-q">キーワード</label><input id="s-q" type="search" placeholder="例：焼肉、市場、K-POP"></div>
+        <button class="go" type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>検索する</button>
+      </form>
+      <div class="kw"><span>人気のキーワード</span><button type="button" data-q="K-POP">#K-POP観覧</button><button type="button" data-q="焼肉">#焼肉</button><button type="button" data-q="市場">#市場の食べ歩き</button><button type="button" data-q="王宮">#王宮</button><button type="button" data-q="韓屋">#韓屋</button></div>
+    </div>
+  </div>
+
+  <div class="trust"><div class="wrap">
+    <div class="t"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 3 5 7v8c0 7 5 12 11 14 6-2 11-7 11-14V7z"/><path d="m11 16 3.5 3.5L21 13"/></svg><div><b>第1種旅行業の安心</b><small>観光庁長官登録 第1791号</small></div></div>
+    <div class="t"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="16" cy="16" r="12"/><path d="M16 9v7l5 3"/></svg><div><b>その場で予約確定</b><small>24時間オンラインで申込み</small></div></div>
+    <div class="t"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h20v13H14l-6 5v-5H6z"/><path d="M11 13h10M11 17h6"/></svg><div><b>日本語でサポート</b><small>電話・LINE・カカオトーク</small></div></div>
+    <div class="t"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 26V12l11-7 11 7v14"/><path d="M12 26v-8h8v8"/></svg><div><b>韓国専門30年</b><small>1996年創業・新大久保に店舗</small></div></div>
+  </div></div>
+
+  <section>
+    <div class="wrap">
+      <div class="sh"><h2>エリアから探す</h2><p>韓国の主要都市と、その先の海外へ。</p></div>
+      <div class="areas">
+        <button class="area" type="button" data-area="seoul"><img src="img/bukchon.jpg" alt="" loading="lazy"><span class="lb"><b>ソウル</b><small class="kr">서울</small></span></button>
+        <button class="area" type="button" data-area="busan"><img src="img/busan.jpg" alt="" loading="lazy"><span class="lb"><b>釜山</b><small class="kr">부산</small></span></button>
+        <button class="area c1" type="button" data-area="jeju"><span class="big-kr">제주</span><span class="lb"><b>済州島</b><small>ツアー準備中</small></span></button>
+        <button class="area c2" type="button" data-area="gyeongju"><span class="big-kr">경주</span><span class="lb"><b>慶州</b><small>ツアー準備中</small></span></button>
+        <button class="area c3" type="button" data-area="jeonju"><span class="big-kr">전주</span><span class="lb"><b>全州</b><small>ツアー準備中</small></span></button>
+        <button class="area" type="button" data-area="other"><img src="img/pyramids.jpg" alt="" loading="lazy" style="object-position:65% 50%"><span class="lb"><b>その他の海外</b><small>エジプトほか</small></span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" style="padding-top:clamp(40px,5vw,56px)">
+    <div class="wrap">
+      <div class="sh"><h2>カテゴリから探す</h2></div>
+      <div class="cats" id="cats">
+        <button class="cat" type="button" data-cat="kpop"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg></span>K-POP・<br>エンタメ</button>
+        <button class="cat" type="button" data-cat="sight"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 9c4-1 6-3 10-6 4 3 6 5 10 6H2z"/><path d="M5 9v10M19 9v10M9 12v7M15 12v7M3 21h18"/></svg></span>観光・<br>王宮</button>
+        <button class="cat" type="button" data-cat="food"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 3 10 9M15 2l-1 7"/></svg></span>グルメ・<br>食べ歩き</button>
+        <button class="cat" type="button" data-cat="beauty"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c3 4 5 6.5 5 10a5 5 0 0 1-10 0c0-3.5 2-6 5-10z"/></svg></span>美容・<br>エステ</button>
+        <button class="cat" type="button" data-cat="culture"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 10h12l-1.5 9a2 2 0 0 1-2 1.7h-5a2 2 0 0 1-2-1.7z"/><path d="M8 10c0-3 1.5-5 4-5s4 2 4 5"/></svg></span>伝統文化<br>体験</button>
+        <button class="cat" type="button" data-cat="package"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 14 22 6l-3 7-7 2-3 5-1-4z"/></svg></span>航空券付き<br>ツアー</button>
+        <a class="cat" href="#services"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span>格安<br>航空券</a>
+        <a class="cat" href="visa.html"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M9 16h6"/></svg></span>ビザ<br>申請代行</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sh"><h2>人気ランキング</h2>
+        <div class="tabs" role="tablist" aria-label="ランキングのエリア"><button type="button" role="tab" aria-selected="true" data-rk="">すべて</button><button type="button" role="tab" aria-selected="false" data-rk="seoul">ソウル</button><button type="button" role="tab" aria-selected="false" data-rk="busan">釜山</button></div>
+      </div>
+      <div class="rail" id="rank"></div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sh"><h2>特集</h2></div>
+      <div class="feat">
+        <a class="fb" href="#book-kpop"><img src="img/concert.jpg" alt="" loading="lazy"><div class="in"><span class="tag">追加募集中</span><h3>PRODUCE 101 JAPAN 新世界<br>観覧ツアー</h3><p>観覧チケット・航空券・ホテルをまとめて手配。残席わずかの日程があります。</p><span class="go">日程を見る →</span></div></a>
+        <div class="stack">
+          <button class="fb" type="button" data-cat="food" style="border:0;padding:0;text-align:left;cursor:pointer"><img src="img/market.jpg" alt="" loading="lazy"><div class="in"><span class="tag">冬の特集</span><h3>市場と屋台で、ソウルを食べ歩く</h3></div></button>
+          <a class="fb" href="#book-egypt"><img src="img/pyramids.jpg" alt="" loading="lazy" style="object-position:50% 70%"><div class="in"><span class="tag">韓国の先へ</span><h3>エジプト 三大ピラミッド 8日間</h3></div></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="results">
+    <div class="wrap">
+      <div class="sh"><h2 id="res-title">すべてのツアー・体験</h2><p>カードを選ぶと、日程と空席を確認してそのまま予約できます。</p></div>
+      <div class="fbar">
+        <div class="cur"><span class="n"><b id="res-n">0</b> 件</span><span id="res-chips"></span></div>
+        <label><span class="sr">並び替え</span><select id="sort"><option value="rec">おすすめ順</option><option value="cheap">料金が安い順</option><option value="rate">評価が高い順</option><option value="rev">体験談が多い順</option></select></label>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sh"><h2>お客様の体験談</h2><p>ご参加いただいたお客様の声（見本）</p></div>
+      <div class="revs">
+        <article class="rev"><div class="stars"><span class="s">★★★★★</span><b>5.0</b></div><h3>ガイドさんのおかげで、市場がぜんぶ楽しかった</h3><p>一人では入りにくい屋台も、ガイドさんが注文から食べ方まで教えてくれました。ピンデトックは焼きたてが本当においしかったです。</p><div class="who"><span>30代女性・友人と参加</span><a href="#book-market">広蔵市場 食べ歩き</a></div></article>
+        <article class="rev"><div class="stars"><span class="s">★★★★★</span><b>5.0</b></div><h3>チケットの心配をしなくていいのが一番</h3><p>公演チケット、飛行機、ホテルが全部セットで、当日は会場に行くだけ。送迎もあって初めての韓国でも迷いませんでした。</p><div class="who"><span>20代女性・一人旅</span><a href="#book-kpop">K-POP観覧ツアー</a></div></article>
+        <article class="rev"><div class="stars"><span class="s">★★★★☆</span><b>4.0</b></div><h3>母の誕生日に、韓屋での食事を</h3><p>家庭料理を囲みながら、女将さんが料理の話をしてくれて母も大喜び。北村の散策は坂が多いので歩きやすい靴がおすすめです。</p><div class="who"><span>50代男性・家族旅行</span><a href="#book-hanok">韓屋で味わう家庭料理</a></div></article>
+      </div>
+      <p class="rnote">掲載の体験談は見本です。公開時は実際にご参加いただいたお客様の体験談を表示します。</p>
+    </div>
+  </section>
+
+  <section class="alt" id="services">
+    <div class="wrap">
+      <div class="sh"><h2>ツアー以外のご相談も</h2></div>
+      <div class="svcs">
+        <article class="svc"><div class="pic"><img src="img/counter.jpg" alt="カウンターで旅行の相談を受けるスタッフ" loading="lazy" style="object-position:30% 50%"></div><div class="in"><h3>格安航空券</h3><p>日本各地から韓国各都市へ。航空会社と日程を比べて、ご予算に合う便をご案内します。</p><ul><li>HND–GMP</li><li>NRT–ICN</li><li>KIX–PUS</li><li>FUK–PUS</li></ul><a class="go" href="#support">空席を問い合わせる →</a></div></article>
+        <article class="svc"><div class="pic"><img src="img/visa-staff.jpg" alt="書類を確認するスタッフ" loading="lazy" style="object-position:62% 40%"></div><div class="in"><h3>ビザ申請代行</h3><p>韓国ビザ・米国ビザの申請を代行します。必要書類の確認からお任せください。</p><ul><li>C-3-9</li><li>C-4-5</li><li>C-3-4</li><li>B-1</li><li>B-2</li><li>e-Arrival</li></ul><a class="go" href="visa.html">ビザ申請代行の詳細を見る →</a></div></article>
+        <article class="svc"><div class="pic"><img src="img/team.jpg" alt="旅行会社のスタッフのイメージ" loading="lazy"></div><div class="in"><h3>団体・オーダーメイド旅行</h3><p>社員旅行や家族旅行など、日程も行き先も自由に。韓国に詳しいスタッフがプランをつくります。</p><ul><li>社員旅行</li><li>視察</li><li>ファンミーティング</li></ul><a class="go" href="#support">見積もりを依頼する →</a></div></article>
+      </div>
+    </div>
+  </section>
+
+  <div class="support" id="support"><div class="wrap">
+    <div><h2>予約や旅行の相談は、お気軽にどうぞ</h2><p>東京本店営業所（新大久保）では、店頭でのご相談も承っています。</p></div>
+    <div class="tel"><span class="num">03-3366-3221<small>月〜金 9:30〜18:00 ／ info@suntravel.co.jp</small></span><span class="btns"><a href="#">LINEで相談</a><a href="#">KakaoTalk</a></span></div>
+  </div></div>
+
+  <section id="company">
+    <div class="wrap nc">
+      <div>
+        <div class="sh"><h2>お知らせ</h2></div>
+        <ul class="news">
+          <li><time datetime="2026-04-07">2026.04.07</time><span class="t">ツアー</span><span>PRODUCE 101 JAPAN 新世界 観覧ツアー追加募集のお知らせ</span></li>
+          <li><time datetime="2026-01-12">2026.01.12</time><span class="t">航空</span><span>アシアナ航空 仁川空港第2ターミナル移転のご案内</span></li>
+          <li><time datetime="2026-01-01">2026.01.01</time><span class="t">ビザ</span><span>韓国電子入国申告書（e-Arrival Card）申請代行のご案内</span></li>
+          <li><time datetime="2025-12-20">2025.12.20</time><span class="t">ビザ</span><span>K-ETA一時免除措置、2026年12月まで延長</span></li>
+        </ul>
+      </div>
+      <aside class="lic" aria-label="旅行業登録">
+        <h2>旅行業登録</h2>
+        <dl>
+          <dt>登録番号</dt><dd>観光庁長官登録旅行業 第1791号（第1種）</dd>
+          <dt>商号</dt><dd>株式会社サントラベル</dd>
+          <dt>代表者</dt><dd>代表取締役 宮内 健太郎</dd>
+          <dt>旅行業務取扱管理者</dt><dd>具 ボンジン（総合旅行業務取扱管理者）</dd>
+          <dt>本社</dt><dd>横浜市港北区新横浜2-17-19 AR新横浜ビル4F</dd>
+          <dt>東京本店</dt><dd>新宿区百人町1-23-6 ケーエムビル3階</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap fcols">
+    <div class="about"><b>サントラベル</b><p>1996年創業の韓国専門旅行社。ツアー・現地体験・航空券・ビザ申請代行をひとつの窓口でご案内します。</p><p>観光庁長官登録旅行業 第1791号</p></div>
+    <div><h4>エリア</h4><ul><li><a href="#results" data-area="seoul">ソウル</a></li><li><a href="#results" data-area="busan">釜山</a></li><li><a href="#results" data-area="jeju">済州島</a></li><li><a href="#results" data-area="other">その他の海外</a></li></ul></div>
+    <div><h4>カテゴリ</h4><ul><li><a href="#results" data-cat="kpop">K-POP・エンタメ</a></li><li><a href="#results" data-cat="food">グルメ・食べ歩き</a></li><li><a href="#results" data-cat="culture">伝統文化体験</a></li><li><a href="#services">航空券</a></li><li><a href="visa.html">ビザ申請代行</a></li></ul></div>
+    <div><h4>ご利用ガイド</h4><ul><li><a href="#">予約の流れ</a></li><li><a href="#">お支払い方法</a></li><li><a href="#">キャンセルについて</a></li><li><a href="#">よくある質問</a></li></ul></div>
+    <div><h4>会社情報</h4><ul><li><a href="index.html">会社案内</a></li><li><a href="#">旅行条件書</a></li><li><a href="#">旅行業約款</a></li><li><a href="#">特定商取引法に基づく表記</a></li><li><a href="#">個人情報について</a></li></ul></div>
+  </div>
+  <div class="fbot"><div class="wrap"><span>© 1996–2026 SUN TRAVEL Inc.</span><span>東京本店営業所 03-3366-3221</span></div></div>
+</footer>
+
+<div class="bk" id="bk" role="dialog" aria-modal="true" aria-labelledby="bk-title" hidden>
+  <div class="bk-top"><div class="wrap">
+    <div class="t"><span class="mono">Online Booking ／ オンライン予約</span><b id="bk-title">ツアー予約</b></div>
+    <button class="bk-x" id="bk-close" type="button">閉じる</button>
+  </div></div>
+  <div class="bk-step-wrap"><div class="wrap">
+    <ol class="stepper" id="bk-stepper"><li>日程・人数</li><li>お客様情報</li><li>旅行条件</li><li>お支払い</li><li>予約完了</li></ol>
+  </div></div>
+  <div class="bk-body" id="bk-body">
+    <div class="wrap bk-grid">
+      <div class="bk-main" id="bk-main"></div>
+      <aside class="sum" id="bk-sum" aria-label="ご予約内容"></aside>
+    </div>
+  </div>
+  <div class="bk-foot" id="bk-foot"><div class="wrap">
+    <div class="ft"><small id="bk-ft-label">旅行代金合計</small><b id="bk-ft-total">¥0</b></div>
+    <div class="acts"><button class="btn btn-back" id="bk-back" type="button">戻る</button><button class="btn btn-next" id="bk-next" type="button">次へ</button></div>
+  </div></div>
+</div>
+
+<script>
+(function(){
+/* スプレッドシート連携：Apps Script のウェブアプリURLを入れると、ツアー・空席・予約がシートと連動します。空欄ならデモ表示 */
+var API_URL='';
+var FUEL=6240; // 燃油サーチャージ・空港諸税（目安・お一人様）
+var TOURS={
+ kpop:{name:'K-POP観覧ツアー 3日間',sub:'PRODUCE 101 JAPAN 新世界 観覧',code:'ST-KP',days:3,img:'img/concert.jpg',air:true,adult:89800,child:79800,single:18000,min:1,
+   area:'seoul',cat:['kpop','package'],dur:'3日間',rating:4.8,reviews:126,badges:['観覧チケット付き','空港送迎'],hot:'追加募集中',kw:'kpop k-pop ケーポップ コンサート アイドル 観覧 ライブ',
+   dates:[['2026-12-19',4],['2027-01-16',12],['2027-02-13',0]],
+   inc:['往復航空券（エコノミークラス）','ホテル2泊（明洞エリア・朝食付き）','公演観覧チケット','仁川空港⇔ホテル間の送迎'],
+   exc:['燃油サーチャージ・空港諸税','食事（朝食以外）','海外旅行保険']},
+ market:{name:'広蔵市場 食べ歩きツアー',sub:'ソウル現地発・日本語ガイド',code:'ST-LM',days:1,img:'img/market.jpg',local:true,adult:7500,child:5000,min:1,
+   area:'seoul',cat:['food'],dur:'約2.5時間',rating:4.6,reviews:152,badges:['日本語ガイド','試食6品'],kw:'市場 屋台 チヂミ ピンデトック 食べ歩き グルメ',
+   dates:[['2026-11-28',8],['2026-12-05',12],['2026-12-12',3]],
+   inc:['日本語ガイド','屋台の試食6品（ピンデトック・キンパなど）'],exc:['集合場所までの交通費','追加の飲食代']},
+ hanok:{name:'韓屋で味わう家庭料理と北村散策',sub:'ソウル現地発・夕食付き',code:'ST-LH',days:1,img:'img/hanok-dinner.jpg',local:true,adult:9800,child:6800,min:2,
+   area:'seoul',cat:['food','culture'],dur:'約3時間',rating:4.8,reviews:73,badges:['日本語ガイド','夕食付き'],kw:'韓屋 北村 家庭料理 夕食 ハンオク',
+   dates:[['2026-11-29',6],['2026-12-06',10],['2026-12-13',8]],
+   inc:['北村韓屋村の散策（日本語ガイド）','韓屋での家庭料理の夕食','ドリンク1杯'],exc:['集合場所までの交通費','追加のドリンク']},
+ palace:{name:'日本語ガイドと歩くソウルの王宮 3日間',sub:'景福宮 半日ガイド付き',code:'ST-PL',days:3,img:'img/palace.jpg',pos:'70% 50%',air:true,adult:59800,child:52800,single:15000,min:2,
+   area:'seoul',cat:['sight','package'],dur:'3日間',rating:4.7,reviews:88,badges:['日本語ガイド','昼食1回'],kw:'王宮 景福宮 歴史 世界遺産 観光',
+   dates:[['2026-12-05',10],['2027-01-09',16],['2027-02-06',3]],
+   inc:['往復航空券（エコノミークラス）','ホテル2泊（光化門エリア・朝食付き）','景福宮 日本語ガイド（半日）','昼食1回'],
+   exc:['燃油サーチャージ・空港諸税','その他の食事','海外旅行保険']},
+ busan:{name:'釜山・海沿いの町を歩く日帰りツアー',sub:'釜山現地発・日帰り',code:'ST-LB',days:1,img:'img/busan.jpg',local:true,adult:12800,child:8800,min:2,
+   area:'busan',cat:['sight','food'],dur:'約6時間',rating:4.7,reviews:57,badges:['日本語ガイド','昼食付き'],kw:'釜山 甘川 影島 海 港 海鮮',
+   dates:[['2026-12-07',12],['2026-12-14',9],['2026-12-21',0]],
+   inc:['日本語ガイド','甘川文化村・影島の散策','昼食（海鮮）'],exc:['集合場所までの交通費','個人的な飲食代']},
+ taste:{name:'ソウル美食・美容ツアー 4日間',sub:'焼肉の名店とエステ',code:'ST-TB',days:4,img:'img/bbq.jpg',air:true,adult:74800,child:69800,single:22000,min:2,
+   area:'seoul',cat:['food','beauty','package'],dur:'4日間',rating:4.6,reviews:64,badges:['エステ60分','夕食1回'],kw:'焼肉 サムギョプサル 美容 エステ グルメ',
+   dates:[['2026-12-12',6],['2027-01-23',14],['2027-03-06',20]],
+   inc:['往復航空券（エコノミークラス）','ホテル3泊（明洞エリア・朝食付き）','焼肉の名店での夕食1回','エステ（60分）'],
+   exc:['燃油サーチャージ・空港諸税','その他の食事','海外旅行保険']},
+ pottery:{name:'韓屋の工房で器をつくる陶芸体験',sub:'ソウル現地発・陶芸体験',code:'ST-LC',days:1,img:'img/pottery.jpg',local:true,adult:18000,child:12000,min:1,
+   area:'seoul',cat:['culture'],dur:'約3時間',rating:4.9,reviews:41,badges:['少人数','日本へ発送'],kw:'陶芸 器 工房 体験 伝統 韓屋',
+   dates:[['2026-12-06',6],['2026-12-13',2],['2026-12-20',8]],
+   inc:['陶芸体験（約2時間）','焼成と日本への発送','日本語アシスタント'],exc:['集合場所までの交通費','昼食']},
+ bukchon:{name:'夕暮れの北村・三清洞さんぽ',sub:'ソウル現地発・日本語ガイド',code:'ST-LN',days:1,img:'img/bukchon.jpg',pos:'75% 50%',local:true,adult:5800,child:3800,min:1,
+   area:'seoul',cat:['sight','culture'],dur:'約2時間',rating:4.5,reviews:39,badges:['日本語ガイド','伝統茶付き'],kw:'北村 韓屋 三清洞 散策 夕暮れ 写真',
+   dates:[['2026-11-27',10],['2026-12-04',10],['2026-12-11',6]],
+   inc:['日本語ガイド','伝統茶カフェでの一杯'],exc:['集合場所までの交通費']},
+ egypt:{name:'エジプト 三大ピラミッドとナイル 8日間',sub:'ギザ・ルクソール周遊',code:'ST-EG',days:8,img:'img/pyramids.jpg',air:true,fuel:42000,adult:298000,child:268000,single:48000,min:2,
+   area:'other',cat:['sight','package'],dur:'8日間',rating:4.8,reviews:22,badges:['全行程日本語ガイド','博物館入場'],kw:'エジプト ピラミッド ナイル 世界遺産 海外',
+   dates:[['2027-02-11',8],['2027-03-18',14],['2027-04-22',16]],
+   inc:['往復航空券（経由便・エコノミークラス）','ホテル6泊','全行程の日本語ガイド','ギザのピラミッド・エジプト考古学博物館の入場料'],
+   exc:['燃油サーチャージ・空港諸税','エジプト入国ビザ','一部の食事','海外旅行保険']}
+};
+
+/* ---------- ユーティリティ ---------- */
+var WD='日月火水木金土';
+function yen(n){return '¥'+n.toLocaleString('ja-JP')}
+function dt(s){return new Date(s+'T00:00:00')}
+function addD(d,n){var x=new Date(d.getTime());x.setDate(x.getDate()+n);return x}
+function f(d){return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+'（'+WD[d.getDay()]+'）'}
+function fs(d){return (d.getMonth()+1)+'/'+d.getDate()+'（'+WD[d.getDay()]+'）'}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function today(){var t=new Date();t.setHours(0,0,0,0);return t}
+function depositPP(p){return p<30000?p:p<60000?10000:p<100000?20000:p<150000?30000:Math.round(p*.2)}
+
+/* ---------- 状態 ---------- */
+var el={bk:document.getElementById('bk'),main:document.getElementById('bk-main'),sum:document.getElementById('bk-sum'),title:document.getElementById('bk-title'),
+  stepper:document.getElementById('bk-stepper'),body:document.getElementById('bk-body'),next:document.getElementById('bk-next'),back:document.getElementById('bk-back'),
+  ftTotal:document.getElementById('bk-ft-total'),ftLabel:document.getElementById('bk-ft-label'),foot:document.getElementById('bk-foot')};
+var S=null;
+function fresh(id){var t=TOURS[id];var first=t.dates.filter(function(d){return d[1]>0})[0];
+  return {id:id,step:1,date:first?first[0]:null,adults:Math.max(2,t.min),children:0,room:'twin',origin:'羽田',form:{},agree:{a:false,b:false,c:false},amount:'full',method:'card',err:'',no:null,busy:false}}
+function T(){return TOURS[S.id]}
+function pax(){return S.adults+S.children}
+function seatsOf(d){var r=T().dates.filter(function(x){return x[0]===d})[0];return r?r[1]:0}
+
+function calc(){var t=T(),n=pax(),L=[];
+  L.push(['大人 '+yen(t.adult)+' × '+S.adults,t.adult*S.adults]);
+  if(S.children)L.push(['子供 '+yen(t.child)+' × '+S.children,t.child*S.children]);
+  if(t.days>1&&S.room==='single')L.push(['1名1室追加 '+yen(t.single)+' × '+n,t.single*n]);
+  var tour=L.reduce(function(a,b){return a+b[1]},0);
+  var fuel=t.air?(t.fuel||FUEL)*n:0;
+  if(fuel)L.push(['燃油サーチャージ・諸税（目安）',fuel]);
+  var total=tour+fuel;
+  var dep=S.date?dt(S.date):null,due=dep?addD(dep,-21):null;
+  var canDeposit=!t.local&&due&&due>today();
+  var deposit=canDeposit?(depositPP(t.adult)*S.adults+depositPP(t.child)*S.children):total;
+  var payNow=(S.amount==='deposit'&&canDeposit)?deposit:total;
+  return {lines:L,tour:tour,total:total,canDeposit:canDeposit,deposit:deposit,due:due,payNow:payNow,balance:total-payNow}}
+
+/* ---------- 画面 ---------- */
+function step1(){var t=T(),max=Math.min(9,seatsOf(S.date)||9),h='';
+  if(!API_URL)h+='<p class="demo-note">試作版のデモです。日程・料金は見本で、入力内容は送信されず、実際の決済も行われません。</p>';
+  h+='<h3 class="bk-h">出発日を選ぶ</h3>'+calHtml();
+  h+='<h3 class="bk-h">人数</h3><div class="pax">';
+  h+=row('adults','大人','12歳以上',t.adult,S.adults<=1,pax()>=max);
+  h+=row('children','子供','2〜11歳（大人の同行が必要です）',t.child,S.children<=0,pax()>=max);
+  h+='</div><p class="bk-lead" style="margin-top:10px">'+(t.min>1?'このツアーは'+t.min+'名様から催行します。':'お一人様から参加できます。')+'2歳未満のお子様はお問い合わせください。</p>';
+  if(t.days>1){h+='<h3 class="bk-h">お部屋タイプ</h3><div class="opts">'
+    +opt('room','twin','2名1室','追加料金なし',S.room==='twin',pax()<2)
+    +opt('room','single','1名1室','お一人様 +'+yen(t.single),S.room==='single',false)+'</div>'}
+  if(t.air){h+='<h3 class="bk-h">出発空港</h3><div class="opts">'+opt('origin','羽田','羽田空港','HND → GMP（金浦）',S.origin==='羽田')+opt('origin','成田','成田空港','NRT → ICN（仁川）',S.origin==='成田')+'</div>'}
+  return h}
+function calHtml(){var t=T(),ds={},months=[];
+  t.dates.forEach(function(r){ds[r[0]]=r[1];var mo=r[0].slice(0,7);if(months.indexOf(mo)<0)months.push(mo)});
+  months.sort();
+  if(!months.length)return '<div class="cal-none">現在、受付中の日程はありません。日程のご相談はお電話（03-3366-3221）でも承ります。</div>';
+  if(!S.cal||months.indexOf(S.cal)<0)S.cal=(S.date||months[0]).slice(0,7);
+  var y=+S.cal.slice(0,4),m=+S.cal.slice(5,7)-1,first=new Date(y,m,1).getDay(),nd=new Date(y,m+1,0).getDate(),ix=months.indexOf(S.cal),td=today();
+  var h='<div class="cal"><div class="cal-hd"><button type="button" data-cal="-1" aria-label="前の月"'+(ix<=0?' disabled':'')+'>‹</button><b aria-live="polite">'+y+'年'+(m+1)+'月</b><button type="button" data-cal="1" aria-label="次の月"'+(ix>=months.length-1?' disabled':'')+'>›</button></div><div class="cal-g">';
+  for(var w=0;w<7;w++)h+='<span class="cal-w'+(w===0?' su':w===6?' sa':'')+'">'+WD[w]+'</span>';
+  for(var b=0;b<first;b++)h+='<span></span>';
+  for(var d=1;d<=nd;d++){var key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    if(key in ds){var s=ds[key],past=dt(key)<td,dis=s===0||past;
+      h+='<button type="button" class="cal-d'+(s>0&&s<=5?' few':'')+'" data-day="'+key+'" aria-pressed="'+(S.date===key)+'"'+(dis?' disabled':'')+' aria-label="'+(m+1)+'月'+d+'日 '+(s===0?'満席':s<=5?'残り'+s+'席':'空席あり')+'"><span>'+d+'</span><span class="mk">'+(s===0?'×':s<=5?'残'+s:'○')+'</span></button>'}
+    else h+='<span class="cal-d">'+d+'</span>'}
+  h+='</div><div class="cal-lg"><span><b>○</b> 空席あり</span><span><b style="color:#B26A00">残n</b> 残りわずか</span><span><b style="color:#9AA2AB">×</b> 満席</span><span>色付きの日が出発日です</span></div></div>';
+  if(S.date){var sd=dt(S.date);h+='<p class="cal-sel">出発日：<b>'+f(sd)+'</b>'+(t.days>1?'　帰国 '+fs(addD(sd,t.days-1))+'（'+t.days+'日間）':'')+'　残り'+seatsOf(S.date)+'席</p>'}
+  return h}
+function row(k,label,note,price,decDis,incDis){return '<div class="pr"><div><b>'+label+'</b><small>'+note+'</small></div><div class="ctr"><button type="button" data-ctr="'+k+'" data-d="-1" aria-label="'+label+'を1人減らす"'+(decDis?' disabled':'')+'>−</button><output aria-live="polite">'+S[k]+'</output><button type="button" data-ctr="'+k+'" data-d="1" aria-label="'+label+'を1人増やす"'+(incDis?' disabled':'')+'>+</button></div><span class="pp">'+yen(price)+'</span></div>'}
+function opt(name,val,b,s,on,dis){return '<label class="opt"><input type="radio" name="bk-'+name+'" value="'+val+'"'+(on?' checked':'')+(dis?' disabled':'')+'><b>'+b+'</b><span>'+s+'</span></label>'}
+function inp(id,label,req,attrs,cls){return '<label class="fld'+(cls?' '+cls:'')+'">'+label+(req?'<i>必須</i>':'')+'<input id="'+id+'" data-f'+(req?' data-req':'')+' value="'+esc(S.form[id])+'" '+(attrs||'')+'></label>'}
+
+function step2(){var t=T(),h='<h3 class="bk-h">代表者さま</h3><p class="bk-lead">ご予約の確認と、旅行中の緊急連絡に使います。</p><button type="button" class="fill-demo" id="fill-demo">見本データを入力する</button>';
+  h+='<div class="fgrid">'+inp('f-sei','姓（漢字）',1,'autocomplete="family-name" placeholder="山田"')+inp('f-mei','名（漢字）',1,'autocomplete="given-name" placeholder="花子"')
+   +inp('f-rs','姓（ローマ字・パスポート表記）',1,'data-roma placeholder="YAMADA" autocapitalize="characters"')+inp('f-rm','名（ローマ字・パスポート表記）',1,'data-roma placeholder="HANAKO" autocapitalize="characters"')
+   +inp('f-birth','生年月日',1,'type="date"')+inp('f-tel','携帯電話番号',1,'type="tel" autocomplete="tel" placeholder="090-1234-5678"')
+   +inp('f-mail','メールアドレス',1,'type="email" autocomplete="email" placeholder="you@example.com"','full')
+   +(t.local?'':inp('f-pp','パスポート有効期限',1,'type="date"'))+'</div>';
+  for(var i=1;i<pax();i++){var kid=i>=S.adults;
+    h+='<div class="tv"><span class="mono">同行者 '+i+'（'+(kid?'子供':'大人')+'）</span><div class="fgrid">'
+     +inp('f-c'+i+'s','姓（ローマ字）',1,'data-roma placeholder="YAMADA"')+inp('f-c'+i+'m','名（ローマ字）',1,'data-roma placeholder="TARO"')
+     +inp('f-c'+i+'b','生年月日',1,'type="date"')+'</div></div>'}
+  if(!t.local)h+='<p class="bk-lead" style="margin-top:16px">渡航先の入国条件を満たす、有効なパスポートが必要です。お名前はパスポートと同じ表記でご入力ください。</p>';
+  return h}
+
+function step3(){var t=T(),c=calc(),h='<h3 class="bk-h">旅行条件の確認</h3><p class="bk-lead">お申込みの前に、以下の取引条件をご確認ください。全文は旅行条件書でご確認いただけます。</p>';
+  h+='<dl class="cond"><dt>旅行の種類</dt><dd>'+(t.local?'募集型企画旅行（現地発着）':'募集型企画旅行')+'</dd>'
+   +'<dt>旅行企画・実施</dt><dd>株式会社サントラベル（観光庁長官登録旅行業 第1791号）</dd>'
+   +'<dt>旅行代金に含まれるもの</dt><dd><ul>'+t.inc.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></dd>'
+   +'<dt>含まれないもの</dt><dd><ul>'+t.exc.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></dd>'
+   +'<dt>最少催行人員</dt><dd>'+t.min+'名</dd>'
+   +'<dt>添乗員</dt><dd>同行しません。現地係員がご案内します。</dd>'
+   +'<dt>お支払い期限</dt><dd>'+(c.canDeposit?'申込金はお申込み時、残金は '+f(c.due)+' まで':'お申込み時に全額')+'</dd></dl>';
+  h+='<h3 class="bk-h">取消料</h3><p class="bk-lead">お客様のご都合で取り消す場合、旅行代金に対して以下の取消料がかかります。</p>';
+  var rows=t.local?[['旅行開始日の前日から起算して 8日前まで','無料'],['7日前〜2日前','20%'],['前日','40%'],['当日','50%'],['旅行開始後・無連絡不参加','100%']]
+    :[['旅行開始日の前日から起算して 31日前まで','無料'],['30日前〜3日前','20%'],['2日前〜当日（旅行開始前）','50%'],['旅行開始後・無連絡不参加','100%']];
+  h+='<div class="tbl-wrap"><table class="cxl"><thead><tr><th>取消日</th><th>取消料</th></tr></thead><tbody>'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'}).join('')+'</tbody></table></div>';
+  if(!t.local)h+='<p class="bk-lead" style="margin-top:10px">年末年始など旅行開始日がピーク時の場合、40日前〜31日前の取消は旅行代金の10%となります。</p>';
+  h+='<h3 class="bk-h">同意事項</h3><div class="agree">'
+   +chk('a','<a href="#" onclick="return false">旅行条件書（取引条件説明書面）</a>の内容を確認し、同意します。')
+   +chk('b','旅行条件書・契約書面を、メールなど電磁的方法で受け取ることに同意します。')
+   +chk('c','<a href="#" onclick="return false">個人情報の取り扱い</a>に同意します。運送・宿泊機関などへの提供を含みます。')+'</div>';
+  return h}
+function chk(k,txt){return '<label class="chk"><input type="checkbox" data-agree="'+k+'"'+(S.agree[k]?' checked':'')+'><span>'+txt+'</span></label>'}
+
+function step4(){var t=T(),c=calc(),h='<h3 class="bk-h">お支払い金額</h3><div class="opts">';
+  h+=opt('amount','full','全額を支払う',yen(c.total),S.amount==='full'||!c.canDeposit);
+  h+=opt('amount','deposit','申込金のみ支払う',c.canDeposit?yen(c.deposit)+'（残金は '+fs(c.due)+' まで）':(t.local?'現地発ツアーは全額のお支払いです':'出発21日前を過ぎているため選べません'),S.amount==='deposit'&&c.canDeposit,!c.canDeposit);
+  h+='</div><h3 class="bk-h">お支払い方法</h3><div class="opts">'
+   +opt('method','card','クレジットカード','すぐに予約が確定します',S.method==='card')
+   +opt('method','bank','銀行振込','ご入金の確認後に確定します',S.method==='bank')+'</div>';
+  if(S.method==='card'){h+='<div class="card-demo"><div class="brands"><span>VISA</span><span>Mastercard</span><span>JCB</span><span>AMEX</span><span>Diners</span></div><div class="fgrid">'
+    +'<label class="fld full">カード番号<input id="cc-no" value="4242 4242 4242 4242" readonly></label>'
+    +'<label class="fld">有効期限<input id="cc-exp" value="12 / 30" readonly></label>'
+    +'<label class="fld">セキュリティコード<input id="cc-cvc" value="123" readonly></label>'
+    +'<label class="fld full">カード名義<input id="cc-name" value="'+esc(((S.form['f-rm']||'HANAKO')+' '+(S.form['f-rs']||'YAMADA')).toUpperCase())+'" readonly></label>'
+    +'<label class="fld full">お支払い回数<select id="cc-times"><option>一括払い</option><option>分割払い（カード会社所定の回数）</option><option>リボ払い</option></select></label></div>'
+    +'<p class="test">テストモード：表示中はテスト用のカード番号です。本番では決済代行会社の入力欄に置き換わり、カード情報は当社のサーバーを通りません。</p></div>'}
+  else{h+='<div class="bank">予約申込みの後、振込先口座とお振込み期限（お申込みから3日以内）をメールでお知らせします。期限までにご入金が確認できない場合、ご予約は取り消しとなります。振込手数料はお客様のご負担です。</div>'}
+  h+='<p class="bk-lead" style="margin-top:18px">クレジットカードでのお申込みは通信契約となり、当社の承諾通知がお客様に届いた時点で契約が成立します。</p>';
+  return h}
+
+function step5(){var t=T(),c=calc(),card=S.method==='card',mail=esc(S.form['f-mail']||'ご登録のメールアドレス');
+  var h='<div class="done"><div class="ok" aria-hidden="true">✓</div><h3>'+(S.live?'お申込みを受け付けました':card?'ご予約が確定しました':'ご予約を承りました')+'</h3>'
+   +'<div class="mono" style="margin-top:22px;color:var(--mute)">予約番号</div><div class="no">'+S.no+'</div>'
+   +'<p>'+(S.live?'受付内容は予約番号とともに担当者が確認し、'+mail+' あてに'+(card?'お支払い手続き':'振込先とお振込み期限')+'とご予約確定のご連絡をお送りします。':card?'ご予約内容と契約書面を '+mail+' にお送りしました（デモのため実際には送信されません）。':'振込先とお振込み期限を '+mail+' にお送りしました（デモのため実際には送信されません）。ご入金の確認後にご予約が確定します。')+'</p><ol>';
+  if(card&&c.balance>0)h+='<li>残金 '+yen(c.balance)+' は '+f(c.due)+' までにお支払いください。</li>';
+  if(!card)h+='<li>お申込みから3日以内に '+yen(c.payNow)+' をお振込みください。</li>';
+  h+=(t.local?'<li>集合場所と時間は、ご出発の3日前までにメールでお知らせします。</li>':'<li>出発の約1週間前に、航空券（eチケット）と最終日程表をお届けします。</li>')
+   +'<li>ご予約の確認・変更は、ご予約明細ページから予約番号でお調べいただけます。</li></ol>'
+   +'<p>ご不明な点は東京本店営業所（03-3366-3221／月〜金 9:30〜18:00）までお問い合わせください。</p></div>';
+  return h}
+
+function summary(){var t=T(),c=calc(),d=S.date?dt(S.date):null,h='<div class="ph-img"><img src="'+t.img+'" alt=""></div><div class="sum-in"><span class="mono">'+t.code+(S.date?S.date.replace(/-/g,'').slice(2):'')+'</span><h4>'+t.name+'</h4><dl>'
+   +'<dt>出発日</dt><dd>'+(d?f(d):'未選択')+'</dd>'
+   +(t.days>1&&d?'<dt>帰国日</dt><dd>'+f(addD(d,t.days-1))+'</dd>':'')
+   +'<dt>人数</dt><dd>大人'+S.adults+(S.children?'・子供'+S.children:'')+'</dd>'
+   +(t.days>1?'<dt>お部屋</dt><dd>'+(S.room==='single'?'1名1室':'2名1室')+'</dd>':'')
+   +(t.air?'<dt>出発空港</dt><dd>'+S.origin+'</dd>':'')+'</dl><dl class="lines">';
+  c.lines.forEach(function(l){h+='<dt>'+l[0]+'</dt><dd>'+yen(l[1])+'</dd>'});
+  h+='</dl><div class="tot"><span>合計</span><b>'+yen(c.total)+'</b></div>';
+  if(S.step>=4)h+='<div class="now"><span>'+(S.method==='bank'?'お振込み金額':'今回のお支払い')+'</span><b>'+yen(c.payNow)+'</b>'+(c.balance>0?'<span>残金 '+yen(c.balance)+'（'+fs(c.due)+' まで）</span>':'')+'</div>';
+  return h+'</div>'}
+
+var LABELS={1:'お客様情報の入力へ',2:'旅行条件の確認へ',3:'お支払いへ'};
+function render(scrollTop){var t=T();
+  el.title.textContent=t.name;
+  [].forEach.call(el.stepper.children,function(li,i){li.className=i+1===S.step?'on':i+1<S.step?'done':''});
+  el.main.innerHTML=[0,step1,step2,step3,step4,step5][S.step]()+'<p class="err" id="bk-err" role="alert">'+esc(S.err)+'</p>';
+  el.sum.innerHTML=summary();
+  var c=calc();
+  el.ftLabel.textContent=S.step>=4?(S.method==='bank'?'お振込み金額':'今回のお支払い'):'旅行代金合計';
+  el.ftTotal.textContent=yen(S.step>=4?c.payNow:c.total);
+  el.back.hidden=S.step===1||S.step===5;
+  el.next.className='btn '+(S.step===4?'btn-pay':'btn-next');
+  el.next.textContent=S.step===5?'トップへ戻る':S.step===4?(S.method==='card'?'決済して予約を確定する':'予約を申し込む'):LABELS[S.step];
+  el.next.disabled=(S.step===1&&!S.date)||(S.step===3&&!(S.agree.a&&S.agree.b&&S.agree.c));
+  if(S.step===2){var fd=document.getElementById('fill-demo');if(fd)fd.onclick=fillDemo}
+  if(scrollTop)el.body.scrollTop=0}
+
+function validate2(){var bad=null;[].forEach.call(el.main.querySelectorAll('[data-f]'),function(i){var v=i.value.trim(),ok=true;
+    if(i.hasAttribute('data-req')&&!v)ok=false;
+    if(ok&&v&&i.hasAttribute('data-roma')&&!/^[A-Za-z][A-Za-z \-]*$/.test(v))ok=false;
+    if(ok&&i.type==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))ok=false;
+    if(ok&&i.id==='f-pp'&&S.date&&dt(v)<=addD(dt(S.date),T().days))ok=false;
+    i.setAttribute('aria-invalid',ok?'false':'true');if(!ok&&!bad)bad=i});
+  if(bad){var lab=bad.closest('label').firstChild.textContent;S.err=(bad.id==='f-pp'?'パスポートの有効期限が帰国日より前です。':'「'+lab+'」を正しく入力してください。'+(bad.hasAttribute('data-roma')?'ローマ字は半角英字で入力します。':''));
+    document.getElementById('bk-err').textContent=S.err;bad.focus();return false}
+  S.err='';return true}
+
+function fillDemo(){var v={'f-sei':'山田','f-mei':'花子','f-rs':'YAMADA','f-rm':'HANAKO','f-birth':'1990-05-14','f-tel':'090-1234-5678','f-mail':'hanako@example.com','f-pp':'2031-08-31'};
+  var names=['TARO','SAKURA','KENTA','MIKI','SHO','AOI','RIKU','YUI'];
+  for(var i=1;i<pax();i++){v['f-c'+i+'s']='YAMADA';v['f-c'+i+'m']=names[(i-1)%names.length];v['f-c'+i+'b']=i>=S.adults?'2017-09-02':'1988-11-20'}
+  Object.keys(v).forEach(function(k){S.form[k]=v[k]});render()}
+
+function go(n){S.err='';S.step=n;render(true)}
+el.next.addEventListener('click',function(){
+  if(S.step===5){close();return}
+  if(S.step===1&&pax()<T().min){S.err='このツアーは'+T().min+'名様から催行します。人数をご確認ください。';document.getElementById('bk-err').textContent=S.err;return}
+  if(S.step===2&&!validate2())return;
+  if(S.step===4){pay();return}
+  go(S.step+1)});
+el.back.addEventListener('click',function(){if(S.step>1)go(S.step-1)});
+
+function payload(){var F=S.form,c=[];for(var i=1;i<pax();i++)c.push({kind:i>=S.adults?'child':'adult',s:F['f-c'+i+'s']||'',m:F['f-c'+i+'m']||'',b:F['f-c'+i+'b']||''});
+  return {action:'book',tourId:S.id,date:S.date,adults:S.adults,children:S.children,room:S.room,origin:S.origin,amount:S.amount,method:S.method,agree:S.agree,
+    lead:{sei:F['f-sei']||'',mei:F['f-mei']||'',rs:F['f-rs']||'',rm:F['f-rm']||'',birth:F['f-birth']||'',tel:F['f-tel']||'',mail:F['f-mail']||'',pp:F['f-pp']||''},companions:c}}
+function pay(){if(S.busy)return;S.busy=true;var card=S.method==='card';
+  var p=document.createElement('div');p.className='proc';p.setAttribute('role','status');
+  p.innerHTML='<div><div class="spin"></div>'+(card?'カード会社の本人認証（3Dセキュア）を確認しています…':'ご予約を登録しています…')+'</div>';
+  el.bk.appendChild(p);el.next.disabled=true;
+  if(API_URL){fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload())})
+    .then(function(r){return r.json()}).then(function(res){p.remove();S.busy=false;if(!res.ok){S.err=res.error||'予約を登録できませんでした。';render();return}S.no=res.no;S.live=true;go(5);loadApi()})
+    .catch(function(){p.remove();S.busy=false;S.err='通信に失敗しました。時間をおいてもう一度お試しいただくか、お電話（03-3366-3221）でご予約ください。';render()});return}
+  setTimeout(function(){var d=new Date();S.no='ST'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(Math.floor(1000+Math.random()*9000));
+    p.remove();S.busy=false;go(5)},1600)}
+
+el.main.addEventListener('click',function(e){var cm=e.target.closest('[data-cal]');if(cm){var ms=[];T().dates.forEach(function(r){var mo=r[0].slice(0,7);if(ms.indexOf(mo)<0)ms.push(mo)});ms.sort();var ni=ms.indexOf(S.cal)+(+cm.getAttribute('data-cal'));if(ms[ni]){S.cal=ms[ni];render()}return}
+  var dy=e.target.closest('[data-day]');if(dy&&!dy.disabled){S.date=dy.getAttribute('data-day');var mx=seatsOf(S.date);while(pax()>mx&&S.children>0)S.children--;while(pax()>mx&&S.adults>1)S.adults--;S.err='';render();return}
+  var b=e.target.closest('[data-ctr]');if(!b)return;var k=b.getAttribute('data-ctr'),d=+b.getAttribute('data-d');
+  S[k]=Math.max(k==='adults'?1:0,S[k]+d);if(pax()<2&&S.room==='twin')S.room='single';render()});
+el.main.addEventListener('change',function(e){var t=e.target;
+  if(t.name==='bk-date'){S.date=t.value;var m=seatsOf(S.date);while(pax()>m&&S.children>0)S.children--;while(pax()>m&&S.adults>1)S.adults--;render();return}
+  if(t.name==='bk-room'){S.room=t.value;render();return}
+  if(t.name==='bk-origin'){S.origin=t.value;render();return}
+  if(t.name==='bk-amount'){S.amount=t.value;render();return}
+  if(t.name==='bk-method'){S.method=t.value;render();return}
+  if(t.hasAttribute('data-agree')){S.agree[t.getAttribute('data-agree')]=t.checked;el.next.disabled=!(S.agree.a&&S.agree.b&&S.agree.c)}});
+el.main.addEventListener('input',function(e){var t=e.target;if(t.hasAttribute('data-f')){if(t.hasAttribute('data-roma'))t.value=t.value.toUpperCase();S.form[t.id]=t.value;t.removeAttribute('aria-invalid')}});
+
+/* ---------- 開閉（#book-xxx で開く） ---------- */
+var lastFocus=null;
+function open(id){if(!TOURS[id])return;if(!S||S.id!==id||S.step===5)S=fresh(id);lastFocus=document.activeElement;
+  el.bk.hidden=false;document.documentElement.style.overflow='hidden';render(true);document.getElementById('bk-close').focus()}
+function close(){el.bk.hidden=true;document.documentElement.style.overflow='';if(S&&S.step===5)S=null;
+  if(location.hash.indexOf('#book-')===0){try{history.replaceState(null,'','#tours')}catch(e){location.hash='tours'}}
+  var tg=document.getElementById('results');if(tg)tg.scrollIntoView({block:'start'});if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+document.getElementById('bk-close').addEventListener('click',close);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!el.bk.hidden&&!S.busy)close()});
+function route(){var h=location.hash;if(h.indexOf('#book-')===0)open(h.slice(6));else if(!el.bk.hidden)close()}
+window.addEventListener('hashchange',route);
+document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#book-"]');if(a&&location.hash===a.getAttribute('href')){e.preventDefault();open(a.getAttribute('href').slice(6))}});
+/* ---------- 予約サイト（検索・ランキング・お気に入り） ---------- */
+var AREA={seoul:'ソウル',busan:'釜山',jeju:'済州島',gyeongju:'慶州',jeonju:'全州',other:'その他の海外'};
+var CAT={kpop:'K-POP・エンタメ',sight:'観光・王宮',food:'グルメ・食べ歩き',beauty:'美容・エステ',culture:'伝統文化体験',package:'航空券付きツアー'};
+var IDS=Object.keys(TOURS),RANK=['kpop','market','hanok','palace','busan','taste','pottery','bukchon'];
+var F={area:'',cat:'',q:'',date:'',fav:false,sort:'rec'},RK='';
+var fav=[];try{fav=JSON.parse(localStorage.getItem('st-fav')||'[]').filter(function(i){return TOURS[i]})}catch(e){fav=[]}
+function saveFav(){try{localStorage.setItem('st-fav',JSON.stringify(fav))}catch(e){}var c=document.getElementById('fav-cnt');c.textContent=fav.length;c.hidden=!fav.length}
+function stars(r){var n=Math.round(r);return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n)}
+function card(id,rank){var t=TOURS[id],on=fav.indexOf(id)>=0;
+  return '<article class="card"><div class="pic"><img src="'+t.img+'" alt="" loading="lazy"'+(t.pos?' style="object-position:'+t.pos+'"':'')+'>'
+   +(rank?'<span class="rank r'+rank+'">'+rank+'</span>':'')+(t.hot?'<span class="hot">'+t.hot+'</span>':'')+'</div>'
+   +'<button class="fav" type="button" data-fav="'+id+'" aria-pressed="'+on+'" aria-label="お気に入り：'+esc(t.name)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button>'
+   +'<div class="meta"><span class="ty">'+(t.local?'現地発':'航空券付き')+'</span><span>'+AREA[t.area]+'・'+t.dur+'</span></div>'
+   +'<h3><a class="cover" href="#book-'+id+'">'+esc(t.name)+'</a></h3>'
+   +(t.reviews?'<div class="stars"><span class="s" aria-hidden="true">'+stars(t.rating)+'</span><span class="sr">評価</span><b>'+t.rating.toFixed(1)+'</b><small>（'+t.reviews+'件）</small></div>':'')
+   +'<div class="badges">'+t.badges.map(function(b){return '<span>'+b+'</span>'}).join('')+'</div>'
+   +'<div class="pr"><span class="cx">'+(t.local?'8日前まで取消無料':'即時予約確定')+'</span><b>'+yen(t.adult)+(t.local?'':'<small>〜</small>')+'</b></div></article>'}
+function renderRank(){var ids=RANK.filter(function(i){return !RK||TOURS[i].area===RK});
+  document.getElementById('rank').innerHTML=ids.map(function(i,k){return card(i,k+1)}).join('')}
+function match(id){var t=TOURS[id];
+  if(F.fav&&fav.indexOf(id)<0)return false;
+  if(F.area&&t.area!==F.area)return false;
+  if(F.cat&&t.cat.indexOf(F.cat)<0)return false;
+  if(F.q){var h=(t.name+t.sub+t.kw+AREA[t.area]+t.cat.map(function(c){return CAT[c]}).join('')).toLowerCase();
+    if(!F.q.toLowerCase().split(/\s+/).every(function(w){return h.indexOf(w)>=0}))return false}
+  if(F.date&&!t.dates.some(function(d){return d[1]>0&&d[0]>=F.date}))return false;
+  return true}
+function renderGrid(){var ids=IDS.filter(match),s=F.sort;
+  ids.sort(function(a,b){var A=TOURS[a],B=TOURS[b];return s==='cheap'?A.adult-B.adult:s==='rate'?B.rating-A.rating:s==='rev'?B.reviews-A.reviews:(RANK.indexOf(a)+99*(RANK.indexOf(a)<0))-(RANK.indexOf(b)+99*(RANK.indexOf(b)<0))});
+  var g=document.getElementById('grid');
+  if(!ids.length){var soon=F.area&&['jeju','gyeongju','jeonju'].indexOf(F.area)>=0;
+    g.innerHTML='<div class="empty"><b>条件に合うツアーが見つかりませんでした</b>'+(F.fav?'カードのハートを押すと、お気に入りに追加できます。':soon?AREA[F.area]+'のツアーは準備中です。日程や行き先に合わせたオーダーメイドの旅もご相談いただけます。':'条件を減らすか、別のキーワードでお試しください。')+'<br><a href="#support">旅の相談をする</a></div>'}
+  else g.innerHTML=ids.map(function(i){return card(i)}).join('');
+  document.getElementById('res-n').textContent=ids.length;
+  var ttl=F.fav?'お気に入り':((F.area?AREA[F.area]+'の':'')+(F.cat?CAT[F.cat]:'ツアー・体験'));
+  document.getElementById('res-title').textContent=(!F.area&&!F.cat&&!F.fav)?'すべてのツアー・体験':ttl;
+  var ch=[];if(F.fav)ch.push(['fav','お気に入り']);if(F.area)ch.push(['area',AREA[F.area]]);if(F.cat)ch.push(['cat',CAT[F.cat]]);if(F.q)ch.push(['q','「'+esc(F.q)+'」']);
+  if(F.date){var d=dt(F.date);ch.push(['date',(d.getMonth()+1)+'/'+d.getDate()+' 以降に出発'])}
+  document.getElementById('res-chips').innerHTML=ch.map(function(c){return '<span class="chip">'+c[1]+'<button type="button" data-clear="'+c[0]+'" aria-label="'+c[1].replace(/<[^>]+>/g,'')+'の条件を外す">×</button></span>'}).join('');
+  [].forEach.call(document.querySelectorAll('#cats .cat[data-cat]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-cat')===F.cat))})}
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function toResults(){renderGrid();document.getElementById('results').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+function syncHero(){document.getElementById('s-area').value=F.area;document.getElementById('s-q').value=F.q;document.getElementById('s-date').value=F.date}
+
+document.getElementById('sbox').addEventListener('submit',function(e){e.preventDefault();F.area=document.getElementById('s-area').value;F.date=document.getElementById('s-date').value;F.q=document.getElementById('s-q').value.trim();F.fav=false;toResults()});
+document.getElementById('hsearch').addEventListener('submit',function(e){e.preventDefault();F.q=document.getElementById('hq').value.trim();F.fav=false;syncHero();toResults()});
+document.getElementById('sort').addEventListener('change',function(e){F.sort=e.target.value;renderGrid()});
+document.getElementById('fav-btn').addEventListener('click',function(){F={area:'',cat:'',q:'',date:'',fav:true,sort:F.sort};syncHero();toResults()});
+document.addEventListener('click',function(e){
+  var fb=e.target.closest('[data-fav]');if(fb){e.preventDefault();var id=fb.getAttribute('data-fav'),k=fav.indexOf(id);if(k<0)fav.push(id);else fav.splice(k,1);saveFav();
+    [].forEach.call(document.querySelectorAll('[data-fav="'+id+'"]'),function(b){b.setAttribute('aria-pressed',String(k<0))});if(F.fav)renderGrid();return}
+  var q=e.target.closest('.kw [data-q]');if(q){F.q=q.getAttribute('data-q');F.fav=false;syncHero();toResults();return}
+  var a=e.target.closest('[data-area]');if(a){e.preventDefault();F.area=a.getAttribute('data-area');F.fav=false;syncHero();toResults();return}
+  var c=e.target.closest('[data-cat]');if(c){e.preventDefault();var v=c.getAttribute('data-cat');F.cat=(F.cat===v&&c.closest('#cats'))?'':v;F.fav=false;toResults();return}
+  var x=e.target.closest('[data-clear]');if(x){var k2=x.getAttribute('data-clear');F[k2]=k2==='fav'?false:'';syncHero();renderGrid();return}
+  var tb=e.target.closest('[data-rk]');if(tb){RK=tb.getAttribute('data-rk');[].forEach.call(document.querySelectorAll('[data-rk]'),function(b){b.setAttribute('aria-selected',String(b===tb))});renderRank()}
+});
+saveFav();renderRank();renderGrid();
+function loadApi(){if(!API_URL)return;fetch(API_URL+'?action=tours').then(function(r){return r.json()}).then(function(d){if(!d||!d.ok||!Array.isArray(d.tours))return;
+  var next={};d.tours.forEach(function(x){var o=TOURS[x.id]||{};x.img=x.img||o.img||'img/bukchon.jpg';x.pos=o.pos;x.hot=o.hot;x.kw=(x.kw||'')+' '+(o.kw||'');if(!x.code)x.code=o.code||'ST';next[x.id]=x});
+  Object.keys(TOURS).forEach(function(k){delete TOURS[k]});Object.keys(next).forEach(function(k){TOURS[k]=next[k]});
+  IDS=Object.keys(TOURS);RANK=RANK.filter(function(i){return TOURS[i]}).concat(IDS.filter(function(i){return RANK.indexOf(i)<0}));fav=fav.filter(function(i){return TOURS[i]});saveFav();
+  renderRank();renderGrid();if(S&&!el.bk.hidden&&TOURS[S.id]&&S.step<5)render()}).catch(function(){})}
+loadApi();
+
+route();
+})();
+</script>
+
+</body>
+</html>
