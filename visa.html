@@ -356,12 +356,46 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 @media (max-width:760px){.offices{grid-template-columns:1fr}}
 
 :root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}
+
+/* ===== グローバルメニュー（現行サイトの構成） ===== */
+.gnav ul{list-style:none;margin:0;padding:0}
+.gnav{margin-left:auto}
+.gnav > ul{display:flex;gap:2px;align-items:center}
+.gnav > ul > li{position:relative}
+.gnav > ul > li > a{display:flex;align-items:center;font-size:13.5px;font-weight:500;padding:10px 11px;border-radius:8px;white-space:nowrap}
+.gnav > ul > li > a:hover,.gnav > ul > li:focus-within > a{color:var(--brand);background:var(--bg-2)}
+.gnav .has > a::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:7px;opacity:.55}
+.gnav .sub{position:absolute;top:calc(100% + 4px);left:0;min-width:250px;width:max-content;max-width:340px;background:var(--bg);border:1px solid var(--hair);border-radius:10px;box-shadow:0 18px 40px -18px rgba(0,0,0,.28);padding:6px;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .18s,transform .18s,visibility .18s;z-index:40}
+.gnav .sub::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}
+.gnav .has:hover .sub,.gnav .has:focus-within .sub{opacity:1;visibility:visible;transform:none}
+.gnav li:last-child .sub{left:auto;right:0}
+.gnav .sub a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;font-size:13.5px}
+.gnav .sub a:hover{background:var(--bg-2);color:var(--brand)}
+.gnav .sub small{font-size:10.5px;background:var(--bg-2);color:var(--mute);border-radius:4px;padding:1px 7px;flex:none}
+.burger{display:none;margin-left:auto;align-items:center;gap:8px;border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink)}
+.burger i{display:grid;gap:3px}.burger i::before,.burger i::after,.burger i span{content:"";display:block;width:16px;height:2px;background:currentColor;border-radius:1px}
+.util .sns{display:flex;gap:12px;align-items:center}
+.util .sns a{font-weight:500;color:var(--mute)}
+.util .sns a:hover{color:var(--brand)}
+@media (max-width:1040px){
+  .burger{display:inline-flex}
+  .gnav{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--hair);box-shadow:0 20px 40px -20px rgba(0,0,0,.3);display:none;max-height:calc(100vh - 110px);overflow:auto;padding-block:8px 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .gnav.open{display:block}
+  .gnav > ul{flex-direction:column;align-items:stretch;gap:0}
+  .gnav > ul > li{border-bottom:1px solid var(--hair)}
+  .gnav > ul > li > a{font-weight:700;font-size:15px;padding:14px 4px}
+  .gnav .has > a::after{display:none}
+  .gnav .sub{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;padding:0 0 10px 12px;min-width:0}
+  .gnav .sub::before{display:none}
+}
+.gnav > ul > li.hl > a{color:var(--brand-d);background:var(--brand-l);font-weight:700}
+.gnav > ul > li.hl > a:hover{background:var(--brand);color:#fff}
 </style>
 </head>
 <body>
 
 <div class="demo"><div class="wrap">試作版です。代行手数料・受付条件は見本のため、公開前に実際の内容へ差し替えてください。</div></div>
-<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">ビザのご相談　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span></div></div>
+<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">ビザのご相談　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span><span class="sns"><a href="#">LINE</a><a href="#">KakaoTalk</a><a href="#">X</a><a href="#">Facebook</a></span></div></div>
 
 <header class="hd">
   <div class="wrap">
@@ -369,11 +403,17 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
       <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="16" r="10" fill="#F2A33A"/><path d="M2 22h30M6 26.5h22M11 31h12" stroke="#1F6B5C" stroke-width="2" stroke-linecap="round"/></svg>
       <span><b>サントラベル</b><small>SUN TRAVEL</small></span>
     </a>
-    <nav class="hnav" aria-label="メニュー">
-      <a href="tours.html#results"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>ツアーを探す</a>
-      <a href="tours.html#services" class="hide-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 14 22 6l-3 7-7 2-3 5-1-4z"/></svg>航空券</a>
-      <a href="#v-contact" class="login">ビザの相談</a>
+    <nav class="gnav" id="gnav" aria-label="メイン">
+      <ul>
+        <li><a href="tours.html#services">格安航空券</a></li>
+        <li class="has"><a href="tours.html">ツアー</a><ul class="sub"><li><a href="tours.html#kikaku">企画ツアー</a></li><li><a href="tours.html#kokunai">国内ツアー</a></li><li><a href="tours.html#genchi">現地発ツアー</a></li></ul></li>
+        <li class="has hl"><a href="visa.html">ビザ(VISA)申請代行</a><ul class="sub"><li><a href="visa.html#v-types">韓国査証（C-4-5・C-3-9・C-3-4）</a></li><li><a href="visa.html#v-types">米国ビザ（B-1・B-2）</a></li></ul></li>
+        <li><a href="index.html#about">会社案内</a></li>
+        <li class="has"><a href="index.html#contact">お問い合わせ</a><ul class="sub"><li><a href="index.html#faq">よくある質問（FAQ）</a></li></ul></li>
+        <li class="has"><a href="tours.html#results">マイアカウント</a><ul class="sub"><li><a href="index.html#contact">ご予約明細ページ<small>準備中</small></a></li><li><a href="tours.html#results">予約手続きページ</a></li></ul></li>
+      </ul>
     </nav>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="gnav"><i><span></span></i>メニュー</button>
   </div>
 </header>
 
@@ -572,5 +612,11 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
   </div>
   <div class="fbot"><div class="wrap"><span>© 1996–2026 SUN TRAVEL Inc.</span><span>東京本店営業所 03-3366-3221</span></div></div>
 </footer>
+<script>
+(function(){var b=document.querySelector('.burger'),n=document.getElementById('gnav');if(!b||!n)return;
+b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',String(o))});
+n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');b.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&n.classList.contains('open')){n.classList.remove('open');b.setAttribute('aria-expanded','false');b.focus()}});})();
+</script>
 </body>
 </html>

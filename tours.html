@@ -883,10 +883,10 @@ function route(){var h=location.hash;if(h.indexOf('#book-')===0)open(h.slice(6))
 window.addEventListener('hashchange',route);
 document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#book-"]');if(a&&location.hash===a.getAttribute('href')){e.preventDefault();open(a.getAttribute('href').slice(6))}});
 /* ---------- 予約サイト（検索・ランキング・お気に入り） ---------- */
-var AREA={seoul:'ソウル',busan:'釜山',jeju:'済州島',gyeongju:'慶州',jeonju:'全州',other:'その他の海外'};
-var CAT={kpop:'K-POP・エンタメ',sight:'観光・王宮',food:'グルメ・食べ歩き',beauty:'美容・エステ',culture:'伝統文化体験',package:'航空券付きツアー'};
+var AREA={seoul:'ソウル',busan:'釜山',jeju:'済州島',gyeongju:'慶州',jeonju:'全州',other:'その他の海外',domestic:'国内'};
+var CAT={kpop:'K-POP・エンタメ',sight:'観光・王宮',food:'グルメ・食べ歩き',beauty:'美容・エステ',culture:'伝統文化体験',package:'企画ツアー（航空券付き）'};
 var IDS=Object.keys(TOURS),RANK=['kpop','market','hanok','palace','busan','taste','pottery','bukchon'];
-var F={area:'',cat:'',q:'',date:'',fav:false,sort:'rec'},RK='';
+var F={area:'',cat:'',q:'',date:'',fav:false,kind:'',sort:'rec'},RK='';
 var fav=[];try{fav=JSON.parse(localStorage.getItem('st-fav')||'[]').filter(function(i){return TOURS[i]})}catch(e){fav=[]}
 function saveFav(){try{localStorage.setItem('st-fav',JSON.stringify(fav))}catch(e){}var c=document.getElementById('fav-cnt');c.textContent=fav.length;c.hidden=!fav.length}
 function stars(r){var n=Math.round(r);return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n)}
@@ -902,6 +902,7 @@ function card(id,rank){var t=TOURS[id],on=fav.indexOf(id)>=0;
 function renderRank(){var ids=RANK.filter(function(i){return !RK||TOURS[i].area===RK});
   document.getElementById('rank').innerHTML=ids.map(function(i,k){return card(i,k+1)}).join('')}
 function match(id){var t=TOURS[id];
+  if(F.kind==='local'&&!t.local)return false;
   if(F.fav&&fav.indexOf(id)<0)return false;
   if(F.area&&t.area!==F.area)return false;
   if(F.cat&&t.cat.indexOf(F.cat)<0)return false;
@@ -912,13 +913,13 @@ function match(id){var t=TOURS[id];
 function renderGrid(){var ids=IDS.filter(match),s=F.sort;
   ids.sort(function(a,b){var A=TOURS[a],B=TOURS[b];return s==='cheap'?A.adult-B.adult:s==='rate'?B.rating-A.rating:s==='rev'?B.reviews-A.reviews:(RANK.indexOf(a)+99*(RANK.indexOf(a)<0))-(RANK.indexOf(b)+99*(RANK.indexOf(b)<0))});
   var g=document.getElementById('grid');
-  if(!ids.length){var soon=F.area&&['jeju','gyeongju','jeonju'].indexOf(F.area)>=0;
+  if(!ids.length){var soon=F.area&&['jeju','gyeongju','jeonju','domestic'].indexOf(F.area)>=0;
     g.innerHTML='<div class="empty"><b>条件に合うツアーが見つかりませんでした</b>'+(F.fav?'カードのハートを押すと、お気に入りに追加できます。':soon?AREA[F.area]+'のツアーは準備中です。日程や行き先に合わせたオーダーメイドの旅もご相談いただけます。':'条件を減らすか、別のキーワードでお試しください。')+'<br><a href="#support">旅の相談をする</a></div>'}
   else g.innerHTML=ids.map(function(i){return card(i)}).join('');
   document.getElementById('res-n').textContent=ids.length;
-  var ttl=F.fav?'お気に入り':((F.area?AREA[F.area]+'の':'')+(F.cat?CAT[F.cat]:'ツアー・体験'));
-  document.getElementById('res-title').textContent=(!F.area&&!F.cat&&!F.fav)?'すべてのツアー・体験':ttl;
-  var ch=[];if(F.fav)ch.push(['fav','お気に入り']);if(F.area)ch.push(['area',AREA[F.area]]);if(F.cat)ch.push(['cat',CAT[F.cat]]);if(F.q)ch.push(['q','「'+esc(F.q)+'」']);
+  var ttl=F.fav?'お気に入り':F.kind==='local'?'現地発ツアー':F.area==='domestic'?'国内ツアー':((F.area?AREA[F.area]+'の':'')+(F.cat?CAT[F.cat]:'ツアー・体験'));
+  document.getElementById('res-title').textContent=(!F.area&&!F.cat&&!F.fav&&!F.kind)?'すべてのツアー・体験':ttl;
+  var ch=[];if(F.fav)ch.push(['fav','お気に入り']);if(F.area)ch.push(['area',AREA[F.area]]);if(F.cat)ch.push(['cat',CAT[F.cat]]);if(F.kind)ch.push(['kind','現地発ツアー']);if(F.q)ch.push(['q','「'+esc(F.q)+'」']);
   if(F.date){var d=dt(F.date);ch.push(['date',(d.getMonth()+1)+'/'+d.getDate()+' 以降に出発'])}
   document.getElementById('res-chips').innerHTML=ch.map(function(c){return '<span class="chip">'+c[1]+'<button type="button" data-clear="'+c[0]+'" aria-label="'+c[1].replace(/<[^>]+>/g,'')+'の条件を外す">×</button></span>'}).join('');
   [].forEach.call(document.querySelectorAll('#cats .cat[data-cat]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-cat')===F.cat))})}
@@ -940,6 +941,10 @@ document.addEventListener('click',function(e){
   var tb=e.target.closest('[data-rk]');if(tb){RK=tb.getAttribute('data-rk');[].forEach.call(document.querySelectorAll('[data-rk]'),function(b){b.setAttribute('aria-selected',String(b===tb))});renderRank()}
 });
 saveFav();renderRank();renderGrid();
+function applyHash(){var m={'#kikaku':{cat:'package'},'#genchi':{kind:'local'},'#kokunai':{area:'domestic'}},h=location.hash;if(!m[h])return;
+  F={area:'',cat:'',q:'',date:'',fav:false,kind:'',sort:F.sort};Object.keys(m[h]).forEach(function(k){F[k]=m[h][k]});syncHero();renderGrid();
+  setTimeout(function(){document.getElementById('results').scrollIntoView({block:'start'})},60)}
+window.addEventListener('hashchange',applyHash);applyHash();
 function loadApi(){if(!API_URL)return;fetch(API_URL+'?action=tours').then(function(r){return r.json()}).then(function(d){if(!d||!d.ok||!Array.isArray(d.tours))return;
   var next={};d.tours.forEach(function(x){var o=TOURS[x.id]||{};x.img=x.img||o.img||'img/bukchon.jpg';x.pos=o.pos;x.hot=o.hot;x.kw=(x.kw||'')+' '+(o.kw||'');if(!x.code)x.code=o.code||'ST';next[x.id]=x});
   Object.keys(TOURS).forEach(function(k){delete TOURS[k]});Object.keys(next).forEach(function(k){TOURS[k]=next[k]});

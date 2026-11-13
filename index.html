@@ -367,22 +367,98 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 .cform button{border:0;cursor:pointer;font-family:inherit}
 #cmsg{font-size:13px;color:var(--brand-d)}
 @media (max-width:860px){.cform-wrap{grid-template-columns:1fr}.cform{grid-template-columns:1fr}}
+
+/* ===== グローバルメニュー（現行サイトの構成） ===== */
+.gnav ul{list-style:none;margin:0;padding:0}
+.gnav{margin-left:auto}
+.gnav > ul{display:flex;gap:2px;align-items:center}
+.gnav > ul > li{position:relative}
+.gnav > ul > li > a{display:flex;align-items:center;font-size:13.5px;font-weight:500;padding:10px 11px;border-radius:8px;white-space:nowrap}
+.gnav > ul > li > a:hover,.gnav > ul > li:focus-within > a{color:var(--brand);background:var(--bg-2)}
+.gnav .has > a::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);margin-left:7px;opacity:.55}
+.gnav .sub{position:absolute;top:calc(100% + 4px);left:0;min-width:250px;width:max-content;max-width:340px;background:var(--bg);border:1px solid var(--hair);border-radius:10px;box-shadow:0 18px 40px -18px rgba(0,0,0,.28);padding:6px;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .18s,transform .18s,visibility .18s;z-index:40}
+.gnav .sub::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}
+.gnav .has:hover .sub,.gnav .has:focus-within .sub{opacity:1;visibility:visible;transform:none}
+.gnav li:last-child .sub{left:auto;right:0}
+.gnav .sub a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;font-size:13.5px}
+.gnav .sub a:hover{background:var(--bg-2);color:var(--brand)}
+.gnav .sub small{font-size:10.5px;background:var(--bg-2);color:var(--mute);border-radius:4px;padding:1px 7px;flex:none}
+.burger{display:none;margin-left:auto;align-items:center;gap:8px;border:1px solid var(--hair);background:var(--bg);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink)}
+.burger i{display:grid;gap:3px}.burger i::before,.burger i::after,.burger i span{content:"";display:block;width:16px;height:2px;background:currentColor;border-radius:1px}
+.util .sns{display:flex;gap:12px;align-items:center}
+.util .sns a{font-weight:500;color:var(--mute)}
+.util .sns a:hover{color:var(--brand)}
+@media (max-width:1040px){
+  .burger{display:inline-flex}
+  .gnav{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--hair);box-shadow:0 20px 40px -20px rgba(0,0,0,.3);display:none;max-height:calc(100vh - 110px);overflow:auto;padding-block:8px 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .gnav.open{display:block}
+  .gnav > ul{flex-direction:column;align-items:stretch;gap:0}
+  .gnav > ul > li{border-bottom:1px solid var(--hair)}
+  .gnav > ul > li > a{font-weight:700;font-size:15px;padding:14px 4px}
+  .gnav .has > a::after{display:none}
+  .gnav .sub{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;padding:0 0 10px 12px;min-width:0}
+  .gnav .sub::before{display:none}
+}
+
+.facc{display:grid;gap:10px}
+.facc details{border:1px solid var(--hair);border-radius:12px;background:var(--bg)}
+.facc summary{cursor:pointer;list-style:none;padding:16px 20px;font-weight:700;font-size:14.5px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.facc summary::-webkit-details-marker{display:none}
+.facc summary::after{content:"+";font-size:20px;color:var(--brand);font-weight:400;flex:none}
+.facc details[open] summary::after{content:"−"}
+.facc summary span::before{content:"Q.";color:var(--brand);font-family:var(--f-en);font-style:italic;font-weight:700;margin-right:8px;font-size:17px}
+.facc .in{padding:0 20px 18px;font-size:14px;color:var(--mute)}
+.facc .in a{color:var(--brand);font-weight:700}
+
+/* ===== ビザ申請代行の特集 ===== */
+.gnav > ul > li.hl > a{color:var(--brand-d);background:var(--brand-l);font-weight:700}
+.gnav > ul > li.hl > a:hover{background:var(--brand);color:#fff}
+.vfeat{background:linear-gradient(180deg,var(--brand-d),#123E35);color:#fff;position:relative;overflow:hidden;isolation:isolate}
+.vfeat::after{content:"VISA";position:absolute;right:-1%;bottom:-6%;font-family:var(--f-en);font-style:italic;font-weight:700;font-size:clamp(120px,20vw,280px);line-height:1;color:rgba(255,255,255,.05);z-index:-1;pointer-events:none}
+.vfeat .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
+.vfeat .kr{color:#F6DDA6;font-size:14px}
+.vfeat h2{font-size:clamp(26px,3.6vw,42px);font-weight:900;line-height:1.45;letter-spacing:.03em;margin-top:8px}
+.vfeat .lead{margin-top:16px;opacity:.9;max-width:34em;line-height:2}
+.vfeat .codes{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.vfeat .codes a{display:inline-flex;align-items:baseline;gap:8px;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:8px 12px;font-size:12.5px;background:rgba(255,255,255,.05)}
+.vfeat .codes a:hover{background:#fff;color:var(--brand-d)}
+.vfeat .codes b{font-family:var(--f-mono);font-weight:500;font-size:14px;letter-spacing:.02em}
+.vfeat .pts{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:12px}
+.vfeat .pts li{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;font-size:14px}
+.vfeat .pts li::before{content:"✓";width:28px;height:28px;border-radius:50%;background:var(--sun);color:#2A1A05;display:grid;place-items:center;font-weight:900;font-size:14px}
+.vfeat .pts small{display:block;opacity:.75;font-size:12.5px}
+.vfeat .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
+.vfeat .tel{font-family:var(--f-en);font-style:italic;font-weight:700;font-size:26px;user-select:all}
+.vfeat .tel small{display:block;font-family:var(--f-body);font-style:normal;font-weight:400;font-size:11.5px;opacity:.8}
+.vfeat .pic{position:relative;aspect-ratio:4/5;border-radius:16px;overflow:hidden;max-width:100%}
+.vfeat .pic img{width:100%;height:100%;object-fit:cover;object-position:62% 40%}
+.vfeat .stamp{position:absolute;left:18px;bottom:18px;background:#fff;color:var(--ink);border-radius:12px;padding:14px 18px;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);display:grid;gap:2px}
+.vfeat .stamp b{font-size:15px}
+.vfeat .stamp span{font-size:12px;color:var(--mute)}
+@media (max-width:900px){.vfeat .wrap{grid-template-columns:1fr}.vfeat .pic{aspect-ratio:16/10;order:-1}}
 </style>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}</style>
 </head>
 <body>
 
-<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">東京本店営業所　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span></div></div>
+<div class="util"><div class="wrap"><span>韓国専門旅行社　<b>観光庁長官登録旅行業 第1791号</b></span><span class="r">東京本店営業所　<b>03-3366-3221</b>（月〜金 9:30〜18:00）</span><span class="sns"><a href="#">LINE</a><a href="#">KakaoTalk</a><a href="#">X</a><a href="#">Facebook</a></span></div></div>
 <header class="hd chd">
   <div class="wrap">
     <a class="logo" href="#top" aria-label="株式会社サントラベル トップ">
       <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="16" r="10" fill="#F2A33A"/><path d="M2 22h30M6 26.5h22M11 31h12" stroke="#1F6B5C" stroke-width="2" stroke-linecap="round"/></svg>
       <span><b>サントラベル</b><small>SUN TRAVEL INC.</small></span>
     </a>
-    <nav class="cnav" aria-label="メイン">
-      <a href="#business">事業内容</a><a href="#about">会社案内</a><a href="visa.html">ビザ申請代行</a><a href="#news">お知らせ</a><a href="#access">アクセス</a><a href="#contact">お問い合わせ</a>
-      <a class="tour" href="tours.html">ツアーを予約する</a>
+    <nav class="gnav" id="gnav" aria-label="メイン">
+      <ul>
+        <li><a href="tours.html#services">格安航空券</a></li>
+        <li class="has"><a href="tours.html">ツアー</a><ul class="sub"><li><a href="tours.html#kikaku">企画ツアー</a></li><li><a href="tours.html#kokunai">国内ツアー</a></li><li><a href="tours.html#genchi">現地発ツアー</a></li></ul></li>
+        <li class="has hl"><a href="visa.html">ビザ(VISA)申請代行</a><ul class="sub"><li><a href="visa.html#v-types">韓国査証（C-4-5・C-3-9・C-3-4）</a></li><li><a href="visa.html#v-types">米国ビザ（B-1・B-2）</a></li></ul></li>
+        <li><a href="index.html#about">会社案内</a></li>
+        <li class="has"><a href="index.html#contact">お問い合わせ</a><ul class="sub"><li><a href="index.html#faq">よくある質問（FAQ）</a></li></ul></li>
+        <li class="has"><a href="tours.html#results">マイアカウント</a><ul class="sub"><li><a href="index.html#contact">ご予約明細ページ<small>準備中</small></a></li><li><a href="tours.html#results">予約手続きページ</a></li></ul></li>
+      </ul>
     </nav>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="gnav"><i><span></span></i>メニュー</button>
   </div>
 </header>
 
@@ -392,8 +468,8 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
     <div class="wrap">
       <p class="kr">가까운 나라, 깊은 여행.</p>
       <h1>韓国と日本を、<br>旅でつないで30年。</h1>
-      <p class="lead">株式会社サントラベルは、1996年に創業した韓国専門の旅行会社です。ツアーの企画・販売から航空券、ビザの申請まで、韓国への旅に必要なことをひとつの窓口でお引き受けしています。</p>
-      <div class="cta"><a class="cbtn light" href="tours.html">ツアーを探す →</a><a class="cbtn line" href="#about">会社案内</a></div>
+      <p class="lead">株式会社サントラベルは、1996年に創業した韓国専門の旅行会社です。韓国ビザの申請代行から、ツアーの企画・販売、航空券まで、韓国への渡航に必要なことをひとつの窓口でお引き受けしています。</p>
+      <div class="cta"><a class="cbtn light" href="visa.html">ビザ申請代行 →</a><a class="cbtn line" href="tours.html">ツアーを探す</a></div>
     </div>
   </div>
 
@@ -403,6 +479,26 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
     <div class="f"><b>2<small>拠点</small></b><span>新横浜の本社と、新大久保の東京本店</span></div>
     <div class="f"><b>10<small>社</small></b><span>大手旅行会社のツアーを受託販売</span></div>
   </div></div>
+
+  <section class="vfeat" id="visa-feature">
+    <div class="wrap">
+      <div>
+        <p class="kr">비자 신청 대행</p>
+        <h2>韓国ビザの申請は、<br>韓国専門のサントラベルへ。</h2>
+        <p class="lead">観光・商用・公演のための韓国ビザから、米国ビザ、入国時の電子入国申告書まで。必要書類の確認と領事館への申請を、新大久保の窓口でまとめてお引き受けします。</p>
+        <div class="codes" aria-label="取扱いビザ">
+          <a href="visa.html#v-types"><b>C-3-9</b>観光</a><a href="visa.html#v-types"><b>C-3-4</b>商用</a><a href="visa.html#v-types"><b>C-4-5</b>公演・短期就業</a><a href="visa.html#v-types"><b>B-1/B-2</b>米国</a><a href="visa.html#v-types"><b>e-Arrival</b>電子入国申告書</a>
+        </div>
+        <ul class="pts">
+          <li><span>在留資格ごとに必要書類をご案内<small>永住者・定住者・留学・家族滞在など、状況に合わせて書類をそろえます</small></span></li>
+          <li><span>申請書の記入から領事館への申請まで代行<small>東京管轄・横浜管轄に対応。書類の不足による遅れを防ぎます</small></span></li>
+          <li><span>公演・イベント出演の短期就業ビザにも対応<small>出演者が複数でもまとめて申請できます</small></span></li>
+        </ul>
+        <div class="cta"><a class="cbtn light" href="visa.html">ビザ申請代行の詳細 →</a><span class="tel">03-3366-3221<small>ビザのご相談（月〜金 9:30〜18:00）</small></span></div>
+      </div>
+      <div class="pic"><img src="img/visa-staff.jpg" alt="申請書類を確認するスタッフ" loading="lazy"><div class="stamp"><b>渡航の3週間前までにご相談ください</b><span>審査の目安：領事館受付から約1〜2週間</span></div></div>
+    </div>
+  </section>
 
   <section>
     <div class="wrap intro">
@@ -423,9 +519,9 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
     <div class="wrap">
       <div class="sh"><h2>事業内容</h2><p>第1種旅行業者として、海外旅行・国内旅行のすべてを取り扱っています。</p></div>
       <div class="biz">
-        <a class="bz" href="tours.html"><div class="pic"><img src="img/concert.jpg" alt="" loading="lazy"></div><div class="in"><span class="no">01 ／ TOURS</span><h3>ツアー・現地体験の企画販売</h3><p>K-POP観覧ツアー、王宮や韓屋をめぐる企画旅行、ソウル・釜山の現地発ツアー。オンラインで空席を確認し、そのままご予約いただけます。</p><span class="go">ツアー予約サイトへ →</span></div></a>
-        <a class="bz" href="tours.html#services"><div class="pic"><img src="img/counter.jpg" alt="" loading="lazy" style="object-position:30% 50%"></div><div class="in"><span class="no">02 ／ AIR</span><h3>格安航空券の手配</h3><p>日本各地から韓国各都市への航空券を、航空会社と日程を比べてご案内します。韓国以外の海外航空券も承ります。</p><span class="go">航空券について →</span></div></a>
-        <a class="bz" href="visa.html"><div class="pic"><img src="img/visa-staff.jpg" alt="" loading="lazy" style="object-position:62% 40%"></div><div class="in"><span class="no">03 ／ VISA</span><h3>ビザ申請代行</h3><p>韓国ビザ（観光・商用・公演）、米国ビザ、韓国の電子入国申告書の申請を代行します。書類の確認から領事館への申請までお任せください。</p><span class="go">ビザ申請代行へ →</span></div></a>
+        <a class="bz" href="visa.html"><div class="pic"><img src="img/visa-staff.jpg" alt="" loading="lazy" style="object-position:62% 40%"></div><div class="in"><span class="no">01 ／ VISA</span><h3>ビザ申請代行</h3><p>韓国ビザ（観光・商用・公演）、米国ビザ、韓国の電子入国申告書の申請を代行します。書類の確認から領事館への申請までお任せください。</p><span class="go">ビザ申請代行へ →</span></div></a>
+        <a class="bz" href="tours.html"><div class="pic"><img src="img/concert.jpg" alt="" loading="lazy"></div><div class="in"><span class="no">02 ／ TOURS</span><h3>ツアー・現地体験の企画販売</h3><p>K-POP観覧ツアー、王宮や韓屋をめぐる企画旅行、ソウル・釜山の現地発ツアー。オンラインで空席を確認し、そのままご予約いただけます。</p><span class="go">ツアー予約サイトへ →</span></div></a>
+        <a class="bz" href="tours.html#services"><div class="pic"><img src="img/counter.jpg" alt="" loading="lazy" style="object-position:30% 50%"></div><div class="in"><span class="no">03 ／ AIR</span><h3>格安航空券の手配</h3><p>日本各地から韓国各都市への航空券を、航空会社と日程を比べてご案内します。韓国以外の海外航空券も承ります。</p><span class="go">航空券について →</span></div></a>
         <a class="bz" href="#contact"><div class="pic"><img src="img/team.jpg" alt="" loading="lazy"></div><div class="in"><span class="no">04 ／ GROUP</span><h3>団体・法人旅行</h3><p>社員旅行、視察、研修、ファンミーティングの遠征など。人数と目的に合わせて企画し、現地の手配から当日の運営まで担当します。</p><span class="go">ご相談・お見積り →</span></div></a>
       </div>
       <div class="partner">
@@ -518,7 +614,21 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
     </div>
   </section>
 
-  <section id="contact">
+  <section id="faq">
+    <div class="wrap">
+      <div class="sh"><h2>よくある質問（FAQ）</h2><p>ビザについては、<a href="visa.html#v-faq" style="color:var(--brand);font-weight:700">ビザ申請代行のよくある質問</a>もご覧ください。</p></div>
+      <div class="facc">
+        <details><summary><span>ツアーはどうやって予約できますか？</span></summary><div class="in">ツアー予約サイトで出発日と人数を選び、そのままお申し込みいただけます。お電話（03-3366-3221）や東京本店の店頭でも承ります。<a href="tours.html">ツアー予約サイトへ →</a></div></details>
+        <details><summary><span>支払い方法を教えてください。</span></summary><div class="in">クレジットカードと銀行振込をご利用いただけます。航空券付きのツアーは、出発の21日前より前のお申し込みなら、申込金を先にお支払いいただき、残金を後日お支払いいただくこともできます。</div></details>
+        <details><summary><span>キャンセルするとき、取消料はかかりますか？</span></summary><div class="in">取り消す時期によって取消料がかかります。航空券付きのツアーは、旅行開始日の前日から数えて30日前から旅行代金の20%以上がかかります（ピーク時は40日前から）。くわしくはツアーごとの旅行条件書をご確認ください。</div></details>
+        <details><summary><span>韓国旅行にパスポート以外の手続きは必要ですか？</span></summary><div class="in">日本国籍の方の90日以内の観光は、ビザが不要です。K-ETA（電子渡航認証）も2026年12月31日まで免除されています。入国時の電子入国申告書（e-Arrival Card）の登録は当社でも代行します。</div></details>
+        <details><summary><span>航空券だけの手配もできますか？</span></summary><div class="in">できます。日本各地から韓国各都市への航空券を、日程とご予算に合わせてご案内します。お電話またはお問い合わせフォームからご相談ください。</div></details>
+        <details><summary><span>店頭で相談できますか？</span></summary><div class="in">東京本店営業所（新大久保）で、月〜金 9:30〜18:00に承っています。混み合うことがあるため、事前にお電話いただくとスムーズです。</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="contact">
     <div class="wrap cform-wrap">
       <div class="side">
         <div class="sh" style="margin-bottom:8px"><h2>お問い合わせ</h2></div>
@@ -542,10 +652,10 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 <footer>
   <div class="wrap fcols">
     <div class="about"><b>サントラベル</b><p>株式会社サントラベル<br>1996年創業の韓国専門旅行社</p><p>観光庁長官登録旅行業 第1791号</p></div>
-    <div><h4>事業内容</h4><ul><li><a href="tours.html">ツアー予約</a></li><li><a href="tours.html#services">格安航空券</a></li><li><a href="visa.html">ビザ申請代行</a></li><li><a href="#contact">団体・法人旅行</a></li></ul></div>
+    <div><h4>事業内容</h4><ul><li><a href="visa.html">ビザ申請代行</a></li><li><a href="tours.html">ツアー予約</a></li><li><a href="tours.html#services">格安航空券</a></li><li><a href="#contact">団体・法人旅行</a></li></ul></div>
     <div><h4>会社情報</h4><ul><li><a href="#about">会社案内</a></li><li><a href="#about">沿革</a></li><li><a href="#access">アクセス</a></li><li><a href="#news">お知らせ</a></li></ul></div>
     <div><h4>規約</h4><ul><li><a href="#">旅行条件書</a></li><li><a href="#">旅行業約款</a></li><li><a href="#">特定商取引法に基づく表記</a></li><li><a href="#">個人情報について</a></li></ul></div>
-    <div><h4>お問い合わせ</h4><ul><li>03-3366-3221</li><li>info@suntravel.co.jp</li><li><a href="#contact">お問い合わせフォーム</a></li></ul></div>
+    <div><h4>お問い合わせ</h4><ul><li>03-3366-3221</li><li>info@suntravel.co.jp</li><li><a href="#contact">お問い合わせフォーム</a></li><li><a href="#faq">よくある質問</a></li></ul></div>
   </div>
   <div class="fbot"><div class="wrap"><span>© 1996–2026 SUN TRAVEL Inc.</span><span>東京本店営業所 03-3366-3221</span></div></div>
 </footer>
@@ -553,6 +663,12 @@ footer{background:#14191E;color:#A7B0B8;font-size:12.5px}
 document.getElementById('cform').addEventListener('submit',function(e){e.preventDefault();var m=document.getElementById('cmsg');
 if(!document.getElementById('c-name').value.trim()||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('c-mail').value.trim())||!document.getElementById('c-body').value.trim()){m.textContent='お名前・メールアドレス・お問い合わせ内容を入力してください。';return}
 m.textContent='試作版のため送信はされません。公開時に送信先を設定します。'});
+</script>
+<script>
+(function(){var b=document.querySelector('.burger'),n=document.getElementById('gnav');if(!b||!n)return;
+b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',String(o))});
+n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');b.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&n.classList.contains('open')){n.classList.remove('open');b.setAttribute('aria-expanded','false');b.focus()}});})();
 </script>
 </body>
 </html>
