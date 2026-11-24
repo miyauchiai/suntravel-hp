@@ -3,6 +3,7 @@
  * スプレッドシート「サントラベル予約管理」の［拡張機能］→［Apps Script］に貼り付けて使います。
  *
  *  GET  ?action=tours   … 公開中のツアーと、受付中の出発日・残席を返す（サイトの表示・空席カレンダー用）
+ *  GET  ?action=formTours … しおり（SHIORIMakerPro）で「販売中」にしたツアーを返す（海外旅行申込フォーム用）
  *  POST {action:'book'} … サイトからの予約を「予約」「同行者」シートに追加し、カレンダーを更新する
  *  POST {action:'entry'}… 海外旅行申込フォーム（サーバーの /form/）。「フォーム受付」「本人確認書類」シートに追加
  *  POST {action:'visa'} … ビザ申請フォーム（サーバーの /form/visa.html）。「ビザ申込」「本人確認書類」シートに追加
@@ -18,6 +19,9 @@ const CONFIG = {
   SHEET_TRAVELERS: '同行者',
   SHEET_ENTRIES: 'フォーム受付',
   SHEET_VISA: 'ビザ申込',
+  // しおり（SHIORIMakerPro）のツアー保存先：ドライブ「Shiorimaker-pro / shiori-data / tours」
+  SHIORI_TOURS_FOLDER_ID: '1GfJkCjHlutJvhkwvyZLTPzvL5znLTxkv',
+  SHIORI_CACHE_SEC: 300,          // しおりの一覧を覚えておく秒数（しおりで変更してからフォームに出るまで最大この時間）
   SHEET_IDDOCS: '本人確認書類',
   PHOTO_FOLDER: '本人確認書類（写真）',   // スプレッドシートと同じフォルダに作成（なければ自動作成）
   // 身分証リーダーの保存先（IdReaderSave.gs のウェブアプリ）にも、同じ形式でパスポートを保存する。
@@ -36,6 +40,7 @@ function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || 'tours';
   try {
     if (action === 'tours') return json_({ ok: true, tours: getTours_(), updated: new Date().toISOString() });
+    if (action === 'formTours') return json_({ ok: true, tours: shioriTours_(e.parameter.fresh === '1') });
     return json_({ ok: false, error: 'unknown action' });
   } catch (err) {
     console.error(err);
@@ -215,6 +220,37 @@ function newNo_() {
   return no;
 }
 
+/* ============ しおり（SHIORIMakerPro）のツアー → 海外旅行申込フォーム ============ */
+/** しおりで「販売中」にチェックし、アーカイブしておらず、出発日が今日以降（または未定）のツアー */
+function shioriTours_(fresh) {
+  const cache = CacheService.getScriptCache();
+  if (!fresh) { const hit = cache.get('shioriTours'); if (hit) return JSON.parse(hit); }
+  const today = ymd_(today_());
+  const out = [];
+  const it = DriveApp.getFolderById(CONFIG.SHIORI_TOURS_FOLDER_ID).getFiles();
+  while (it.hasNext()) {
+    const f = it.next();
+    if (!/\.json$/.test(f.getName())) continue;
+    let j;
+    try { j = JSON.parse(f.getBlob().getDataAsString('UTF-8')); } catch (e) { continue; }
+    if (!j || j.archived || !j.data || !j.data.meta) continue;
+    const m = j.data.meta;
+    if (m.sale !== true) continue;
+    const start = /^\d{4}-\d{2}-\d{2}$/.test(m.start || '') ? m.start : '';
+    if (start && start < today) continue;                 // 出発済みは出さない
+    const days = Array.isArray(j.data.days) ? j.data.days.length : 0;
+    let end = /^\d{4}-\d{2}-\d{2}$/.test(m.end || '') ? m.end : '';
+    if (!end && start && days) { const d = new Date(start + 'T00:00:00+09:00'); d.setDate(d.getDate() + days - 1); end = ymd_(d); }
+    const name = String(m.title || m.footerTitle || '').replace(/\s*\n\s*/g, ' ').trim();
+    if (!name) continue;
+    out.push({ id: String(j.id || f.getName().replace(/\.json$/, '')), name: name, code: String(m.code || ''), start: start, end: end, days: days,
+      price: num_(String((j.data.cost || {}).sell || '').replace(/[^\d.]/g, '')) });
+  }
+  out.sort(function (a, b) { return (a.start || '9999') < (b.start || '9999') ? -1 : (a.start || '9999') > (b.start || '9999') ? 1 : a.name < b.name ? -1 : 1; });
+  try { cache.put('shioriTours', JSON.stringify(out), CONFIG.SHIORI_CACHE_SEC); } catch (e) {}
+  return out;
+}
+
 /* ============ フォーム共通（サーバーの /form/ と /form/visa.html） ============ */
 function upper_(v) { return String(v || '').toUpperCase().trim(); }
 function dateOf_(v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? new Date(v + 'T00:00:00+09:00') : ''; }
@@ -376,7 +412,8 @@ function entry_(b) {
       '緊急連絡先氏名': String(E.name), '続柄': String(E.relation || ''), '緊急連絡先電話': E.tel ? "'" + String(E.tel) : '',
       '海外旅行保険': String(b.insurance), '食物アレルギー': String(b.allergy || ''), 'アレルギーの内容': String(b.allergyDetail || ''),
       '無料両替': b.exchange ? '申請する' : '', '両替額（万円）': b.exchange ? num_(b.exchangeAmount) : '', 'その他連絡事項': String(b.request || ''),
-      '参加者（ローマ字・生年月日）': travelerList_(tv), 'パスポート申請中': applying ? applying + '名' : '', '対応状況': '未対応'
+      '参加者（ローマ字・生年月日）': travelerList_(tv), 'パスポート申請中': applying ? applying + '名' : '', '対応状況': '未対応',
+      'ツアーコード': String(b.tourCode || '')
     });
     SpreadsheetApp.flush();
     try {
