@@ -4,8 +4,8 @@
  *
  *  GET  ?action=tours   … 公開中のツアーと、受付中の出発日・残席を返す（サイトの表示・空席カレンダー用）
  *  POST {action:'book'} … サイトからの予約を「予約」「同行者」シートに追加し、カレンダーを更新する
- *  POST {action:'entry'}… ご予約・本人確認フォーム（form.html）。「フォーム受付」「本人確認書類」シートに追加
- *  POST {action:'visa'} … ビザ申請フォーム（visa-form.html）。「ビザ申込」「本人確認書類」シートに追加
+ *  POST {action:'entry'}… 海外旅行申込フォーム（サーバーの /form/）。「フォーム受付」「本人確認書類」シートに追加
+ *  POST {action:'visa'} … ビザ申請フォーム（サーバーの /form/visa.html）。「ビザ申込」「本人確認書類」シートに追加
  *                          どちらもパスポート等の写真をドライブ「本人確認書類（写真）」フォルダに保存する
  *
  * ⚠️ このコードを書き換えたら：［デプロイ］→［デプロイを管理］→ 鉛筆アイコン →「新バージョン」で更新すること。
@@ -215,7 +215,7 @@ function newNo_() {
   return no;
 }
 
-/* ============ フォーム共通（form.html／visa-form.html） ============ */
+/* ============ フォーム共通（サーバーの /form/ と /form/visa.html） ============ */
 function upper_(v) { return String(v || '').toUpperCase().trim(); }
 function dateOf_(v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? new Date(v + 'T00:00:00+09:00') : ''; }
 
@@ -257,7 +257,7 @@ function addIdDocs_(key, no, leadName, tv, memoOf) {
     const url = have && t.image ? savePhoto_(t.image, base) : '';
     const ex = Object.keys(t.extraImages || {}).map(function (k) { const u = savePhoto_(t.extraImages[k], base + '_' + k); return u ? (XN[k] || k) + '：' + u : ''; }).filter(String);
     const fw = have ? forwardToIdReader_(t, key + '　' + memoOf(t, i).split('\n')[0]) : '';
-    const memo = [memoOf(t, i), have ? '' : 'パスポート申請中・更新中' + (f.pickup ? '（受取予定 ' + f.pickup + '）' : '')].concat(ex, [fw]).filter(String).join('\n');
+    const memo = [memoOf(t, i), have ? '' : 'パスポート申請中・更新中' + (f.pickup ? '（発行・受取予定 ' + f.pickup + '）' : '')].concat(ex, [fw]).filter(String).join('\n');
     return [now, key, have ? 'パスポート' : 'パスポート（申請中）', have ? String(t.verdict || '手入力') : '申請中', t.edited ? 'あり' : '',
       upper_(f.surname), upper_(f.givenNames), i === 0 ? leadName : '', dateOf_(f.birthDate), upper_(f.sex), upper_(f.nationality),
       have ? upper_(f.documentNumber) : '', '', have ? dateOf_(f.expiryDate) : '', '', '', url, '', memo];
@@ -328,16 +328,29 @@ function passportCount_(tv) {
   return c;
 }
 
-/* ============ ご予約・本人確認フォーム（form.html） ============ */
-const ENTRY_HEAD = ['受付番号', '受付日時', '予約番号', 'ツアーID', 'ツアー・ご希望内容', '出発日', '大人', '子供', '代表者氏名', 'ローマ字',
-  '生年月日', '性別', '電話', 'メール', '郵便番号', '住所', '緊急連絡先', 'ご要望', '参加者（ローマ字・生年月日）', 'パスポート申請中', '対応状況', '担当者', 'メモ'];
+/* ============ 海外旅行申込フォーム（サーバーの /form/） ============ */
+const ENTRY_HEAD = ['受付番号', '受付日時', '予約番号', 'ツアーID', 'ツアー・ご旅行内容', '出発日', '帰国日', '大人', '子供', 'サロン会員',
+  '代表者氏名', 'ローマ字', '生年月日', '電話', 'メール', '郵便番号', '住所', '緊急連絡先氏名', '続柄', '緊急連絡先電話',
+  '海外旅行保険', '食物アレルギー', 'アレルギーの内容', '無料両替', '両替額（万円）', 'その他連絡事項',
+  '参加者（ローマ字・生年月日）', 'パスポート申請中', '対応状況', '担当者', 'メモ'];
 const STATUS_LIST = ['未対応', '対応中', '予約登録済み', '完了', '対象外'];
+
+/** 見出し名に合わせて1行追加する（見出しが足りなければ右端に足す。列の並べ替えにも強い） */
+function appendByHead_(sh, obj) {
+  const lastCol = Math.max(1, sh.getLastColumn());
+  const head = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(String);
+  Object.keys(obj).forEach(function (k) { if (head.indexOf(k) < 0) { head.push(k); sh.getRange(1, head.length).setValue(k).setFontWeight('bold').setBackground('#E3EFEA'); } });
+  sh.appendRow(head.map(function (h) { return h in obj ? obj[h] : ''; }));
+}
 
 function entry_(b) {
   if (b.company) return { ok: true, no: 'SF000000-0000' };   // ボット対策（人には見えない欄に入力があれば保存しない）
-  const err = checkForm_(b, ['sei', 'mei', 'rs', 'rm', 'birth', 'tel', 'mail', 'zip', 'addr']);
+  const err = checkForm_(b, ['sei', 'mei', 'rs', 'rm', 'tel', 'mail']);
   if (err) return { ok: false, error: err };
-  if (!String(b.tourName || '').trim() || !dateOf_(b.date)) return { ok: false, error: 'ツアーと出発日を選択してください。' };
+  if (!String(b.tourName || '').trim() || !dateOf_(b.date) || !dateOf_(b.retDate)) return { ok: false, error: 'ツアーと出発日・帰国日をご入力ください。' };
+  const E = b.emergency || {};
+  if (!String(E.name || '').trim()) return { ok: false, error: '緊急連絡先の氏名をご入力ください。' };
+  if (['加入する', '加入しない'].indexOf(b.insurance) < 0) return { ok: false, error: '海外旅行保険に加入されるかどうかを選択してください。' };
   const L = b.lead, tv = b.travelers;
 
   const lock = LockService.getScriptLock();
@@ -351,16 +364,26 @@ function entry_(b) {
     });
     const applying = passportCount_(tv).applying;
     const es = sheetWithHead_(CONFIG.SHEET_ENTRIES, ENTRY_HEAD, function (sh) {
-      sh.getRange('B:B').setNumberFormat('yyyy/mm/dd hh:mm'); sh.getRange('F:F').setNumberFormat('yyyy/mm/dd'); sh.getRange('K:K').setNumberFormat('yyyy/mm/dd');
-      sh.getRange('U2:U').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(STATUS_LIST, true).build());
+      sh.getRange('B:B').setNumberFormat('yyyy/mm/dd hh:mm');
+      ['F:F', 'G:G', 'M:M'].forEach(function (r) { sh.getRange(r).setNumberFormat('yyyy/mm/dd'); });
+      sh.getRange('AC2:AC').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(STATUS_LIST, true).build());
     });
-    es.appendRow([no, new Date(), bookingNo, String(b.tourId || ''), String(b.tourName), dateOf_(b.date), Math.floor(num_(b.adults)), Math.floor(num_(b.children)),
-      leadName, upper_(L.rs) + ' ' + upper_(L.rm), dateOf_(L.birth), { F: '女性', M: '男性' }[L.sex] || '—', "'" + String(L.tel), String(L.mail),
-      "'" + String(L.zip), String(L.addr), String(L.emergency || ''), String(b.request || ''), travelerList_(tv), applying ? applying + '名' : '', '未対応', '', '']);
+    appendByHead_(es, {
+      '受付番号': no, '受付日時': new Date(), '予約番号': bookingNo, 'ツアーID': String(b.tourId || ''), 'ツアー・ご旅行内容': String(b.tourName),
+      '出発日': dateOf_(b.date), '帰国日': dateOf_(b.retDate), '大人': Math.floor(num_(b.adults)), '子供': Math.floor(num_(b.children)), 'サロン会員': String(b.salon || ''),
+      '代表者氏名': leadName, 'ローマ字': upper_(L.rs) + ' ' + upper_(L.rm), '生年月日': dateOf_(L.birth), '電話': "'" + String(L.tel), 'メール': String(L.mail),
+      '郵便番号': L.zip ? "'" + String(L.zip) : '', '住所': String(L.addr || ''),
+      '緊急連絡先氏名': String(E.name), '続柄': String(E.relation || ''), '緊急連絡先電話': E.tel ? "'" + String(E.tel) : '',
+      '海外旅行保険': String(b.insurance), '食物アレルギー': String(b.allergy || ''), 'アレルギーの内容': String(b.allergyDetail || ''),
+      '無料両替': b.exchange ? '申請する' : '', '両替額（万円）': b.exchange ? num_(b.exchangeAmount) : '', 'その他連絡事項': String(b.request || ''),
+      '参加者（ローマ字・生年月日）': travelerList_(tv), 'パスポート申請中': applying ? applying + '名' : '', '対応状況': '未対応'
+    });
     SpreadsheetApp.flush();
     try {
-      notifyForm_('【予約・本人確認フォーム】' + no + '　' + b.tourName + '（' + b.date + '発・' + tv.length + '名）',
-        '受付番号：' + no + (bookingNo ? '\n予約番号：' + bookingNo : '') + '\nツアー：' + b.tourName + '\n出発日：' + b.date, L, tv, '「フォーム受付」「本人確認書類」');
+      notifyForm_('【海外旅行申込フォーム】' + no + '　' + b.tourName + '（' + b.date + '発・' + tv.length + '名）',
+        '受付番号：' + no + (bookingNo ? '\n予約番号：' + bookingNo : '') + '\nツアー：' + b.tourName + '\n出発日：' + b.date + '　帰国日：' + b.retDate +
+        '\n海外旅行保険：' + b.insurance + (b.exchange ? '\n無料両替：' + b.exchangeAmount + '万円' : '') + (b.allergy === 'あり' ? '\n食物アレルギー：' + b.allergyDetail : ''),
+        L, tv, '「フォーム受付」「本人確認書類」');
     } catch (e2) { console.error('mail', e2); }
     return { ok: true, no: no };
   } finally {
@@ -368,7 +391,7 @@ function entry_(b) {
   }
 }
 
-/* ============ ビザ申請フォーム（visa-form.html） ============ */
+/* ============ ビザ申請フォーム（サーバーの /form/visa.html） ============ */
 const VISA_HEAD = ['受付番号', '受付日時', 'ビザ種類', 'ビザ名', '人数', 'お住まい', '管轄', '渡航予定日', '帰国予定日', '渡航目的', '公演・招へい先', '申請先公館',
   '面接場所', '米国ビザ・ESTA歴', '便名', '滞在先', '滞在先住所', 'お持ち込み先', '記入代行', '緊急申請', '代行手数料（目安）',
   '代表者氏名', 'ローマ字', '生年月日', '性別', '電話', 'メール', '郵便番号', '住所', '連絡方法', '申請者（ローマ字・生年月日）', 'パスポート申請中', 'ご質問',
