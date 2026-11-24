@@ -872,7 +872,7 @@ el.main.addEventListener('input',function(e){var t=e.target;if(t.hasAttribute('d
 
 /* ---------- 開閉（#book-xxx で開く） ---------- */
 var lastFocus=null;
-function open(id){if(!TOURS[id])return;if(!S||S.id!==id||S.step===5)S=fresh(id);lastFocus=document.activeElement;
+function open(id){if(!TOURS[id])return;if(TOURS[id].form){location.href=TOURS[id].form;return}if(!S||S.id!==id||S.step===5)S=fresh(id);lastFocus=document.activeElement;
   el.bk.hidden=false;document.documentElement.style.overflow='hidden';render(true);document.getElementById('bk-close').focus()}
 function close(){el.bk.hidden=true;document.documentElement.style.overflow='';if(S&&S.step===5)S=null;
   if(location.hash.indexOf('#book-')===0){try{history.replaceState(null,'','#tours')}catch(e){location.hash='tours'}}
@@ -895,10 +895,10 @@ function card(id,rank){var t=TOURS[id],on=fav.indexOf(id)>=0;
    +(rank?'<span class="rank r'+rank+'">'+rank+'</span>':'')+(t.hot?'<span class="hot">'+t.hot+'</span>':'')+'</div>'
    +'<button class="fav" type="button" data-fav="'+id+'" aria-pressed="'+on+'" aria-label="お気に入り：'+esc(t.name)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button>'
    +'<div class="meta"><span class="ty">'+(t.local?'現地発':'航空券付き')+'</span><span>'+AREA[t.area]+'・'+t.dur+'</span></div>'
-   +'<h3><a class="cover" href="#book-'+id+'">'+esc(t.name)+'</a></h3>'
+   +'<h3><a class="cover" href="'+(t.form?esc(t.form):'#book-'+id)+'">'+esc(t.name)+'</a></h3>'
    +(t.reviews?'<div class="stars"><span class="s" aria-hidden="true">'+stars(t.rating)+'</span><span class="sr">評価</span><b>'+t.rating.toFixed(1)+'</b><small>（'+t.reviews+'件）</small></div>':'')
    +'<div class="badges">'+t.badges.map(function(b){return '<span>'+b+'</span>'}).join('')+'</div>'
-   +'<div class="pr"><span class="cx">'+(t.local?'8日前まで取消無料':'即時予約確定')+'</span><b>'+yen(t.adult)+(t.local?'':'<small>〜</small>')+'</b></div></article>'}
+   +'<div class="pr"><span class="cx">'+(t.form?'申込フォームで受付':t.local?'8日前まで取消無料':'即時予約確定')+'</span><b>'+yen(t.adult)+(t.local?'':'<small>〜</small>')+'</b></div></article>'}
 function renderRank(){var ids=RANK.filter(function(i){return !RK||TOURS[i].area===RK});
   document.getElementById('rank').innerHTML=ids.map(function(i,k){return card(i,k+1)}).join('')}
 function match(id){var t=TOURS[id];

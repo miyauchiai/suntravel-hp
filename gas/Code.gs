@@ -4,6 +4,8 @@
  *
  *  GET  ?action=tours   … 公開中のツアーと、受付中の出発日・残席を返す（サイトの表示・空席カレンダー用）
  *  GET  ?action=formTours … しおり（SHIORIMakerPro）で「販売中」にしたツアーを返す（海外旅行申込フォーム用）
+ *  しおり → スプレッドシート：しおりで「販売中」にしたツアーを「ツアー」「出発日」シートに自動で書き込む（syncShiori）
+ *                          「HPにも載せる」にしたものは「公開」、それ以外は「非公開」。HPの予約ボタンは申込フォームを開く
  *  POST {action:'book'} … サイトからの予約を「予約」「同行者」シートに追加し、カレンダーを更新する
  *  POST {action:'entry'}… 海外旅行申込フォーム（サーバーの /form/）。「フォーム受付」「本人確認書類」シートに追加
  *  POST {action:'visa'} … ビザ申請フォーム（サーバーの /form/visa.html）。「ビザ申込」「本人確認書類」シートに追加
@@ -21,7 +23,11 @@ const CONFIG = {
   SHEET_VISA: 'ビザ申込',
   // しおり（SHIORIMakerPro）のツアー保存先：ドライブ「Shiorimaker-pro / shiori-data / tours」
   SHIORI_TOURS_FOLDER_ID: '1GfJkCjHlutJvhkwvyZLTPzvL5znLTxkv',
-  SHIORI_CACHE_SEC: 300,          // しおりの一覧を覚えておく秒数（しおりで変更してからフォームに出るまで最大この時間）
+  SHIORI_CACHE_SEC: 300,
+  SHIORI_SYNC_SEC: 300,           // しおり → シートの自動取り込みの間隔（秒）。サイトが開かれたときにこの間隔で確認する
+  SHIORI_IMG_FOLDER: 'しおり（HP用写真）',   // HPに出す写真の保存先（スプレッドシートと同じフォルダに自動作成・リンクを知っている全員が閲覧可）
+  SHIORI_DEFAULT_CAPACITY: 20,    // しおりの人数が読めないときの定員
+  FORM_URL: 'https://suntravel.jp/form/',   // 海外旅行申込フォーム（しおりのツアーはHPの予約ボタンでここを開く）          // しおりの一覧を覚えておく秒数（しおりで変更してからフォームに出るまで最大この時間）
   SHEET_IDDOCS: '本人確認書類',
   PHOTO_FOLDER: '本人確認書類（写真）',   // スプレッドシートと同じフォルダに作成（なければ自動作成）
   // 身分証リーダーの保存先（IdReaderSave.gs のウェブアプリ）にも、同じ形式でパスポートを保存する。
@@ -39,7 +45,7 @@ const CONFIG = {
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || 'tours';
   try {
-    if (action === 'tours') return json_({ ok: true, tours: getTours_(), updated: new Date().toISOString() });
+    if (action === 'tours') { syncShioriIfStale_(); return json_({ ok: true, tours: getTours_(), updated: new Date().toISOString() }); }
     if (action === 'formTours') return json_({ ok: true, tours: shioriTours_(e.parameter.fresh === '1') });
     return json_({ ok: false, error: 'unknown action' });
   } catch (err) {
@@ -120,7 +126,8 @@ function getTours_() {
       rating: num_(t['評価（見本）']),
       reviews: num_(t['体験談数（見本）']),
       kw: String(t['検索キーワード'] || ''),
-      dates: dates
+      dates: dates,
+      form: t['しおりID'] ? CONFIG.FORM_URL + '?tour=' + encodeURIComponent(String(t['しおりID'])) : ''
     };
   });
 }
@@ -225,6 +232,16 @@ function newNo_() {
 function shioriTours_(fresh) {
   const cache = CacheService.getScriptCache();
   if (!fresh) { const hit = cache.get('shioriTours'); if (hit) return JSON.parse(hit); }
+  const out = shioriRead_().filter(function (x) { return x.live; }).map(function (x) {
+    return { id: x.id, name: x.name, code: x.code, start: x.start, end: x.end, days: x.days, price: x.price };
+  });
+  out.sort(function (a, b) { return (a.start || '9999') < (b.start || '9999') ? -1 : (a.start || '9999') > (b.start || '9999') ? 1 : a.name < b.name ? -1 : 1; });
+  try { cache.put('shioriTours', JSON.stringify(out), CONFIG.SHIORI_CACHE_SEC); } catch (e) {}
+  return out;
+}
+
+/** しおりのツアーファイルをすべて読む。live＝販売中・アーカイブしていない・出発日が今日以降（または未定） */
+function shioriRead_() {
   const today = ymd_(today_());
   const out = [];
   const it = DriveApp.getFolderById(CONFIG.SHIORI_TOURS_FOLDER_ID).getFiles();
@@ -233,22 +250,148 @@ function shioriTours_(fresh) {
     if (!/\.json$/.test(f.getName())) continue;
     let j;
     try { j = JSON.parse(f.getBlob().getDataAsString('UTF-8')); } catch (e) { continue; }
-    if (!j || j.archived || !j.data || !j.data.meta) continue;
-    const m = j.data.meta;
-    if (m.sale !== true) continue;
+    if (!j || !j.data || !j.data.meta) continue;
+    const m = j.data.meta, c = j.data.cost || {};
     const start = /^\d{4}-\d{2}-\d{2}$/.test(m.start || '') ? m.start : '';
-    if (start && start < today) continue;                 // 出発済みは出さない
     const days = Array.isArray(j.data.days) ? j.data.days.length : 0;
     let end = /^\d{4}-\d{2}-\d{2}$/.test(m.end || '') ? m.end : '';
     if (!end && start && days) { const d = new Date(start + 'T00:00:00+09:00'); d.setDate(d.getDate() + days - 1); end = ymd_(d); }
     const name = String(m.title || m.footerTitle || '').replace(/\s*\n\s*/g, ' ').trim();
     if (!name) continue;
-    out.push({ id: String(j.id || f.getName().replace(/\.json$/, '')), name: name, code: String(m.code || ''), start: start, end: end, days: days,
-      price: num_(String((j.data.cost || {}).sell || '').replace(/[^\d.]/g, '')) });
+    const price = num_(String(c.sell || '').replace(/[^\d.]/g, ''));
+    const cats = Object.keys(m.hpCats || {}).filter(function (k) { return m.hpCats[k] === true; });
+    const cap = num_(String(c.pax || '').replace(/[^\d]/g, '')) || num_((String(m.pax || '').match(/\d+/) || [''])[0]);
+    out.push({
+      id: String(j.id || f.getName().replace(/\.json$/, '')), name: name, code: String(m.code || ''), start: start, end: end, days: days, price: price,
+      live: m.sale === true && !j.archived && (!start || start >= today), hp: m.hp === true,
+      sub: String(m.hpSub || m.catch || '').trim(), area: String(m.hpArea || 'other'), cats: cats.length ? cats : ['package'],
+      adult: num_(String(m.hpAdult || '').replace(/[^\d.]/g, '')) || price, child: num_(String(m.hpChild || '').replace(/[^\d.]/g, '')),
+      inc: String(m.hpInc || '').trim(), exc: String(m.hpExc || '').trim(),
+      badges: String(m.hpBadges || '').split(/[、,，]/).map(function (x) { return x.trim(); }).filter(String).join(','),
+      img: /^data:image\/(jpeg|png|webp);base64,/.test(String(m.hpImg || '')) ? String(m.hpImg) : '', cap: cap
+    });
   }
-  out.sort(function (a, b) { return (a.start || '9999') < (b.start || '9999') ? -1 : (a.start || '9999') > (b.start || '9999') ? 1 : a.name < b.name ? -1 : 1; });
-  try { cache.put('shioriTours', JSON.stringify(out), CONFIG.SHIORI_CACHE_SEC); } catch (e) {}
   return out;
+}
+
+/* ============ しおり → スプレッドシート（ツアー・出発日） ============ */
+/** サイトが開かれたときに、前回から SHIORI_SYNC_SEC 秒以上たっていれば取り込む */
+function syncShioriIfStale_() {
+  const cache = CacheService.getScriptCache();
+  if (cache.get('shioriSyncAt')) return;
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(0)) return;
+  try { cache.put('shioriSyncAt', '1', CONFIG.SHIORI_SYNC_SEC); syncShiori_(); } catch (e) { console.error(e); } finally { lock.releaseLock(); }
+}
+
+/** メニュー［しおりから取り込む］ */
+function syncShiori() {
+  const r = syncShiori_();
+  CacheService.getScriptCache().removeAll(['shioriTours', 'shioriSyncAt']);
+  try { SpreadsheetApp.getUi().alert('しおりから取り込みました。\n\n追加：' + r.added + '件　更新：' + r.updated + '件　非公開にした：' + r.hidden + '件\n出発日の追加：' + r.deps + '件'); } catch (e) {}
+}
+
+/** しおりで「販売中」のツアーを「ツアー」「出発日」シートに書き込む。
+ *  しおりが持っている項目（ツアー名・サブタイトル・エリア・カテゴリ・日数・料金・含まれるもの・バッジ・写真・公開）はしおりの内容で上書き。
+ *  1名1室追加・燃油・最少催行人員・評価・定員・受付などはシートで管理（最初に作るときだけ初期値を入れる） */
+function syncShiori_() {
+  const list = shioriRead_();
+  const sh = sheet_(CONFIG.SHEET_TOURS);
+  let head = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(String);
+  if (head.indexOf('しおりID') < 0) { sh.getRange(1, head.length + 1).setValue('しおりID'); head.push('しおりID'); }
+  const col = function (name) { return head.indexOf(name) + 1; };
+  const tours = rows_(CONFIG.SHEET_TOURS);
+  const byShiori = {};
+  tours.forEach(function (t) { if (t['しおりID']) byShiori[String(t['しおりID'])] = t; });
+  const r = { added: 0, updated: 0, hidden: 0, deps: 0 };
+  list.forEach(function (x) {
+    let row = byShiori[x.id];
+    if (!x.live) {
+      if (row && row['公開'] !== '非公開') { sh.getRange(row._row, col('公開')).setValue('非公開'); r.hidden++; }
+      if (row) closeShioriDeps_(row['ツアーID'], '');
+      return;
+    }
+    const tid = row ? String(row['ツアーID']) : 'sh-' + x.id;
+    const v = {
+      'ツアーID': tid, 'ツアー名': x.name, '種別': '航空券付き', '日数': x.days || 1, '所要時間': (x.days || 1) + '日間',
+      'エリア': x.area, 'カテゴリ': x.cats.join(','), '公開': x.hp ? '公開' : '非公開', 'しおりID': x.id
+    };
+    if (x.sub) v['サブタイトル'] = x.sub;
+    if (x.adult) v['大人料金'] = x.adult;
+    if (x.child) v['子供料金'] = x.child;
+    if (x.inc) v['含まれるもの'] = x.inc;
+    if (x.exc) v['含まれないもの'] = x.exc;
+    if (x.badges) v['バッジ'] = x.badges;
+    if (x.img) { const url = shioriImage_(x.id, x.img); if (url) v['画像'] = url; }
+    if (!row) {
+      v['1名1室追加'] = 0; v['燃油・諸税（目安）'] = 0; v['最少催行人員'] = 1; v['評価（見本）'] = 0; v['体験談数（見本）'] = 0;
+      v['検索キーワード'] = [x.code, x.name].filter(String).join(' ');
+      const n = firstEmptyRow_(sh);
+      const vals = head.map(function (h) { return v[h] !== undefined ? v[h] : ''; });
+      sh.getRange(n, 1, 1, vals.length).setValues([vals]);
+      r.added++;
+    } else {
+      let changed = false;
+      Object.keys(v).forEach(function (h) {
+        if (!col(h)) return;
+        const cur = row[h];
+        if (String(cur) === String(v[h])) return;
+        sh.getRange(row._row, col(h)).setValue(v[h]); changed = true;
+      });
+      if (changed) r.updated++;
+    }
+    if (x.start) { if (ensureShioriDep_(tid, x.start, x.cap || CONFIG.SHIORI_DEFAULT_CAPACITY)) r.deps++; closeShioriDeps_(tid, x.start); }
+  });
+  SpreadsheetApp.flush();
+  return r;
+}
+
+/** 出発日シートに、そのツアーの出発日の行がなければ追加する（計算式は2行目からコピー） */
+function ensureShioriDep_(tid, start, cap) {
+  const sh = sheet_(CONFIG.SHEET_DEPS);
+  const hit = rows_(CONFIG.SHEET_DEPS).filter(function (d) { return String(d['ツアーID']) === tid && d['出発日'] instanceof Date && ymd_(d['出発日']) === start; })[0];
+  if (hit) { if (hit['受付'] === '停止') sh.getRange(hit._row, 4).setValue('受付中'); return false; }   // 定員はシートで管理。受付はしおりの「販売中」に合わせる
+  const n = firstEmptyRow_(sh);
+  sh.getRange(n, 1, 1, 4).setValues([[tid, new Date(start + 'T00:00:00+09:00'), cap, '受付中']]);
+  if (n > 2) sh.getRange(2, 5, 1, 7).copyTo(sh.getRange(n, 5, 1, 7));   // ツアー名〜未収額の計算式
+  return true;
+}
+
+/** しおりの出発日が変わった・販売をやめたとき：予約のない古い出発日の受付を「停止」にする */
+function closeShioriDeps_(tid, keepStart) {
+  const sh = sheet_(CONFIG.SHEET_DEPS);
+  rows_(CONFIG.SHEET_DEPS).forEach(function (d) {
+    if (String(d['ツアーID']) !== String(tid) || !(d['出発日'] instanceof Date)) return;
+    if (keepStart && ymd_(d['出発日']) === keepStart) return;
+    if (d['受付'] === '受付中' && !num_(d['予約人数'])) sh.getRange(d._row, 4).setValue('停止');
+  });
+}
+
+/** HPに出す写真をドライブに保存して、表示用のURLを返す（同じ写真なら保存し直さない） */
+function shioriImage_(id, dataUrl) {
+  try {
+    const m = dataUrl.match(/^data:(image\/[a-z]+);base64,(.*)$/);
+    if (!m) return '';
+    const hash = Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, m[2]));
+    const folder = shioriImgFolder_();
+    const name = id + (m[1] === 'image/png' ? '.png' : '.jpg');
+    const it = folder.getFilesByName(name);
+    let f = it.hasNext() ? it.next() : null;
+    if (f && f.getDescription() === hash) return 'https://drive.google.com/thumbnail?id=' + f.getId() + '&sz=w1200';
+    if (f) f.setTrashed(true);
+    f = folder.createFile(Utilities.newBlob(Utilities.base64Decode(m[2]), m[1], name));
+    f.setDescription(hash);
+    f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return 'https://drive.google.com/thumbnail?id=' + f.getId() + '&sz=w1200';
+  } catch (e) { console.error(e); return ''; }
+}
+
+function shioriImgFolder_() {
+  const file = DriveApp.getFileById(SpreadsheetApp.getActiveSpreadsheet().getId());
+  const parents = file.getParents();
+  const parent = parents.hasNext() ? parents.next() : DriveApp.getRootFolder();
+  const it = parent.getFoldersByName(CONFIG.SHIORI_IMG_FOLDER);
+  return it.hasNext() ? it.next() : parent.createFolder(CONFIG.SHIORI_IMG_FOLDER);
 }
 
 /* ============ フォーム共通（サーバーの /form/ と /form/visa.html） ============ */
@@ -548,6 +691,8 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu('サントラベル')
     .addItem('選択した予約を「入金済み・確定」にする', 'markPaid')
     .addItem('選択した予約をキャンセルにする', 'markCancel')
+    .addSeparator()
+    .addItem('しおりから取り込む（ツアー・出発日）', 'syncShiori')
     .addSeparator()
     .addItem('カレンダーに同期', 'syncCalendar')
     .addItem('毎時の自動同期をオンにする', 'installTrigger')
