@@ -29,7 +29,8 @@ const CONFIG = {
   SHIORI_DEFAULT_CAPACITY: 20,    // しおりの人数が読めないときの定員
   FORM_URL: 'form/',   // 海外旅行申込フォーム（しおりのツアーはHPの予約ボタンでここを開く）。HPと同じ場所の form フォルダ（相対パス。いまは GitHub、サーバーへ移したらそのまま使える）
   SHEET_IDDOCS: '本人確認書類',
-  PHOTO_FOLDER: '本人確認書類（写真）',   // スプレッドシートと同じフォルダに作成（なければ自動作成）
+  PHOTO_FOLDER: '本人確認書類（写真）',
+  TOURBOOK_FOLDER: 'ツアー別申込',   // ツアーごとの申込スプレッドシートを入れるフォルダ（予約管理スプレッドシートと同じフォルダに自動作成）   // スプレッドシートと同じフォルダに作成（なければ自動作成）
   // 身分証リーダーの保存先（IdReaderSave.gs のウェブアプリ）にも、同じ形式でパスポートを保存する。
   // URL と合言葉はコードに書かず、［プロジェクトの設定］→［スクリプト プロパティ］に
   //   IDREADER_URL（ウェブアプリのURL）・IDREADER_TOKEN（IdReaderSave.gs の TOKEN）を登録すると有効になる（未登録なら送らない）
@@ -443,6 +444,7 @@ function addIdDocs_(key, no, leadName, tv, memoOf) {
   });
   const ds = sheet_(CONFIG.SHEET_IDDOCS);
   ds.getRange(ds.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
+  return rows;
 }
 
 /** 身分証リーダーの保存先（免許証一覧「パスポート」シート・処理済みフォルダ）へ送る。合言葉はサーバー側だけで使う */
@@ -538,7 +540,7 @@ function entry_(b) {
     const no = newFormNo_('SF', CONFIG.SHEET_ENTRIES);
     const bookingNo = /^ST\d{6}-\d{4}$/.test(String(b.bookingNo || '')) ? String(b.bookingNo) : '';
     const leadName = String(L.sei).trim() + ' ' + String(L.mei).trim();
-    addIdDocs_(bookingNo || no, no, leadName, tv, function (t, i) {
+    const idRows = addIdDocs_(bookingNo || no, no, leadName, tv, function (t, i) {
       return (i === 0 ? '代表者' : '参加者' + (i + 1)) + '（' + (t.kind === 'child' ? '子供' : '大人') + '）' + (bookingNo ? '' : '　受付番号 ' + no);
     });
     const applying = passportCount_(tv).applying;
@@ -547,7 +549,7 @@ function entry_(b) {
       ['F:F', 'G:G', 'M:M'].forEach(function (r) { sh.getRange(r).setNumberFormat('yyyy/mm/dd'); });
       sh.getRange('AC2:AC').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(STATUS_LIST, true).build());
     });
-    appendByHead_(es, {
+    const entryObj = {
       '受付番号': no, '受付日時': new Date(), '予約番号': bookingNo, 'ツアーID': String(b.tourId || ''), 'ツアー・ご旅行内容': String(b.tourName),
       '出発日': dateOf_(b.date), '帰国日': dateOf_(b.retDate), '大人': Math.floor(num_(b.adults)), '子供': Math.floor(num_(b.children)), 'サロン会員': String(b.salon || ''),
       '代表者氏名': leadName, 'ローマ字': upper_(L.rs) + ' ' + upper_(L.rm), '生年月日': dateOf_(L.birth), '電話': "'" + String(L.tel), 'メール': String(L.mail),
@@ -557,7 +559,12 @@ function entry_(b) {
       '無料両替': b.exchange ? '申請する' : '', '両替額（万円）': b.exchange ? num_(b.exchangeAmount) : '', 'その他連絡事項': String(b.request || ''),
       '参加者（ローマ字・生年月日）': travelerList_(tv), 'パスポート申請中': applying ? applying + '名' : '', '対応状況': '未対応',
       'ツアーコード': String(b.tourCode || '')
-    });
+    };
+    // ツアーごとの申込ファイルにも同じ内容を入れる（失敗しても受付は止めない）
+    let bookUrl = '';
+    try { bookUrl = writeTourBook_(b, entryObj, idRows, tv); } catch (e3) { console.error('tourbook', e3); entryObj['メモ'] = 'ツアー別ファイルに書き込めませんでした：' + e3.message; }
+    entryObj['ツアー別ファイル'] = bookUrl;
+    appendByHead_(es, entryObj);
     SpreadsheetApp.flush();
     try {
       notifyForm_('【海外旅行申込フォーム】' + no + '　' + b.tourName + '（' + b.date + '発・' + tv.length + '名）',
@@ -569,6 +576,57 @@ function entry_(b) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/* ============ ツアーごとの申込ファイル（ドライブ「サントラベル 予約管理 / ツアー別申込」） ============ */
+const PAX_HEAD = ['受付日時', '受付番号', '区分', '姓（ローマ字）', '名（ローマ字）', '氏名（代表者）', '生年月日', '性別', '国籍',
+  'パスポート', '旅券番号', '有効期限', '読取判定', '手修正', '写真', 'メモ'];
+
+/** 申込をツアーごとのスプレッドシート（「申込」「参加者」シート）にも書き込み、そのファイルのURLを返す */
+function writeTourBook_(b, entryObj, idRows, tv) {
+  const ss = tourBook_(b);
+  appendByHead_(ss.getSheetByName('申込') || ss.insertSheet('申込'), entryObj);
+  const ps = ss.getSheetByName('参加者') || ss.insertSheet('参加者');
+  const rows = idRows.map(function (r, i) {
+    const t = tv[i] || {}, f = t.fields || {}, have = t.passport !== 'applying';
+    return [r[0], entryObj['受付番号'], t.kind === 'child' ? '子供' : '大人', r[5], r[6], r[7], r[8], r[9], r[10],
+      have ? 'お持ち' : '申請中' + (f.pickup ? '（発行予定 ' + f.pickup + '）' : ''), r[11], r[13], r[3], r[4], r[16], r[18]];
+  });
+  ps.getRange(ps.getLastRow() + 1, 1, rows.length, PAX_HEAD.length).setValues(rows);
+  return ss.getUrl();
+}
+
+/** ツアー（しおりID）ごとのスプレッドシートを開く。なければ作る（ツアー外の申込は「その他」に1つ） */
+function tourBook_(b) {
+  const key = b.tourId ? 'T_' + String(b.tourId).replace(/[^\w-]/g, '') : 'OTHER';
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('TOURBOOK_' + key);
+  if (id) {
+    try { const f = DriveApp.getFileById(id); if (!f.isTrashed()) return SpreadsheetApp.openById(id); } catch (e) {}
+  }
+  const name = b.tourId ? '申込_' + String(b.date || '日程未定') + '_' + String(b.tourName || '').slice(0, 60) : '申込_その他（ツアー外・ご相談）';
+  const ss = SpreadsheetApp.create(name);
+  DriveApp.getFileById(ss.getId()).moveTo(tourBookFolder_());
+  const first = ss.getSheets()[0].setName('申込');
+  first.getRange(1, 1, 1, ENTRY_HEAD.length).setValues([ENTRY_HEAD]).setFontWeight('bold').setBackground('#E3EFEA');
+  first.setFrozenRows(1);
+  first.getRange('B:B').setNumberFormat('yyyy/mm/dd hh:mm');
+  ['F:F', 'G:G', 'M:M'].forEach(function (r) { first.getRange(r).setNumberFormat('yyyy/mm/dd'); });
+  const ps = ss.insertSheet('参加者');
+  ps.getRange(1, 1, 1, PAX_HEAD.length).setValues([PAX_HEAD]).setFontWeight('bold').setBackground('#E3EFEA');
+  ps.setFrozenRows(1);
+  ps.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm');
+  ['G:G', 'L:L'].forEach(function (r) { ps.getRange(r).setNumberFormat('yyyy/mm/dd'); });
+  props.setProperty('TOURBOOK_' + key, ss.getId());
+  return ss;
+}
+
+function tourBookFolder_() {
+  const file = DriveApp.getFileById(SpreadsheetApp.getActiveSpreadsheet().getId());
+  const parents = file.getParents();
+  const parent = parents.hasNext() ? parents.next() : DriveApp.getRootFolder();
+  const it = parent.getFoldersByName(CONFIG.TOURBOOK_FOLDER);
+  return it.hasNext() ? it.next() : parent.createFolder(CONFIG.TOURBOOK_FOLDER);
 }
 
 /* ============ ビザ申請フォーム（サーバーの /form/visa.html） ============ */
