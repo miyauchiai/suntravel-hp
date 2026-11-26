@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>海外旅行申込フォーム｜サントラベル</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 34 34%22%3E%3Ccircle cx=%2217%22 cy=%2216%22 r=%2210%22 fill=%22%23F2A33A%22/%3E%3C/svg%3E">
+<link rel="stylesheet" href="forms/forms.css">
+<style>
+.notice{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;margin:0 0 16px;font-size:14px}
+.notice ul{margin:0;padding-left:1.2em}
+.notice li{margin:2px 0}
+.notice .line{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-weight:700;color:#06C755;text-decoration:none}
+.carrier{display:block;font-size:12.5px;color:var(--warn);background:var(--warn-l);border-radius:8px;padding:6px 10px;margin-top:6px}
+.unit{display:flex;align-items:center;gap:8px}
+.unit input{max-width:160px}
+</style>
+</head>
+<body>
+<header class="hd"><div class="in">
+  <a class="logo" href="https://suntravel.jp/tour/" aria-label="サントラベル ツアー一覧へ">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="16" r="10" fill="#F2A33A"/><path d="M2 22h30M6 26.5h22M11 31h12" stroke="#1F6B5C" stroke-width="2" stroke-linecap="round"/></svg>
+    <span><b>サントラベル</b><small>RESERVATION ・ 海外旅行申込</small></span>
+  </a>
+  <div class="tel">お電話でのご相談<b>03-3366-3221</b>月〜金 9:30〜18:00</div>
+</div></header>
+
+<main>
+  <h1>海外旅行申込フォーム</h1>
+  <p class="lead">この度はお申込みいただき、誠にありがとうございます。海外旅行の手配に必要な情報をご入力ください。Googleアカウントへのログインは不要です。パスポートの写真を選ぶと、氏名・旅券番号・有効期限などを自動で読み取って入力します。</p>
+  <div class="notice">
+    <ul>
+      <li>氏名などは、<b>必ずパスポートと同じ表記</b>でご入力ください。</li>
+      <li>海外旅行保険の加入をご希望の方には、別途お申込書をお送りします。</li>
+      <li>docomo・au（ezweb）・SoftBankなどのキャリアメールは、メールが届かないトラブルが起きやすいため、それ以外のメールアドレスをご入力ください。</li>
+    </ul>
+    <a class="line" href="https://line.me/ti/p/e-2XY8y9cS" target="_blank" rel="noopener">サントラベル LINE 友だち追加 ↗</a>
+  </div>
+  <div class="demo" id="demo" hidden>試作版のプレビューです。入力内容は送信されません。</div>
+
+  <ol class="stepper" id="stepper"><li>ご旅行</li><li>パスポート</li><li>お客様情報</li><li>確認・送信</li></ol>
+
+  <form id="f" novalidate autocomplete="on">
+    <!-- 1. ご旅行 -->
+    <section class="step" data-step="1">
+      <div class="card">
+        <h2>ご旅行の内容</h2>
+        <p class="sub">現在販売中のツアーから選んでください。一覧にないご旅行（航空券のみ・ご相談中の内容など）は「その他」を選んでください。予約番号をお持ちの方はご入力ください。</p>
+        <div class="grid">
+          <label class="fld full"><span>予約番号 <i class="opt">任意</i></span>
+            <input id="bookingNo" placeholder="例：ST261124-1234" autocapitalize="characters" inputmode="latin"></label>
+          <label class="fld full"><span>お申込みのツアー <i class="req">必須</i></span>
+            <select id="tour"><option value="">読み込み中…</option></select></label>
+          <label class="fld full" id="tourFreeWrap" hidden><span>ご旅行の内容 <i class="req">必須</i></span>
+            <input id="tourFree" placeholder="例：K-POP観覧ツアー（3月）、航空券のみ 羽田⇔金浦 など"></label>
+          <label class="fld" id="dateFreeWrap" hidden><span>出発日 <i class="req">必須</i></span><input type="date" id="dateFree"><small id="depNote"></small></label>
+          <label class="fld"><span>帰国日 <i class="req">必須</i></span><input type="date" id="ret"><small id="retNote"></small></label>
+          <div class="fld"><span>大人（12歳以上）</span>
+            <div class="ctr"><button type="button" data-ctr="adults" data-d="-1" aria-label="大人を減らす">−</button><output id="adults">1</output><button type="button" data-ctr="adults" data-d="1" aria-label="大人を増やす">＋</button></div></div>
+          <div class="fld"><span>子供（2〜11歳）</span>
+            <div class="ctr"><button type="button" data-ctr="children" data-d="-1" aria-label="子供を減らす">−</button><output id="children">0</output><button type="button" data-ctr="children" data-d="1" aria-label="子供を増やす">＋</button></div></div>
+          <div class="fld full"><span>オンラインサロン会員ですか？ <i class="opt">任意</i></span>
+            <div class="seg"><label><input type="radio" name="salon" value="会員">会員</label><label><input type="radio" name="salon" value="非会員">非会員</label></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. パスポート -->
+    <section class="step" data-step="2" hidden>
+      <div class="card">
+        <h2>パスポート（参加者全員分）</h2>
+        <p class="sub">パスポートをお持ちの方は、顔写真のページ全体が鮮明に写るように撮影してください。氏名（ローマ字）・パスポート番号・有効期限などを自動で入力します。申請中の方は「申請中・更新中」を選び、氏名などと発行予定日を入力してください。</p>
+        <div id="paxList"></div>
+        <p class="note">読み取りはお使いの端末の中で行います。送信されるのは、入力欄の内容とパスポートの写真だけです。写真は当社のご旅行手配（航空券・ホテル等）にのみ使用し、担当者以外は閲覧できない場所に保管します。</p>
+      </div>
+    </section>
+
+    <!-- 3. お客様情報 -->
+    <section class="step" data-step="3" hidden>
+      <div class="card">
+        <h2>代表者のご連絡先</h2>
+        <p class="sub">パスポートから読み取ったローマ字氏名と生年月日は入力済みです。</p>
+        <div class="grid">
+          <label class="fld"><span>氏名（漢字）姓 <i class="req">必須</i></span><input id="sei" data-req autocomplete="family-name" placeholder="山田"></label>
+          <label class="fld"><span>氏名（漢字）名 <i class="req">必須</i></span><input id="mei" data-req autocomplete="given-name" placeholder="花子"></label>
+          <label class="fld"><span>氏名（ローマ字）苗字 <i class="req">必須</i></span><input id="rs" data-req data-roma autocapitalize="characters" placeholder="YAMADA"></label>
+          <label class="fld"><span>氏名（ローマ字）名前 <i class="req">必須</i></span><input id="rm" data-req data-roma autocapitalize="characters" placeholder="HANAKO"></label>
+          <label class="fld"><span>生年月日 <i class="opt">任意</i></span><input type="date" id="birth" autocomplete="bday"></label>
+          <label class="fld"><span>電話番号 <i class="req">必須</i></span><input type="tel" id="tel" data-req autocomplete="tel" inputmode="tel" placeholder="090-1234-5678"></label>
+          <label class="fld full"><span>メールアドレス <i class="req">必須</i></span><input type="email" id="mail" data-req autocomplete="email" inputmode="email" placeholder="hanako@example.com">
+            <small class="carrier" id="carrierNote" hidden>キャリアメールは届かないことがあります。できればGmailなど、ほかのメールアドレスをご入力ください。</small></label>
+          <label class="fld"><span>郵便番号 <i class="opt">任意</i></span><input id="zip" autocomplete="postal-code" inputmode="numeric" placeholder="169-0073"></label>
+          <label class="fld full"><span>住所 <i class="opt">任意</i></span><input id="addr" autocomplete="street-address" placeholder="東京都新宿区百人町1-2-3 ○○マンション101"></label>
+        </div>
+      </div>
+      <div class="card">
+        <h2>緊急連絡先</h2>
+        <p class="sub">ご旅行に参加しない方をご入力ください。</p>
+        <div class="grid">
+          <label class="fld full"><span>緊急連絡先氏名（フルネーム） <i class="req">必須</i></span><input id="emName" data-req placeholder="山田 太郎"></label>
+          <label class="fld"><span>続柄 <i class="opt">任意</i></span><input id="emRel" placeholder="父"></label>
+          <label class="fld"><span>電話番号 <i class="opt">任意</i></span><input type="tel" id="emTel" inputmode="tel" placeholder="03-1234-5678"></label>
+        </div>
+      </div>
+      <div class="card">
+        <h2>オプション・その他</h2>
+        <div class="grid">
+          <div class="fld full"><span>弊社で海外旅行保険にご加入されますか？ <i class="req">必須</i></span>
+            <div class="seg" id="insSeg"><label><input type="radio" name="ins" value="加入する">加入する</label><label><input type="radio" name="ins" value="加入しない">加入しない</label></div>
+            <small>加入される方には、別途お申込書をお送りします。</small></div>
+          <div class="fld full"><span>食物アレルギーはありますか？ <i class="opt">任意</i></span>
+            <div class="seg"><label><input type="radio" name="allergy" value="なし">なし</label><label><input type="radio" name="allergy" value="あり">あり</label></div></div>
+          <label class="fld full" id="allergyWrap" hidden><span>アレルギーの内容 <i class="req">必須</i></span><input id="allergyText" placeholder="例：乳製品・えび・かに・ナッツ類 など"></label>
+          <div class="fld full"><span>無料両替サービス <i class="opt">任意</i></span>
+            <label class="agree" style="margin:0"><input type="checkbox" id="fx"><span>無料両替サービスを申請する</span></label></div>
+          <label class="fld full" id="fxWrap" hidden><span>両替する金額 <i class="req">必須</i></span>
+            <span class="unit"><input type="number" id="fxAmount" min="1" step="1" inputmode="numeric" placeholder="5">万円</span></label>
+          <label class="fld full"><span>その他連絡事項 <i class="opt">任意</i></span><textarea id="request" placeholder="お部屋割り、出発空港のご希望、ご質問など"></textarea></label>
+        </div>
+        <label class="hp" aria-hidden="true">会社名<input id="company" tabindex="-1" autocomplete="off"></label>
+      </div>
+    </section>
+
+    <!-- 4. 確認・送信 -->
+    <section class="step" data-step="4" hidden>
+      <div class="card confirm" id="confirm"></div>
+      <div class="card">
+        <label class="agree"><input type="checkbox" id="agreePriv"><span><a href="https://suntravel.jp/privacy/" target="_blank" rel="noopener">個人情報の取り扱い</a>に同意し、パスポートの写真を提出します。<br><small style="color:var(--mute)">お預かりした個人情報は、旅行の手配・ご連絡・出入国手続きに必要な範囲で、運送・宿泊機関等へ提供することがあります。</small></span></label>
+        <label class="agree"><input type="checkbox" id="agreeTrue"><span>入力した内容がパスポートの記載と同じであることを確認しました。</span></label>
+      </div>
+    </section>
+
+    <p class="err" id="err" role="alert"></p>
+    <div class="nav">
+      <button type="button" class="btn" id="back" hidden>戻る</button>
+      <button type="button" class="btn pri" id="next">パスポートの読み取りへ</button>
+    </div>
+  </form>
+
+  <section class="card done" id="done" hidden>
+    <div class="ok" aria-hidden="true">✓</div>
+    <h2>お申込みを受け付けました</h2>
+    <div style="color:var(--mute);font-size:13px;margin-top:14px">受付番号</div>
+    <div class="no" id="doneNo"></div>
+    <p>担当者が内容とパスポートを確認のうえ、<span id="doneMail"></span> にご連絡します。</p>
+    <ol>
+      <li>受付番号は、お問い合わせの際にお伝えください。</li>
+      <li>パスポートを申請中の方は、受け取り後にパスポート番号と有効期限をお知らせください（顔写真ページの写真をLINEかメールでお送りいただくか、店頭でご提示ください）。</li>
+      <li>海外旅行保険に加入される方には、別途お申込書をお送りします。</li>
+      <li>2営業日以内にご連絡がない場合は、お手数ですがお電話（03-3366-3221）でお問い合わせください。</li>
+    </ol>
+  </section>
+</main>
+
+<footer>株式会社サントラベル　観光庁長官登録旅行業 第1791号<br>東京本店営業所　〒169-0073 東京都新宿区百人町1-23-6 ケーエムビル3階　TEL 03-3366-3221</footer>
+<div class="sending" id="sending" hidden><div><div class="spin"></div>送信しています…<br><small style="font-weight:400;color:var(--mute)">写真のアップロードに数十秒かかることがあります。画面を閉じずにお待ちください。</small></div></div>
+
+<script src="idreader/parsers.js"></script>
+<script src="idreader/vendor/tesseract.min.js"></script>
+<script src="idreader/engine.js"></script>
+<script src="forms/pp.js"></script>
+<script>
+(function(){
+'use strict';
+/* 予約管理シートの Apps Script（tours.html の API_URL と同じURL） */
+var API_URL='https://script.google.com/macros/s/AKfycbxcpd82ognNzyklT20gCCV5_sZUXZyvTCwtfAH76W85fQAKpEybJjwDyOk6QcJYUndt/exec';
+var DEMO=/[?&]demo\b/.test(location.search)||!API_URL;
+var OTHER='__other';
+var $=function(id){return document.getElementById(id)},esc=PPForm.esc,fmt=PPForm.fmt;
+var S={step:1,adults:1,children:0,tours:[],busy:false};
+if(window.IdReader)IdReader.init({base:new URL('idreader/',location.href).href});
+if(DEMO)$('demo').hidden=false;
+
+/* ---------- ツアー（しおりで「販売中」にしたもの。Apps Script の formTours） ---------- */
+var FALLBACK=[{id:'demo1',name:'K-POP観覧ツアー 3日間（見本）',code:'',start:'2026-12-19',end:'2026-12-21',days:3,price:89800},
+  {id:'demo2',name:'エジプト 三大ピラミッドとナイル 8日間（見本）',code:'',start:'2027-03-18',end:'2027-03-25',days:8,price:298000},
+  {id:'demo3',name:'日程未定のツアー（見本）',code:'',start:'',end:'',days:4,price:0}];
+function fillTours(list){
+  S.tours=list||[];
+  var h='<option value="">'+(S.tours.length?'選択してください':'現在販売中のツアーはありません')+'</option>';
+  S.tours.forEach(function(t){h+='<option value="'+esc(t.id)+'">'+esc(t.name)+(t.start?'（'+shortDate(t.start)+'発）':'（日程未定）')+'</option>'});
+  $('tour').innerHTML=h+'<option value="'+OTHER+'">その他（航空券のみ・ご相談中のご旅行など）</option>';
+  var q=new URLSearchParams(location.search);
+  if(q.get('tour')){$('tour').value=q.get('tour');onTour()}
+}
+function loadTours(){
+  if(DEMO){fillTours(FALLBACK);return}
+  fetch(API_URL+'?action=formTours').then(function(r){return r.json()}).then(function(d){fillTours(d&&d.ok?d.tours:[])}).catch(function(){fillTours([])});
+}
+function shortDate(s){var d=new Date(s+'T00:00:00');return (d.getMonth()+1)+'/'+d.getDate()+'（'+'日月火水木金土'[d.getDay()]+'）'}
+function T(){var id=$('tour').value;return S.tours.filter(function(t){return t.id===id})[0]||null}
+function isOther(){return $('tour').value===OTHER}
+function dep(){return $('dateFree').value}
+function onTour(){
+  var t=T(),o=isOther(),fixed=!!(t&&t.start);
+  $('dateFreeWrap').hidden=!(t||o);$('tourFreeWrap').hidden=!o;
+  $('dateFree').readOnly=fixed;
+  if(fixed){$('dateFree').value=t.start;$('depNote').textContent='このツアーの出発日です。'}
+  else{if(t||o)$('dateFree').value='';$('depNote').textContent=t?'日程未定のツアーです。ご希望の出発日をご入力ください。':''}
+  retAuto=true;autoRet();
+}
+// 帰国日：しおりの帰着日（なければ日数から計算）を自動で入れる（変更も可）
+var retAuto=true;
+function autoRet(){
+  var t=T(),d=dep();
+  if(!retAuto)return;
+  if(t&&t.end&&t.start){$('ret').value=t.end;$('retNote').textContent='ツアーの日程から自動で入れています。'}
+  else if(t&&d&&t.days){var x=new Date(d+'T00:00:00');x.setDate(x.getDate()+t.days-1);$('ret').value=ymd(x);$('retNote').textContent='ツアーの日数から自動で入れています。'}
+  else{$('retNote').textContent=''}
+}
+$('ret').addEventListener('input',function(){retAuto=false;$('retNote').textContent=''});
+$('dateFree').addEventListener('change',autoRet);
+$('tour').addEventListener('change',onTour);
+
+function pax(){return S.adults+S.children}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-ctr]');if(!b)return;var k=b.getAttribute('data-ctr'),d=+b.getAttribute('data-d');
+  S[k]=Math.max(k==='adults'?1:0,Math.min(9-(k==='adults'?S.children:S.adults),S[k]+d));$('adults').textContent=S.adults;$('children').textContent=S.children;ctr()});
+function ctr(){document.querySelectorAll('[data-ctr]').forEach(function(b){var k=b.getAttribute('data-ctr'),d=+b.getAttribute('data-d');b.disabled=d<0?S[k]<=(k==='adults'?1:0):pax()>=9})}
+ctr();
+
+/* ---------- パスポート ---------- */
+var pp=PPForm.create({box:$('paxList'),
+  title:function(i){return i===0?'代表者':'参加者 '+(i+1)},
+  tag:function(i){return i<S.adults?'大人':'子供'},
+  pickupLabel:'パスポート発行予定日',pickupRequired:true,
+  applyingNote:'パスポート申請書に書いたローマ字と同じ表記で入力してください。パスポート番号と有効期限は、受け取り後にお知らせください。',
+  onLeadRead:function(f,fromRead){copyLead(f,fromRead)}});
+function copyLead(f,fromRead){
+  if(f.surname&&(fromRead||!$('rs').value))$('rs').value=String(f.surname).toUpperCase();
+  if(f.givenNames&&(fromRead||!$('rm').value))$('rm').value=String(f.givenNames).toUpperCase();
+  if(f.birthDate&&(fromRead||!$('birth').value))$('birth').value=f.birthDate;
+}
+
+/* ---------- 入力に応じた表示 ---------- */
+var CARRIER=/@(docomo\.ne\.jp|ezweb\.ne\.jp|au\.com|softbank\.ne\.jp|i\.softbank\.jp|[a-z]\.vodafone\.ne\.jp|ymobile\.ne\.jp|rakumail\.jp)$/i;
+$('mail').addEventListener('input',function(){$('carrierNote').hidden=!CARRIER.test($('mail').value.trim())});
+document.addEventListener('change',function(e){
+  if(e.target.name==='allergy')$('allergyWrap').hidden=e.target.value!=='あり';
+  if(e.target.id==='fx')$('fxWrap').hidden=!e.target.checked;
+});
+
+/* ---------- 入力チェック ---------- */
+var ROMA=/^[A-Za-z][A-Za-z \-]*$/;
+function showErr(m){$('err').textContent=m||''}
+function bad(el,msg){if(el){el.setAttribute('aria-invalid','true');if(el.focus)el.focus();if(el.scrollIntoView)el.scrollIntoView({block:'center'})}showErr(msg);return false}
+function retDate(){return $('ret').value?new Date($('ret').value+'T00:00:00'):null}
+function radio(n){return (document.querySelector('[name='+n+']:checked')||{}).value||''}
+function validate(step){
+  document.querySelectorAll('[aria-invalid]').forEach(function(x){x.removeAttribute('aria-invalid')});showErr('');
+  if(step===1){
+    var bn=$('bookingNo').value.trim();
+    if(bn&&!/^ST\d{6}-\d{4}$/i.test(bn))return bad($('bookingNo'),'予約番号は「ST」で始まる番号です（例：ST261124-1234）。分からない場合は空欄にしてください。');
+    if(!$('tour').value)return bad($('tour'),'お申込みのツアーを選択してください。');
+    if(isOther()&&!$('tourFree').value.trim())return bad($('tourFree'),'ご旅行の内容をご入力ください。');
+    if(!dep())return bad($('dateFree'),'出発日をご入力ください。');
+    if(!$('ret').value)return bad($('ret'),'帰国日をご入力ください。');
+    if($('ret').value<dep())return bad($('ret'),'帰国日が出発日より前になっています。');
+    return true}
+  if(step===2){var e=pp.validate({returnDate:retDate()});if(e)return bad(e.el,e.msg);return true}
+  if(step===3){
+    var first=null,msg='';
+    document.querySelectorAll('.step[data-step="3"] [data-req]').forEach(function(x){var v=x.value.trim(),ok=!!v;
+      if(ok&&x.hasAttribute('data-roma')&&!ROMA.test(v)){ok=false;msg=msg||'ローマ字は半角英字で入力してください。'}
+      if(ok&&x.type==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){ok=false;msg=msg||'メールアドレスを正しく入力してください。'}
+      if(ok&&x.id==='tel'&&v.replace(/\D/g,'').length<10){ok=false;msg=msg||'電話番号を正しく入力してください。'}
+      if(!ok&&!first)first=x});
+    if(first)return bad(first,msg||'「'+first.closest('label').querySelector('span').firstChild.textContent.trim()+'」をご入力ください。');
+    if(!radio('ins'))return bad($('insSeg'),'海外旅行保険に加入されるかどうかを選択してください。');
+    if(radio('allergy')==='あり'&&!$('allergyText').value.trim())return bad($('allergyText'),'アレルギーの内容をご入力ください。');
+    if($('fx').checked&&!(+$('fxAmount').value>0))return bad($('fxAmount'),'両替する金額を万円単位でご入力ください。');
+    return true}
+  if(step===4){if(!$('agreePriv').checked||!$('agreeTrue').checked)return bad(null,'2つの確認事項にチェックしてください。');return true}
+  return true}
+
+/* ---------- 画面遷移 ---------- */
+var NEXT={1:'パスポートの読み取りへ',2:'お客様情報の入力へ',3:'入力内容の確認へ',4:'この内容で申し込む'};
+function go(n){
+  S.step=n;showErr('');
+  document.querySelectorAll('.step').forEach(function(s){s.hidden=+s.dataset.step!==n});
+  [].forEach.call($('stepper').children,function(li,i){li.className=i+1===n?'on':i+1<n?'done':''});
+  $('back').hidden=n===1;$('next').textContent=NEXT[n];
+  if(n===2){pp.sync(pax());pp.seed(0,{surname:$('rs').value.trim().toUpperCase(),givenNames:$('rm').value.trim().toUpperCase(),birthDate:$('birth').value});pp.warm()}
+  if(n===3){var q0=pp.people()[0];if(q0)copyLead(q0.f,false)}
+  if(n===4)renderConfirm();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('next').addEventListener('click',function(){if(S.busy)return;if(!validate(S.step))return;if(S.step===4)submit();else go(S.step+1)});
+$('back').addEventListener('click',function(){if(S.step>1)go(S.step-1)});
+$('f').addEventListener('input',function(e){if(e.target.getAttribute&&e.target.getAttribute('aria-invalid'))e.target.removeAttribute('aria-invalid');showErr('')});
+$('f').addEventListener('change',function(){showErr('')});
+$('adults').textContent=S.adults;
+
+function renderConfirm(){
+  var t=T(),o=isOther(),row=function(k,v){return v?'<dt>'+k+'</dt><dd>'+v+'</dd>':''};
+  var h='<h3>ご旅行の内容</h3><dl>'+row('予約番号',esc($('bookingNo').value.trim().toUpperCase()))
+   +row('ツアー',esc(o?$('tourFree').value:t.name)+(t&&t.code?'<br><small>ツアーコード '+esc(t.code)+'</small>':''))+row('旅行代金（目安）',t&&t.price?'お一人様 ¥'+t.price.toLocaleString('ja-JP'):'')+row('出発日',fmt(dep()))+row('帰国日',fmt($('ret').value))
+   +row('人数','大人'+S.adults+'名'+(S.children?'・子供'+S.children+'名':''))+row('サロン会員',esc(radio('salon')))+'</dl>'
+   +'<h3>パスポート</h3>'+pp.confirmHtml()
+   +'<h3>代表者のご連絡先</h3><dl>'+row('氏名',esc($('sei').value+' '+$('mei').value)+'（'+esc(($('rs').value+' '+$('rm').value).toUpperCase())+'）')
+   +row('生年月日',fmt($('birth').value))+row('電話番号',esc($('tel').value))+row('メール',esc($('mail').value))
+   +row('住所',($('zip').value||$('addr').value)?(($('zip').value?'〒'+esc($('zip').value)+' ':'')+esc($('addr').value)):'')+'</dl>'
+   +'<h3>緊急連絡先</h3><dl>'+row('氏名',esc($('emName').value))+row('続柄',esc($('emRel').value))+row('電話番号',esc($('emTel').value))+'</dl>'
+   +'<h3>オプション・その他</h3><dl>'+row('海外旅行保険',esc(radio('ins')))
+   +row('食物アレルギー',esc(radio('allergy')==='あり'?'あり（'+$('allergyText').value.trim()+'）':radio('allergy')))
+   +row('無料両替',$('fx').checked?'申請する（'+esc($('fxAmount').value)+'万円）':'')
+   +row('その他連絡事項',esc($('request').value.trim()).replace(/\n/g,'<br>'))+'</dl>';
+  $('confirm').innerHTML=h;
+}
+
+/* ---------- 送信 ---------- */
+function payload(){
+  var t=T(),o=isOther();
+  return {action:'entry',bookingNo:$('bookingNo').value.trim().toUpperCase(),
+    tourId:o?'':t.id,tourName:o?$('tourFree').value.trim():t.name,tourCode:o?'':(t.code||''),date:dep(),retDate:$('ret').value,
+    adults:S.adults,children:S.children,salon:radio('salon'),
+    lead:{sei:$('sei').value.trim(),mei:$('mei').value.trim(),rs:$('rs').value.trim().toUpperCase(),rm:$('rm').value.trim().toUpperCase(),
+      birth:$('birth').value,tel:$('tel').value.trim(),mail:$('mail').value.trim(),zip:$('zip').value.trim(),addr:$('addr').value.trim()},
+    emergency:{name:$('emName').value.trim(),relation:$('emRel').value.trim(),tel:$('emTel').value.trim()},
+    insurance:radio('ins'),allergy:radio('allergy'),allergyDetail:radio('allergy')==='あり'?$('allergyText').value.trim():'',
+    exchange:$('fx').checked,exchangeAmount:$('fx').checked?Math.floor(+$('fxAmount').value):'',
+    request:$('request').value.trim(),
+    travelers:pp.data().map(function(x,i){x.kind=i<S.adults?'adult':'child';return x}),
+    agree:true,company:$('company').value};
+}
+function submit(){
+  S.busy=true;$('next').disabled=true;$('sending').hidden=false;
+  var finish=function(no){$('sending').hidden=true;$('f').hidden=true;$('stepper').hidden=true;$('done').hidden=false;$('doneNo').textContent=no;$('doneMail').textContent=$('mail').value.trim();window.scrollTo({top:0})};
+  var fail=function(m){S.busy=false;$('next').disabled=false;$('sending').hidden=true;showErr(m)};
+  if(DEMO){setTimeout(function(){finish('SF'+ymd(new Date()).slice(2).replace(/-/g,'')+'-0000')},900);return}
+  fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload())})
+    .then(function(r){return r.json()}).then(function(d){if(d&&d.ok)finish(d.no);else fail((d&&d.error)||'送信できませんでした。')})
+    .catch(function(){fail('通信エラーで送信できませんでした。電波の良い場所でもう一度お試しいただくか、お電話（03-3366-3221）でご連絡ください。')});
+}
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+window.addEventListener('beforeunload',function(e){if(S.step>1&&$('done').hidden){e.preventDefault();e.returnValue=''}});
+loadTours();
+})();
+</script>
+</body>
+</html>
